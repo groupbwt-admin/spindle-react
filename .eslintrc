@@ -1,7 +1,7 @@
 {
 	"settings": {
 		"react": {
-			"version": "17.0.2"
+			"version": "18.2"
 		}
 	},
 	"env": {
@@ -13,7 +13,8 @@
 		"eslint:recommended",
 		"plugin:react/recommended",
 		"plugin:@typescript-eslint/eslint-recommended",
-		"plugin:@typescript-eslint/recommended"
+		"plugin:@typescript-eslint/recommended",
+		"plugin:react/jsx-runtime"
 	],
 	"globals": {
 		"Atomics": "readonly",
