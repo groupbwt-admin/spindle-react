@@ -1,5 +1,5 @@
-import React from 'react';
-import { Input } from './input';
+import React, { forwardRef } from 'react';
+import { Input, InputProps } from './input';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { Icon } from 'shared/components/icon/icon';
@@ -9,17 +9,21 @@ import { ReactComponent as HidePasswordIcon } from 'shared/components/icon/colle
 import { InputAdornment } from '@mui/material';
 
 const StyledInput = styled(Input)`
-	padding-right: 36px;
 `;
 
-export const PasswordInput = () => {
+type PasswordInputProps = InputProps;
+
+export const RootPasswordInput: React.ForwardRefRenderFunction<
+	HTMLInputElement,
+	PasswordInputProps
+> = (props, ref) => {
 	const [isDisplayedPassword, setIsDisplayedPassword] = useState(false);
 	const toggleShowPassword = () =>
 		setIsDisplayedPassword((prevValue) => !prevValue);
 
 	const InputButton = (
 		<InputAdornment
-			position={'end'}
+			position='end'
 			sx={{ position: 'absolute', right: 7, top: 27 }}
 		>
 			<IconButton onClick={toggleShowPassword}>
@@ -32,11 +36,12 @@ export const PasswordInput = () => {
 
 	return (
 		<StyledInput
-			label={'Password'}
+			ref={ref}
 			type={isDisplayedPassword ? 'text' : 'password'}
-			name={'password'}
-			placeholder={'Your password'}
 			endAdornment={InputButton}
+			{...props}
 		/>
 	);
 };
+
+export const PasswordInput = forwardRef(RootPasswordInput);

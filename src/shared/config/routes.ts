@@ -1,19 +1,28 @@
 // import { generatePath } from 'react-router-dom';
 
 export const AUTH_ROUTES = {
+	ROOT: {
+		path: '/auth'
+	},
 	LOGIN: {
-		path: '/login'
+		path: '/auth/login',
 	},
 	REGISTER: {
-		path: '/register'
+		path: '/auth/registration',
 	},
-	RESET_PASSWORD: {
-		path: '/reset-password'
+	FORGOT_PASSWORD: {
+		path: '/auth/reset-password',
 	},
-	CHANGE_PASSWORD : {
-	    path: '/change-password'
+	NEW_PASSWORD: {
+		path: '/auth/change-password',
 	},
-	CREATE_ACCOUNT: {
-		path: '/create-account'
+	SET_UP_PROFILE: {
+		path: '/auth/fill-account',
+	},
+};
+
+export const VIDEO_ROUTES = {
+	MY_VIDEOS: {
+		path: '/',
 	}
 }

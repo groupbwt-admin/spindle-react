@@ -1,5 +1,6 @@
-import React from "react";
-import {styled} from "@mui/material/styles";
+import React from 'react';
+import { styled } from '@mui/material/styles';
+import { IconCollectionType } from './icon-list';
 
 const IconWrapper = styled('span')`
 	display: inline-flex;
@@ -8,15 +9,15 @@ const IconWrapper = styled('span')`
 `;
 
 interface IconProps {
-	className?: string,
-	icon: React.JSXElementConstructor<React.SVGProps<SVGSVGElement>>
+	className?: string;
+	icon: IconCollectionType;
 }
 
 export const Icon: React.FC<IconProps> = ({ className, icon }) => {
 	const Component = icon;
 
 	return (
-		<IconWrapper className={className} >
+		<IconWrapper className={className}>
 			<Component />
 		</IconWrapper>
 	);

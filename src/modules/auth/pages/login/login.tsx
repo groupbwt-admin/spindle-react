@@ -1,42 +1,68 @@
-import React from "react";
-import { AuthLayout } from "modules/auth/components/layout";
-import { Typography } from "shared/components/typography/typography";
-import {LoginForm} from "modules/auth/pages/login/components/login-form";
-import {styled} from "@mui/material/styles";
-import {Link} from 'react-router-dom'
+import React, { useState } from 'react';
+import { styled } from '@mui/material/styles';
+import { Typography } from 'shared/components/typography/typography';
+import { LoginForm } from 'modules/auth/pages/login/components/login-form';
+import { AuthLink } from 'modules/auth/components/link';
+import { AUTH_ROUTES } from 'shared/config/routes';
+import { useMutation } from 'react-query';
+import { AuthApi } from 'app/api/auth-api/auth-api';
+import { LocalStorageService } from 'shared/services/local-storage-service';
+import { setAuthUserData } from 'app/store/auth/actions';
+import { IToken } from 'shared/types/token';
+import jwtDecode from 'jwt-decode';
 
-const LoginContainer = styled('div')`
+const Title = styled(Typography)`
+	margin-top: 20px;
+	margin-bottom: 24px;
+	text-align: center;
+`;
+
+const Description = styled(Typography)`
+	max-width: 424px;
+	text-align: center;
+`;
+
+const Container = styled('div')`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	height: 100%;
 	justify-content: center;
-`
+	margin-top: 22px;
+`;
 
-const LoginHeader = styled(Typography)`
-	margin-bottom: 40px;
-	text-align: center;
-	margin-top: auto;
-`
+const Footer = styled(Typography)`
+	position: absolute;
+	bottom: 10px;
+`;
 
-const LoginFootnote = styled(Typography)`
-	margin-top: auto;
-`
+export const LoginPage = () => {
 
-export const Login = () => {
-	return <AuthLayout>
-		<LoginContainer>
-			<LoginHeader variant='h1' component='h1' >
+	const loginMutation = useMutation(AuthApi.login, {
+		onSuccess: async (token) => {
+			const userData: IToken = jwtDecode(token);
+			LocalStorageService.set('token', token);
+
+			setAuthUserData(userData);
+		},
+	});
+
+	const handleSubmit = (data) => {
+		loginMutation.mutate(data);
+	};
+
+	return (
+		<Container>
+			<Title variant="h1" component="h1">
 				Sign in to Spindle
-			</LoginHeader>
-			{/*<Typography variant='body1' >*/}
-			{/*	Enter your registered email address and we’ll send you a link to reset your password.*/}
-			{/*</Typography>*/}
-			<LoginForm/>
-			<LoginFootnote variant={'body2'}>
-				Don’t have an account? <Link to={'/register'}>Sign up</Link>
-			</LoginFootnote>
-		</LoginContainer>
-	</AuthLayout>
-}
-
+			</Title>
+					<LoginForm
+						onSubmit={handleSubmit}
+						isLoading={loginMutation.isLoading}
+					/>
+					<Footer variant="subtitle2">
+						Don’t have an account?{' '}
+						<AuthLink to={AUTH_ROUTES.REGISTER.path}>Sign up</AuthLink>
+					</Footer>
+		</Container>
+	);
+};

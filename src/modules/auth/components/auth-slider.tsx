@@ -1,14 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {css, styled, useTheme} from '@mui/material/styles';
+import { css, styled } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
-import {Avatar} from "@mui/material";
-import {IconButton} from "shared/components/button/icon-button";
-import {Icon} from 'shared/components/icon/icon'
-import {ReactComponent as ArrowRight} from 'shared/components/icon/collection/arrow-right.svg'
-import {ReactComponent as ArrowLeft} from 'shared/components/icon/collection/arrow-left.svg'
-import {ReactComponent as QuoteIcon} from 'shared/components/icon/collection/quote.svg';
-import {Typography} from "shared/components/typography/typography";
+import { Avatar } from '@mui/material';
+import { IconButton } from 'shared/components/button/icon-button';
+import { Icon } from 'shared/components/icon/icon';
+import { Typography } from 'shared/components/typography/typography';
+import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 
 const steps = [
 	{
@@ -29,21 +27,25 @@ const steps = [
 	},
 ];
 
-const QuoteContainer = styled(Box)(({theme}) => css`
-	max-height: 444px;
-	height: 380px;
-	max-width: 560px;
-	padding: 32px;
-	background-color: ${theme.palette.common.white};
-	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-	border-radius: 20px;
-	font-size: 1.125rem;
-	line-height: 1.875rem;
-	text-align: center;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-`)
+const QuoteContainer = styled(Box)(
+	({ theme }) => css`
+		max-height: 444px;
+		height: 370px;
+		max-width: 560px;
+		padding: 32px;
+		padding-top: 42px;
+		margin-bottom: 37px;
+		background-color: ${theme.palette.common.white};
+		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+		border-radius: 20px;
+		font-size: 1.125rem;
+		line-height: 1.875rem;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	`,
+);
 
 const AuthIconButton = styled(IconButton)`
 	&.Mui-disabled {
@@ -56,12 +58,16 @@ const AuthIconButton = styled(IconButton)`
 	&:hover {
 		opacity: 1;
 	}
-`
+`;
 
 const QuoteIconStyled = styled(Icon)`
 	margin-right: auto;
-	margin-bottom: 8px;
-`
+	margin-bottom: 10px;
+`;
+
+const UserDesc = styled(Typography)`
+	margin-top: 12px;
+`;
 
 export const AuthSlider = () => {
 	const [activeStep, setActiveStep] = React.useState(0);
@@ -75,33 +81,39 @@ export const AuthSlider = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
 
-	const ButtonLeft = <AuthIconButton onClick={handleBack} disabled={activeStep === 0}>
-		<Icon icon={ArrowLeft}/>
-	</AuthIconButton>
+	const ButtonLeft = (
+		<AuthIconButton onClick={handleBack} disabled={activeStep === 0}>
+			<Icon icon={ICON_COLLECTION.arrow_left_outlined} />
+		</AuthIconButton>
+	);
 
-	const ButtonRight = <AuthIconButton onClick={handleNext} disabled={activeStep === maxSteps - 1}>
-		<Icon icon={ArrowRight}/>
-	</AuthIconButton>
+	const ButtonRight = (
+		<AuthIconButton onClick={handleNext} disabled={activeStep === maxSteps - 1}>
+			<Icon icon={ICON_COLLECTION.arrow_right_outlined} />
+		</AuthIconButton>
+	);
 
 	return (
-		<Box sx={{ maxWidth: '560px', flexGrow: 1 }}>
+		<Box sx={{ maxWidth: '560px', flexGrow: 1, mb: '38px' }}>
 			<QuoteContainer>
-				<QuoteIconStyled icon={QuoteIcon}/>
+				<QuoteIconStyled icon={ICON_COLLECTION.quote} />
 				{steps[activeStep].description}
 				<Avatar
 					alt="Remy Sharp"
 					src="https://politeka.net/crops/c3f33f/360x0/1/0/2019/11/12/C02RGv1hy3O3PcANSkg1ENxLbLXtJoypIiQlrTmN.jpeg"
-					sx={{ width: 100, height: 100, mt: 4 }}
+					sx={{ width: 100, height: 100, mt: 3.5, mb: 0.5 }}
 				/>
-				<Typography variant={'h1'}>
-					Rebecca Philips
-				</Typography>
-				<Typography variant={'caption'}>
-					Marketing Manager
-				</Typography>
+				<Typography variant="h1">Rebecca Philips</Typography>
+				<UserDesc variant="caption">Marketing Manager</UserDesc>
 			</QuoteContainer>
 			<MobileStepper
-				sx={{background: 'transparent', mt: 10}}
+				sx={{
+					background: 'transparent',
+					mt: 10,
+					p: '8px 0',
+					ml: '-8px',
+					mr: '-8px',
+				}}
 				variant="dots"
 				steps={maxSteps}
 				position="static"
@@ -111,5 +123,4 @@ export const AuthSlider = () => {
 			/>
 		</Box>
 	);
-}
-
+};

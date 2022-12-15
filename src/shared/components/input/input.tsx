@@ -1,4 +1,4 @@
-import React, { useId } from 'react';
+import React, { forwardRef, InputHTMLAttributes, useId } from 'react';
 import { InputLabel } from '@mui/material';
 import { InputBase, InputBaseProps } from '@mui/material';
 import { styled, css } from '@mui/material/styles';
@@ -34,8 +34,11 @@ const AppLabel = styled(InputLabel)(
 );
 
 const InputContainer = styled('label')`
-	margin: 32px 0;
 	display: block;
+`;
+
+const HelperText = styled('div')`
+	margin-top: 4px;
 `;
 
 const ErrorText = styled('div')(
@@ -46,44 +49,40 @@ const ErrorText = styled('div')(
 	`,
 );
 
-interface InputProps {
-	autoComplete?: InputBaseProps['autoComplete'];
-	label: string;
-	placeholder: InputBaseProps['placeholder'];
+export interface InputProps {
+	className?: string;
+	type?: InputHTMLAttributes<HTMLInputElement>['type'];
+	autoComplete?: InputHTMLAttributes<HTMLInputElement>['autoComplete'];
+	label?: string;
+	placeholder?: InputHTMLAttributes<HTMLInputElement>['placeholder'];
 	error?: InputBaseProps['error'];
-	type?: InputBaseProps['type'];
-	name?: InputBaseProps['name'],
+	helperText?: React.ReactNode;
+	errorText?: React.ReactNode;
+	name?: InputHTMLAttributes<HTMLInputElement>['name'];
 	endAdornment?: InputBaseProps['endAdornment'];
-	autoFocus?: InputBaseProps['autoFocus'];
+	startAdornment?: InputBaseProps['startAdornment'];
+	autoFocus?: InputHTMLAttributes<HTMLInputElement>['autoFocus'];
+	tabIndex?: InputHTMLAttributes<HTMLInputElement>['tabIndex'];
+	onClick?: InputHTMLAttributes<HTMLInputElement>['onClick'];
+	onChange?: InputHTMLAttributes<HTMLInputElement>['onChange'];
+	onBlur?: InputHTMLAttributes<HTMLInputElement>['onBlur'];
+	onFocus?: InputHTMLAttributes<HTMLInputElement>['onFocus'];
 }
 
-export const Input: React.FC<InputProps> = ({
-	label,
-	autoComplete,
-	autoFocus,
-	placeholder,
-	error,
-	type,
-	name,
-	endAdornment,
-}) => {
+const RootInput: React.ForwardRefRenderFunction<
+	HTMLInputElement,
+	InputProps
+> = ({ className, label, helperText, error, errorText, ...props }, ref) => {
 	const id = useId();
 
 	return (
-		<InputContainer>
+		<InputContainer className={className} htmlFor={id}>
 			<AppLabel htmlFor={id}>{label}</AppLabel>
-			<AppInput
-				autoComplete={autoComplete}
-				autoFocus={autoFocus}
-				fullWidth
-				id={id}
-				name={name}
-				placeholder={placeholder}
-				error={error}
-				type={type}
-				endAdornment={endAdornment}
-			/>
-			{error && <ErrorText>Error text</ErrorText>}
+			<AppInput inputRef={ref} id={id} fullWidth {...props} />
+			{helperText && <HelperText>{helperText}</HelperText>}
+			{error && <ErrorText>{errorText}</ErrorText>}
 		</InputContainer>
 	);
 };
+
+export const Input = forwardRef(RootInput);
