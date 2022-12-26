@@ -62,7 +62,7 @@ const MenuContainer = styled.aside<AppMenuProps>`
 	width: 81px;
 	border-right: 1px solid #eeedf1;
 	padding: 40px 15px 32px;
-	color: ${({ theme }) => theme.palette.primary.contrastText};
+	color: ${({ theme }) => theme.palette.primary.light};
 	overflow: hidden;
 	transition: width 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
 
@@ -138,7 +138,7 @@ const UserInfo = styled.div`
 const StyledNavLink = styled(NavLink)(
 	({ theme }) => css`
 		padding: 13px 15px;
-		color: ${theme.palette.primary.contrastText};
+		color: ${theme.palette.primary.light};
 		display: flex;
 		align-items: center;
 		border-radius: 10px;

@@ -17,11 +17,6 @@ const Title = styled(Typography)`
 	text-align: center;
 `;
 
-const Description = styled(Typography)`
-	max-width: 424px;
-	text-align: center;
-`;
-
 const Container = styled('div')`
 	display: flex;
 	flex-direction: column;
@@ -38,9 +33,9 @@ const Footer = styled(Typography)`
 export const LoginPage = () => {
 
 	const loginMutation = useMutation(AuthApi.login, {
-		onSuccess: async (token) => {
-			const userData: IToken = jwtDecode(token);
-			LocalStorageService.set('token', token);
+		onSuccess: async (data) => {
+			const userData: IToken = jwtDecode(data.accessToken);
+			LocalStorageService.set('token', data.accessToken);
 
 			setAuthUserData(userData);
 		},

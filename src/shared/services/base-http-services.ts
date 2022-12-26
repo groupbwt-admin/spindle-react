@@ -67,4 +67,16 @@ export class BaseHttpServices {
 
 		return response as unknown as Promise<R>;
 	}
+
+	async patch<T = any, R = AxiosResponse<T>, D = any>(
+		url: string,
+		data?: any,
+		config?: AxiosRequestConfig<any> | undefined,
+	): Promise<R> {
+		const response = await axios.patch(url, data, config);
+
+		this.onResponse(response);
+
+		return response as unknown as Promise<R>;
+	}
 }

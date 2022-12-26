@@ -46,6 +46,7 @@ const ErrorText = styled('div')(
 		font-size: 0.75rem;
 		color: ${theme.palette.error.main};
 		padding: 4px 24px 0;
+		white-space: pre-line;
 	`,
 );
 

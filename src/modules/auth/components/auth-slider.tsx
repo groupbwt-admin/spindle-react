@@ -29,8 +29,6 @@ const steps = [
 
 const QuoteContainer = styled(Box)(
 	({ theme }) => css`
-		max-height: 444px;
-		height: 370px;
 		max-width: 560px;
 		padding: 32px;
 		padding-top: 42px;
