@@ -30,7 +30,7 @@ const schema = yup
 				}
 
 				if (Object.keys(errors).length) {
-					return createError({ message: Object.values(errors).join(',  ') });
+					return createError({ message: Object.values(errors).map(error => '– '+ error).join('\n') });
 				}
 
 				return true;
@@ -40,7 +40,7 @@ const schema = yup
 			.string()
 			.oneOf(
 				[yup.ref('password')],
-				"Confirmation password doesn't match password",
+				"The password confirmation does not match",
 			)
 			.required(),
 	})

@@ -34,7 +34,7 @@ export const ForgotPasswordPage = () => {
 	const [isFormSent, setIsFormSent] = useState(false);
 
 	const forgotPasswordMutation = useMutation(AuthApi.forgotPassword,{
-		onSettled: () => {
+		onSuccess: () => {
 		setIsFormSent(true);
 	},
 	})

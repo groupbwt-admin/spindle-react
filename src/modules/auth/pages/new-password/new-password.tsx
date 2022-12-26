@@ -8,6 +8,7 @@ import jwtDecode from "jwt-decode";
 import {LocalStorageService} from "shared/services/local-storage-service";
 import {setAuthUserData} from "app/store/auth/actions";
 import {Typography} from "shared/components/typography/typography";
+import {useSearchParams} from "react-router-dom";
 
 const LoginContainer = styled('div')`
 	display: flex;
@@ -28,6 +29,7 @@ const Description = styled(Typography)`
 `;
 
 export const NewPasswordPage = () => {
+	const [searchParams, setSearchParams] = useSearchParams();
 
 	const updatePasswordMutation = useMutation(AuthApi.setNewPassword, {
 		onSuccess: async (token) => {
@@ -39,7 +41,10 @@ export const NewPasswordPage = () => {
 	});
 
 	const handleSubmit = (data) => {
-		updatePasswordMutation.mutate(data)
+		const token = searchParams.get("token");
+		if(token) {
+			updatePasswordMutation.mutate({token: token, password: data.password})
+		}
 	}
 
 	return <LoginContainer>

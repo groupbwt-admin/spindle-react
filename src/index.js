@@ -11,8 +11,8 @@ const theme = createTheme({
 	palette: {
 		primary: {
 			main: '#2F48D1',
-			light: '#F3F5F7',
-			contrastText: '#8192E2'
+			light: '#8192E2',
+			contrastText: '#FFFFFF'
 		},
 		info: {
 			main: '#FFFFFF',
@@ -34,6 +34,7 @@ const theme = createTheme({
 		fontFamily: "'Catamaran', sans-serif",
 		h1: {
 			fontSize: '32px',
+			lineHeight: '52px',
 			fontWeight: 700,
 			color: '#231D2C',
 		},
@@ -63,6 +64,7 @@ const theme = createTheme({
 			},
 		},
 		MuiButton: {
+			color: '#FFFFFF',
 			disabled: {
 				backgroundColor: '#C8CCDA',
 			},
@@ -77,6 +79,23 @@ const theme = createTheme({
 				},
 			},
 		},
+		MuiTab: {
+			styleOverrides: {
+				root: {
+					textTransform: 'none',
+					opacity: 1,
+					fontSize: '18px',
+					paddingLeft: 0,
+					marginRight: '32px',
+					color: '#828CB1',
+					transition: 'color 0.3s ease',
+					"&.Mui-selected": {
+						"fontWeight": "700",
+						"color": "#231D2C"
+					}
+				},
+			}
+		}
 	},
 });
 

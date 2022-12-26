@@ -52,13 +52,20 @@ const schema = yup
 				}
 
 				if (Object.keys(errors).length) {
-					return createError({ message: Object.values(errors).join(',  ') });
+					return createError({
+						message: Object.values(errors)
+							.map((error) => '– ' + error)
+							.join('\n'),
+					});
 				}
 
 				return true;
 			},
 		}),
-		confirmPassword: yup.string().oneOf([yup.ref('password')]).required(),
+		confirmPassword: yup
+			.string()
+			.oneOf([yup.ref('password')], 'The password confirmation does not match')
+			.required(),
 	})
 	.defined();
 
@@ -66,10 +73,13 @@ type RegisterFormData = yup.InferType<typeof schema>;
 
 interface RegisterFormProps {
 	isLoading: boolean;
-	onSubmit: (data: RegisterFormData) => void
+	onSubmit: (data: RegisterFormData) => void;
 }
 
-export const RegisterForm: React.FC<RegisterFormProps> = ({isLoading, onSubmit}) => {
+export const RegisterForm: React.FC<RegisterFormProps> = ({
+	isLoading,
+	onSubmit,
+}) => {
 	const {
 		register,
 		handleSubmit,
@@ -110,7 +120,11 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({isLoading, onSubmit})
 				error={!!errors.confirmPassword}
 				errorText={errors.confirmPassword?.message as string}
 			/>
-			<Button label="Verify Email Address" type="submit" isLoading={isLoading}/>
+			<Button
+				label="Verify Email Address"
+				type="submit"
+				isLoading={isLoading}
+			/>
 		</Box>
 	);
 };

@@ -10,14 +10,18 @@ export interface ForgotPasswordDataDto {
 	usernameOrEmail: string;
 }
 
+export interface VerifyEmailDataDto {
+	token: string;
+}
+
 export interface SetNewPasswordDto {
 	token: string;
 	password: string;
 }
 
 interface AuthApiInterface {
-	login: (data: LoginDataDto) => Promise<string>;
-	logout: () => Promise<AxiosResponse<any>>;
+	login: (data: LoginDataDto) => Promise<{accessToken: string}>;
+	verifyEmail: (data: VerifyEmailDataDto) => Promise<string>;
 	forgotPassword: (data: ForgotPasswordDataDto) => Promise<string>;
 	setNewPassword: (data: SetNewPasswordDto) => Promise<string>;
 }
@@ -34,30 +38,35 @@ export class AuthApiService implements AuthApiInterface {
 		const payload = await this.http.post<
 			AxiosError<{ error: string; status: number }>,
 			AxiosResponse<string>
-		>(`/login`, data, undefined);
+		>(`/auth/register`, data, undefined);
 
 		return payload.data;
 
 	};
 
-	login = async (data: LoginDataDto): Promise<string> => {
+	login = async (data: LoginDataDto): Promise<{accessToken: string}> => {
 
 			const payload = await this.http.post<
 				AxiosError<{ error: string; status: number }>,
-				AxiosResponse<string>
-			>(`/login`, data, undefined);
+				AxiosResponse<{accessToken: string}>
+			>(`/auth/log-in`, data, undefined);
 
 			return payload.data;
 
 	};
 
-	logout = (): Promise<AxiosResponse<any>> => {
-		return this.http.get(`/logout`);
-	};
+	verifyEmail = async (data: VerifyEmailDataDto): Promise<string> => {
+		const payload = await this.http.post<
+			AxiosError<{ error: string; status: number }>,
+			AxiosResponse<string>
+		>(`/email/confirm`, data, undefined);
+
+		return payload.data;
+	}
 
 	forgotPassword = async (data: ForgotPasswordDataDto): Promise<string> => {
 		const payload = await this.http.post(
-			`/api/corepublic/reset/password/request`,
+			`/auth/reset-password`,
 			data,
 			undefined,
 		);
@@ -66,7 +75,7 @@ export class AuthApiService implements AuthApiInterface {
 	};
 
 	setNewPassword = async (data: SetNewPasswordDto): Promise<string> => {
-		const payload = await this.http.post(`/api/corepublic/reset/password/response`, data);
+		const payload = await this.http.patch(`/auth/reset-password`, data);
 		return payload.data.data
 	};
 }
