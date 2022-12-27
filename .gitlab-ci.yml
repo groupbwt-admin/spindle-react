@@ -1,5 +1,3 @@
-image: node:14.18.0
-
 .base_autodeploy_script: &base_autodeploy_script
   - eval $(ssh-agent -s)
   - ssh-add <(echo "$SSH_PRIVATE_KEY")
