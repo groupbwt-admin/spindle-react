@@ -2,9 +2,6 @@
   "name": "spindle_frontend",
   "version": "0.1.0",
   "private": true,
-	"engines": {
-    "node": "14.17.1"
-  },
   "dependencies": {
     "@emotion/babel-plugin": "^11.10.5",
     "@emotion/react": "^11.10.5",
