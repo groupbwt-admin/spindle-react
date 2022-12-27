@@ -23,7 +23,7 @@ deploy-current-branche:
       - $CI_COMMIT_REF_NAME == $AUTO_DEPLOY_BRANCH
 
 manual-deploy:
-  image: groupbwt/gitlab-runner-envoy-node:latest
+  image: node:14.5.0
   script:
     - *base_autodeploy_script
   when: manual
