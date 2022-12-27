@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './app/app';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from 'react-router-dom';
-import { createTheme, ThemeProvider } from '@mui/material';
+import {BrowserRouter} from 'react-router-dom';
+import {createTheme, ThemeProvider} from '@mui/material';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {ReactQueryDevtools} from "react-query/devtools";
 
@@ -109,8 +109,8 @@ root.render(
 		<ThemeProvider theme={theme}>
 			<QueryClientProvider client={queryClient}>
 				<BrowserRouter>
-					<App />
-					<ReactQueryDevtools initialIsOpen={false} />
+					<App/>
+					<ReactQueryDevtools initialIsOpen={false}/>
 				</BrowserRouter>
 			</QueryClientProvider>
 		</ThemeProvider>
