@@ -6,7 +6,6 @@ import { Box } from '@mui/material';
 import { Input } from 'shared/components/input/input';
 import { PasswordInput } from 'shared/components/input/password-input';
 import { Button } from 'shared/components/button/button';
-import { GoogleButton } from 'modules/auth/components/google-button';
 import { css, styled } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import {
@@ -16,6 +15,7 @@ import {
 import { AuthLink } from 'modules/auth/components/link';
 import { AUTH_ROUTES } from 'shared/config/routes';
 import { Typography } from 'shared/components/typography/typography';
+import { GoogleAuthButtonWidget } from 'shared/widgets/google-auth-button/google-auth-button';
 
 const StyledInput = styled(Input)`
 	margin-top: 47px;
@@ -72,10 +72,13 @@ type LoginFormData = yup.InferType<typeof schema>;
 
 interface LoginFormProps {
 	isLoading: boolean;
-	onSubmit: (data: LoginFormData) => void
+	onSubmit: (data: LoginFormData) => void;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({isLoading, onSubmit}) => {
+export const LoginForm: React.FC<LoginFormProps> = ({
+	isLoading,
+	onSubmit,
+}) => {
 	const {
 		register,
 		handleSubmit,
@@ -84,14 +87,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({isLoading, onSubmit}) => {
 		resolver: yupResolver(schema),
 	});
 
-
 	return (
 		<Box
 			sx={{ width: 400 }}
 			component={'form'}
 			onSubmit={handleSubmit(onSubmit)}
 		>
-			<GoogleButton label="Sign In with Google" />
+			<GoogleAuthButtonWidget label="Sign In with Google" />
 			<StyledDivider>or</StyledDivider>
 			<StyledInput
 				type="email"
