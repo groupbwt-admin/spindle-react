@@ -28,7 +28,10 @@ type DecodedGoogleUserToken = {
 };
 
 interface UseGoogleLoginParams {
-	onSuccess?: (res: DecodedGoogleUserToken) => void;
+	onSuccess?: (
+		userData: DecodedGoogleUserToken,
+		res: GoogleRequestResponse,
+	) => void;
 	onFailure?: (error: any) => void;
 	onRequest?: () => void;
 	onScriptLoadFailure?: () => void;
@@ -76,7 +79,7 @@ export const useGoogleLogin = ({
 					callback: (res: GoogleRequestResponse) => {
 						const userInfo: DecodedGoogleUserToken = jwtDecode(res.credential);
 
-						onSuccess(userInfo);
+						onSuccess(userInfo, res);
 					},
 				};
 
