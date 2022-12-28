@@ -90,7 +90,7 @@ export const useGoogleLogin = ({
 	useEffect(() => {
 		let unmounted = false;
 		const onLoadFailure = onScriptLoadFailure || onFailure;
-		setIsLoading(true)
+		setIsLoading(true);
 		loadScript(
 			document,
 			'script',
@@ -110,14 +110,14 @@ export const useGoogleLogin = ({
 						window.gapi.auth2.init(params).then(
 							(res) => {
 								if (!unmounted) {
-									setIsLoaded(true);
-									setIsLoading(false)
+									setIsLoading(false);
 									const signedIn = isSignedIn && res.isSignedIn.get();
 									onAutoLoadFinished(signedIn);
 									if (signedIn) {
 										handleSigninSuccess(res.currentUser.get());
 									}
 								}
+								setIsLoaded(true);
 							},
 							(err) => {
 								console.log(err);
@@ -134,16 +134,19 @@ export const useGoogleLogin = ({
 									return;
 								}
 								if (isSignedIn && GoogleAuth.isSignedIn.get()) {
-									setIsLoaded(true);
 									onAutoLoadFinished(true);
 									handleSigninSuccess(GoogleAuth.currentUser.get());
 								} else {
-									setIsLoaded(true);
 									onAutoLoadFinished(false);
 								}
+								setIsLoaded(true);
+								setIsLoading(false);
 							},
 							(err) => {
+								console.log(err);
 								onFailure(err);
+								setIsLoaded(false);
+								setIsLoading(false);
 							},
 						);
 					}
