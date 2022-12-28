@@ -1,3 +1,5 @@
 export interface IToken {
-	username: string
+	email?: string;
+	firstName?: string;
+	lastName?: string;
 }

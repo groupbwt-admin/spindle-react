@@ -20,7 +20,7 @@ export interface SetNewPasswordDto {
 }
 
 interface AuthApiInterface {
-	login: (data: LoginDataDto) => Promise<{accessToken: string}>;
+	login: (data: LoginDataDto) => Promise<{ accessToken: string }>;
 	verifyEmail: (data: VerifyEmailDataDto) => Promise<string>;
 	forgotPassword: (data: ForgotPasswordDataDto) => Promise<string>;
 	setNewPassword: (data: SetNewPasswordDto) => Promise<string>;
@@ -34,35 +34,31 @@ export class AuthApiService implements AuthApiInterface {
 	}
 
 	register = async (data: LoginDataDto): Promise<string> => {
-
 		const payload = await this.http.post<
 			AxiosError<{ error: string; status: number }>,
 			AxiosResponse<string>
 		>(`/auth/register`, data, undefined);
 
 		return payload.data;
-
 	};
 
-	login = async (data: LoginDataDto): Promise<{accessToken: string}> => {
+	login = async (data: LoginDataDto): Promise<{ accessToken: string }> => {
+		const payload = await this.http.post<
+			AxiosError<{ error: string; status: number }>,
+			AxiosResponse<{ accessToken: string }>
+		>(`/auth/log-in`, data, undefined);
 
-			const payload = await this.http.post<
-				AxiosError<{ error: string; status: number }>,
-				AxiosResponse<{accessToken: string}>
-			>(`/auth/log-in`, data, undefined);
-
-			return payload.data;
-
+		return payload.data;
 	};
 
 	verifyEmail = async (data: VerifyEmailDataDto): Promise<string> => {
 		const payload = await this.http.post<
 			AxiosError<{ error: string; status: number }>,
 			AxiosResponse<string>
-		>(`/email/confirm`, data, undefined);
+		>(`/email/confirm?token=${data.token}`);
 
 		return payload.data;
-	}
+	};
 
 	forgotPassword = async (data: ForgotPasswordDataDto): Promise<string> => {
 		const payload = await this.http.post(
@@ -76,7 +72,7 @@ export class AuthApiService implements AuthApiInterface {
 
 	setNewPassword = async (data: SetNewPasswordDto): Promise<string> => {
 		const payload = await this.http.patch(`/auth/reset-password`, data);
-		return payload.data.data
+		return payload.data.data;
 	};
 }
 
