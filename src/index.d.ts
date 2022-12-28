@@ -6,5 +6,6 @@ declare module '@mui/private-theming' {
 }
 
 declare interface Window {
-	gapi?: gapi;
+	google?: google;
+	onGoogleLibraryLoad?: onGoogleLibraryLoad;
 }

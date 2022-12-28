@@ -1,89 +1,61 @@
 import React, { useState, useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
 import { loadScript, removeScript } from '../utils/script-helper';
 
+type GoogleRequestResponse = {
+	clientId: string;
+	client_id: string;
+	credential: string;
+	select_by: string;
+};
+
+type DecodedGoogleUserToken = {
+	iss: string;
+	nbf: number;
+	aud: string;
+	sub: string;
+	hd: string;
+	email: string;
+	email_verified: boolean;
+	azp: string;
+	name: string;
+	picture: string;
+	given_name: string;
+	family_name: string;
+	iat: number;
+	exp: number;
+	jti: string;
+};
+
 interface UseGoogleLoginParams {
-	onSuccess?: (res: {
-		googleId: string;
-		tokenObj: { access_token: string };
-		tokenId: string;
-		accessToken: string;
-		profileObj: {
-			googleId: string;
-			imageUrl: string;
-			email: string;
-			name: string;
-			givenName: string;
-			familyName: string;
-		};
-	}) => void;
-	onAutoLoadFinished?: (flag: boolean) => void;
+	onSuccess?: (res: DecodedGoogleUserToken) => void;
 	onFailure?: (error: any) => void;
 	onRequest?: () => void;
 	onScriptLoadFailure?: () => void;
 	clientId: string;
 	autoLoad?: boolean;
-	isSignedIn?: boolean;
-	fetchBasicProfile?: boolean;
-	redirectUri?: string;
-	uxMode?: boolean;
+	uxMode?: 'popup' | 'redirect';
 	jsSrc?: string;
-	prompt?: boolean;
 }
 
 export const useGoogleLogin = ({
 	onSuccess = () => {},
-	onAutoLoadFinished = () => {},
 	onFailure = () => {},
-	onRequest = () => {},
 	onScriptLoadFailure,
 	clientId,
 	autoLoad,
-	isSignedIn,
-	fetchBasicProfile,
-	redirectUri,
-	uxMode,
-	jsSrc = 'https://apis.google.com/js/api.js',
-	prompt,
+	uxMode = 'redirect',
+	jsSrc = 'https://accounts.google.com/gsi/client',
 }: UseGoogleLoginParams) => {
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-	const [isError, setIsError] = useState(false);
-
-	function handleSigninSuccess(res) {
-		/*
-			offer renamed response keys to names that match use
-		*/
-		const basicProfile = res.getBasicProfile();
-		const authResponse = res.getAuthResponse(true);
-		res.googleId = basicProfile.getId();
-		res.tokenObj = authResponse;
-		res.tokenId = authResponse.id_token;
-		res.accessToken = authResponse.access_token;
-		res.profileObj = {
-			googleId: basicProfile.getId(),
-			imageUrl: basicProfile.getImageUrl(),
-			email: basicProfile.getEmail(),
-			name: basicProfile.getName(),
-			givenName: basicProfile.getGivenName(),
-			familyName: basicProfile.getFamilyName(),
-		};
-		onSuccess(res);
-	}
 
 	function signIn(e?: React.MouseEvent) {
 		if (e) {
 			e.preventDefault(); // to prevent submit if used within form
 		}
 		if (isLoaded) {
-			const GoogleAuth = window.gapi.auth2.getAuthInstance();
-			const options = {
-				prompt,
-			};
-			onRequest();
-			GoogleAuth.signIn(options).then(
-				(res) => handleSigninSuccess(res),
-				(err) => onFailure(err),
-			);
+			window.google.accounts.id.prompt();
 		}
 	}
 
@@ -91,6 +63,7 @@ export const useGoogleLogin = ({
 		let unmounted = false;
 		const onLoadFailure = onScriptLoadFailure || onFailure;
 		setIsLoading(true);
+
 		loadScript(
 			document,
 			'script',
@@ -99,61 +72,24 @@ export const useGoogleLogin = ({
 			() => {
 				const params = {
 					client_id: clientId,
-					fetch_basic_profile: fetchBasicProfile,
 					ux_mode: uxMode,
-					redirect_uri: redirectUri,
+					callback: (res: GoogleRequestResponse) => {
+						const userInfo: DecodedGoogleUserToken = jwtDecode(res.credential);
+
+						onSuccess(userInfo);
+					},
 				};
 
-				window.gapi.load('auth2', () => {
-					const GoogleAuth = window.gapi.auth2.getAuthInstance();
-					if (!GoogleAuth) {
-						window.gapi.auth2.init(params).then(
-							(res) => {
-								if (!unmounted) {
-									setIsLoading(false);
-									const signedIn = isSignedIn && res.isSignedIn.get();
-									onAutoLoadFinished(signedIn);
-									if (signedIn) {
-										handleSigninSuccess(res.currentUser.get());
-									}
-								}
-								setIsLoaded(true);
-							},
-							(err) => {
-								console.log(err);
-								setIsLoading(false);
-								setIsLoaded(false);
-								onAutoLoadFinished(false);
-								onLoadFailure(err);
-							},
-						);
-					} else {
-						GoogleAuth.then(
-							() => {
-								if (unmounted) {
-									return;
-								}
-								if (isSignedIn && GoogleAuth.isSignedIn.get()) {
-									onAutoLoadFinished(true);
-									handleSigninSuccess(GoogleAuth.currentUser.get());
-								} else {
-									onAutoLoadFinished(false);
-								}
-								setIsLoaded(true);
-								setIsLoading(false);
-							},
-							(err) => {
-								console.log(err);
-								onFailure(err);
-								setIsLoaded(false);
-								setIsLoading(false);
-							},
-						);
-					}
-				});
+				window.onGoogleLibraryLoad = () => {
+					setIsLoaded(true);
+					setIsLoading(false);
+					window.google.accounts.id.initialize(params);
+				};
 			},
 			(err) => {
 				onLoadFailure(err);
+				setIsLoaded(false);
+				setIsLoading(false);
 			},
 		);
 
@@ -169,5 +105,5 @@ export const useGoogleLogin = ({
 		}
 	}, [isLoaded]);
 
-	return { signIn, isLoaded, isLoading, isError };
+	return { signIn, isLoaded, isLoading };
 };
