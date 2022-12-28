@@ -64,7 +64,7 @@ export const NewPasswordForm: React.FC<NewPasswordProps> = ({onSubmit}) => {
 
 	return (
 		<Box
-			sx={{ width: 400 }}
+			sx={{ width: '100%', maxWidth: 400 }}
 			component={'form'}
 			onSubmit={handleSubmit(onSubmit)}
 		>

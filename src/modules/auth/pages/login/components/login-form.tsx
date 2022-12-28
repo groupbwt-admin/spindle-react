@@ -89,7 +89,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
 	return (
 		<Box
-			sx={{ width: 400 }}
+			sx={{ width: '100%', maxWidth: 400 }}
 			component={'form'}
 			onSubmit={handleSubmit(onSubmit)}
 		>

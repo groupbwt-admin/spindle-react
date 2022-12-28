@@ -22,6 +22,7 @@ const Container = styled('div')`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	width: 100%;
 	margin-top: 22px;
 `;
 
@@ -31,7 +32,6 @@ const Footer = styled(Typography)`
 `;
 
 export const LoginPage = () => {
-
 	const loginMutation = useMutation(AuthApi.login, {
 		onSuccess: async (data) => {
 			const userData: IToken = jwtDecode(data.accessToken);
@@ -50,14 +50,11 @@ export const LoginPage = () => {
 			<Title variant="h1" component="h1">
 				Sign in to Spindle
 			</Title>
-					<LoginForm
-						onSubmit={handleSubmit}
-						isLoading={loginMutation.isLoading}
-					/>
-					<Footer variant="subtitle2">
-						Don’t have an account?{' '}
-						<AuthLink to={AUTH_ROUTES.REGISTER.path}>Sign up</AuthLink>
-					</Footer>
+			<LoginForm onSubmit={handleSubmit} isLoading={loginMutation.isLoading} />
+			<Footer variant="subtitle2">
+				Don’t have an account?{' '}
+				<AuthLink to={AUTH_ROUTES.REGISTER.path}>Sign up</AuthLink>
+			</Footer>
 		</Container>
 	);
 };
