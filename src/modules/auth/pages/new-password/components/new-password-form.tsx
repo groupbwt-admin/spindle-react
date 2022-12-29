@@ -54,7 +54,10 @@ interface NewPasswordProps {
 	onSubmit: (data: NewPasswordFormData) => void;
 }
 
-export const NewPasswordForm: React.FC<NewPasswordProps> = ({ onSubmit }) => {
+export const NewPasswordForm: React.FC<NewPasswordProps> = ({
+	onSubmit,
+	isLoading,
+}) => {
 	const {
 		register,
 		handleSubmit,
@@ -87,7 +90,12 @@ export const NewPasswordForm: React.FC<NewPasswordProps> = ({ onSubmit }) => {
 				autoFocus
 				{...register('confirmPassword')}
 			/>
-			<Button label="Submit and Sign in" type="submit" fullWidth />
+			<Button
+				label="Submit and Sign in"
+				type="submit"
+				isLoading={isLoading}
+				fullWidth
+			/>
 		</Box>
 	);
 };
