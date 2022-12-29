@@ -60,7 +60,9 @@ export class AuthApiService implements AuthApiInterface {
 		this.http = httpService;
 	}
 
-	register = async (data: RegisterDataDto): Promise<{ accessToken: string; user: IUser }> => {
+	register = async (
+		data: RegisterDataDto,
+	): Promise<{ accessToken: string; user: IUser }> => {
 		const payload = await this.http.post(`/auth/register`, data, undefined);
 
 		return payload.data;
@@ -98,10 +100,13 @@ export class AuthApiService implements AuthApiInterface {
 		return payload.data.data;
 	};
 
-	resetPassword = async (data: ResetPasswordDto): Promise<string> => {
+	resetPassword = async ({
+		token,
+		...data
+	}: ResetPasswordDto): Promise<string> => {
 		const payload = await this.http.patch(
-			`/auth/reset-password?token=${data.token}`,
-			{ password: 'password' },
+			`/auth/reset-password?token=${token}`,
+			data,
 			undefined,
 		);
 

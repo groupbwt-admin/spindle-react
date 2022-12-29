@@ -1,10 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import { styled } from '@mui/material/styles';
 import { SetUpProfileForm } from 'modules/auth/pages/set-up-profile/components/set-up-profile-form';
 import { UserApi } from 'app/api/user-api/user-api';
-import { VIDEO_ROUTES } from 'shared/config/routes';
+import { userState } from 'app/store/user/state';
 
 const ProfileContainer = styled('div')`
 	display: flex;
@@ -15,11 +14,9 @@ const ProfileContainer = styled('div')`
 `;
 
 export const SetUpProfilePage = () => {
-	const navigate = useNavigate();
-
 	const setUpProfileMutation = useMutation(UserApi.updateProfile, {
 		onSuccess: async (userData) => {
-			navigate(VIDEO_ROUTES.MY_VIDEOS.path);
+			userState.setProfile(userData);
 		},
 		onError: async (error) => {
 			console.log(error);

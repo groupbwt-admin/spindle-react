@@ -6,10 +6,7 @@ import { AuthLink } from 'modules/auth/components/link';
 import { AUTH_ROUTES } from 'shared/config/routes';
 import { useMutation } from 'react-query';
 import { AuthApi } from 'app/api/auth-api/auth-api';
-import { LocalStorageService } from 'shared/services/local-storage-service';
-import { setAuthUserData } from 'app/store/auth/actions';
-import { IToken } from 'shared/types/token';
-import jwtDecode from 'jwt-decode';
+import { authState } from 'app/store/auth/state';
 
 const Title = styled(Typography)`
 	margin-bottom: 36px;
@@ -33,10 +30,7 @@ const Footer = styled(Typography)`
 export const LoginPage = () => {
 	const loginMutation = useMutation(AuthApi.login, {
 		onSuccess: async (data) => {
-			const userData: IToken = jwtDecode(data.accessToken);
-			LocalStorageService.set('token', data.accessToken);
-
-			setAuthUserData(userData);
+			authState.setUser(data.accessToken);
 		},
 	});
 

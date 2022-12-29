@@ -1,5 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
+import { useMutation } from 'react-query';
 import { Typography } from 'shared/components/typography/typography';
 import { AuthLink } from 'modules/auth/components/link';
 import { AUTH_ROUTES } from 'shared/config/routes';
@@ -7,12 +8,8 @@ import {
 	RegisterForm,
 	RegisterFormData,
 } from 'modules/auth/pages/register/components/register-form';
-import { useMutation } from 'react-query';
 import { AuthApi } from 'app/api/auth-api/auth-api';
-import {IToken} from "shared/types/token";
-import jwtDecode from "jwt-decode";
-import {LocalStorageService} from "shared/services/local-storage-service";
-import {setAuthUserData} from "app/store/auth/actions";
+import { authState } from 'app/store/auth/state';
 
 const Title = styled(Typography)`
 	margin-top: 20px;
@@ -37,11 +34,8 @@ const LoginFootnote = styled(Typography)`
 export const RegisterPage = () => {
 	const registerMutation = useMutation(AuthApi.register, {
 		onSuccess: (data) => {
-			const userData: IToken = jwtDecode(data.accessToken);
-			LocalStorageService.set('token', data.accessToken);
-
-			setAuthUserData(userData);
-		}
+			authState.setUser(data.accessToken);
+		},
 	});
 
 	const handleSubmit = (data: RegisterFormData) => {

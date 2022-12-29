@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography } from 'shared/components/typography/typography';
 import { ForgotPasswordForm } from 'modules/auth/pages/forgot-password/components/forgot-password-form';
 import { BackButton } from 'modules/auth/components/back-button';
-import {useMutation} from "react-query";
-import {AuthApi} from "app/api/auth-api/auth-api";
-import {ConfirmationMessage} from "modules/auth/components/confirmation-message";
+import { useMutation } from 'react-query';
+import { AuthApi } from 'app/api/auth-api/auth-api';
+import { ConfirmationMessage } from 'modules/auth/components/confirmation-message';
 
 const Container = styled('div')`
 	display: flex;
@@ -34,15 +34,15 @@ const Description = styled(Typography)`
 export const ForgotPasswordPage = () => {
 	const [isFormSent, setIsFormSent] = useState(false);
 
-	const forgotPasswordMutation = useMutation(AuthApi.forgotPassword,{
+	const forgotPasswordMutation = useMutation(AuthApi.forgotPassword, {
 		onSuccess: () => {
-		setIsFormSent(true);
-	},
-	})
+			setIsFormSent(true);
+		},
+	});
 
 	const handleSubmit = (data) => {
-		forgotPasswordMutation.mutate(data)
-	}
+		forgotPasswordMutation.mutate(data);
+	};
 
 	return (
 		<>
@@ -52,16 +52,24 @@ export const ForgotPasswordPage = () => {
 						title="Check your email"
 						description="We've sent a link to your email address to reset your password."
 					/>
-				) : (<>
-					<Title variant="h1" component="h1">
-						Forgot your password?
-					</Title>
-					<Description variant="body1">Enter your registered email address and we’ll send you a link to reset your password.</Description>
-					<ForgotPasswordForm onSubmit={handleSubmit} isLoading={forgotPasswordMutation.isLoading}/>
-					<Footer variant="subtitle2">
-						<BackButton />
-					</Footer>
-				</>)}
+				) : (
+					<>
+						<Title variant="h1" component="h1">
+							Forgot your password?
+						</Title>
+						<Description variant="body1">
+							Enter your registered email address and we’ll send you a link to
+							reset your password.
+						</Description>
+						<ForgotPasswordForm
+							onSubmit={handleSubmit}
+							isLoading={forgotPasswordMutation.isLoading}
+						/>
+						<Footer variant="subtitle2">
+							<BackButton />
+						</Footer>
+					</>
+				)}
 			</Container>
 		</>
 	);

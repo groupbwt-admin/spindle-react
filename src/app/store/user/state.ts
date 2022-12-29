@@ -6,6 +6,7 @@ interface IUserState {
 	user: IUser | null;
 	isLoading: boolean;
 	getProfile: () => Promise<void>;
+	setProfile: (user: IUser) => void;
 }
 
 export const userState = proxy<IUserState>({
@@ -15,5 +16,8 @@ export const userState = proxy<IUserState>({
 		this.isLoading = true;
 		this.user = await UserApi.getProfile();
 		this.isLoading = false;
+	},
+	setProfile(user: IUser) {
+		this.user = user;
 	},
 });

@@ -3,12 +3,9 @@ import { styled } from '@mui/material/styles';
 import { NewPasswordForm } from 'modules/auth/pages/new-password/components/new-password-form';
 import { useMutation } from 'react-query';
 import { AuthApi } from 'app/api/auth-api/auth-api';
-import { IToken } from 'shared/types/token';
-import jwtDecode from 'jwt-decode';
-import { LocalStorageService } from 'shared/services/local-storage-service';
-import { setAuthUserData } from 'app/store/auth/actions';
 import { Typography } from 'shared/components/typography/typography';
 import { useSearchParams } from 'react-router-dom';
+import { authState } from 'app/store/auth/state';
 
 const LoginContainer = styled('div')`
 	display: flex;
@@ -34,19 +31,7 @@ export const NewPasswordPage = () => {
 
 	const resetPasswordMutation = useMutation(AuthApi.resetPassword, {
 		onSuccess: async (token) => {
-			const userData: IToken = jwtDecode(token);
-			LocalStorageService.set('token', token);
-
-			setAuthUserData(userData);
-		},
-	});
-
-	const updatePasswordMutation = useMutation(AuthApi.setNewPassword, {
-		onSuccess: async (token) => {
-			const userData: IToken = jwtDecode(token);
-			LocalStorageService.set('token', token);
-
-			setAuthUserData(userData);
+			authState.setUser(token);
 		},
 	});
 
@@ -67,7 +52,7 @@ export const NewPasswordPage = () => {
 			</Description>
 			<NewPasswordForm
 				onSubmit={handleSubmit}
-				isLoading={updatePasswordMutation.isLoading}
+				isLoading={resetPasswordMutation.isLoading}
 			/>
 		</LoginContainer>
 	);

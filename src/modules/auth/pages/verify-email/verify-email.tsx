@@ -1,17 +1,14 @@
 import React, { useEffect } from 'react';
+import { useMutation } from 'react-query';
 import { styled } from '@mui/material/styles';
 import { Typography } from 'shared/components/typography/typography';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from 'shared/components/button/button';
-import { useMutation } from 'react-query';
-import { setAuthUserData } from 'app/store/auth/actions';
 import { AuthApi, VerifyEmailDataDto } from 'app/api/auth-api/auth-api';
-import { IToken } from 'shared/types/token';
-import jwtDecode from 'jwt-decode';
-import { LocalStorageService } from 'shared/services/local-storage-service';
 import { CircularProgress } from '@mui/material';
 import { AUTH_ROUTES } from 'shared/config/routes';
 import { AxiosError } from 'axios';
+import { authState } from 'app/store/auth/state';
 
 const Title = styled(Typography)`
 	margin-top: 20px;
@@ -34,10 +31,7 @@ export const VerifyEmailPage = () => {
 		VerifyEmailDataDto
 	>(AuthApi.verifyEmail, {
 		onSuccess: async (token) => {
-			const userData: IToken = jwtDecode(token);
-			LocalStorageService.set('token', token);
-
-			setAuthUserData(userData);
+			authState.setUser(token);
 		},
 	});
 

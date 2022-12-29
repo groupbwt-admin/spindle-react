@@ -1,10 +1,8 @@
-import { setAuthUserData } from 'app/store/auth/actions';
-import { LocalStorageService } from 'shared/services/local-storage-service';
+import {authState} from "app/store/auth/state";
 
 export function useLogout() {
 	const logout = () => {
-		LocalStorageService.remove('token');
-		setAuthUserData(null);
+		authState.setUser(null);
 	};
 
 	return {
