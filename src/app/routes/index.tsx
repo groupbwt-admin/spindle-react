@@ -10,6 +10,7 @@ import { NewPasswordPage } from 'modules/auth/pages/new-password/new-password';
 import { SetUpProfilePage } from 'modules/auth/pages/set-up-profile/set-up-profile';
 import { VerifyEmailPage } from 'modules/auth/pages/verify-email/verify-email';
 import { HomePage } from 'modules/videos/pages/home';
+import { MustVerifyEmailPage } from 'modules/auth/pages/must-verify-email/must-verify-email';
 
 export const AppRoutes: React.FC = () => {
 	const routes = useRoutes([
@@ -44,6 +45,10 @@ export const AppRoutes: React.FC = () => {
 				{
 					path: AUTH_ROUTES.VERIFY_EMAIL.path,
 					element: <VerifyEmailPage />,
+				},
+				{
+					path: AUTH_ROUTES.MUST_VERIFY_EMAIL.path,
+					element: <MustVerifyEmailPage />,
 				},
 			],
 		},

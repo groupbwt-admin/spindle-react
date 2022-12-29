@@ -27,7 +27,7 @@ export const ConfirmationMessage: React.FC<
 			<Title variant="h1">{title}</Title>
 			<Description variant="body1">{description}</Description>
 			<Description variant="body1">Didn&apos;t receive the email?</Description>
-			<Button label="Resend Email" />
+			<Button label="Resend Email" fullWidth />
 		</Box>
 	);
 };

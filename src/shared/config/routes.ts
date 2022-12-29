@@ -19,6 +19,9 @@ export const AUTH_ROUTES = {
 	SET_UP_PROFILE: {
 		path: '/auth/fill-account',
 	},
+	MUST_VERIFY_EMAIL: {
+		path: '/auth/must-verify-email',
+	},
 	VERIFY_EMAIL: {
 		path: '/auth/verify-email',
 	},

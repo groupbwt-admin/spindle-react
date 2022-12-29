@@ -1,14 +1,24 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { BaseHttpServices } from 'shared/services/base-http-services';
-import {IUser} from "shared/types/user";
+import { IUser } from 'shared/types/user';
 
 export interface LoginDataDto {
 	username: string;
 	password: string;
 }
 
+export interface RegisterDataDto {
+	email: string;
+	password: string;
+	confirmPassword: string;
+}
+
 export interface ForgotPasswordDataDto {
 	usernameOrEmail: string;
+}
+
+export interface VerifyEmailDataDto {
+	token: string;
 }
 
 export interface VerifyEmailDataDto {
@@ -32,11 +42,15 @@ export interface GoogleAuthDto {
 
 interface AuthApiInterface {
 	login: (data: LoginDataDto) => Promise<{ accessToken: string }>;
+	register: (data: RegisterDataDto) => Promise<{ accessToken: string }>;
 	verifyEmail: (data: VerifyEmailDataDto) => Promise<string>;
+	resendConfirmationLink: () => Promise<void>;
 	forgotPassword: (data: ForgotPasswordDataDto) => Promise<string>;
 	resetPassword: (data: ResetPasswordDto) => Promise<string>;
 	setNewPassword: (data: SetNewPasswordDto) => Promise<string>;
-	googleAuth: (data: GoogleAuthDto) => Promise<{ accessToken: string, user: IUser }>;
+	googleAuth: (
+		data: GoogleAuthDto,
+	) => Promise<{ accessToken: string; user: IUser }>;
 }
 
 export class AuthApiService implements AuthApiInterface {
@@ -46,11 +60,8 @@ export class AuthApiService implements AuthApiInterface {
 		this.http = httpService;
 	}
 
-	register = async (data: LoginDataDto): Promise<string> => {
-		const payload = await this.http.post<
-			AxiosError<{ error: string; status: number }>,
-			AxiosResponse<string>
-		>(`/auth/register`, data, undefined);
+	register = async (data: RegisterDataDto): Promise<{ accessToken: string; user: IUser }> => {
+		const payload = await this.http.post(`/auth/register`, data, undefined);
 
 		return payload.data;
 	};
@@ -71,6 +82,10 @@ export class AuthApiService implements AuthApiInterface {
 		>(`/email/confirm?token=${data.token}`);
 
 		return payload.data;
+	};
+
+	resendConfirmationLink = async (): Promise<void> => {
+		await this.http.post(`/email/resend-confirmation-link`);
 	};
 
 	forgotPassword = async (data: ForgotPasswordDataDto): Promise<string> => {
@@ -98,7 +113,9 @@ export class AuthApiService implements AuthApiInterface {
 		return payload.data;
 	};
 
-	googleAuth = async (data: GoogleAuthDto): Promise<{ accessToken: string, user: IUser }> => {
+	googleAuth = async (
+		data: GoogleAuthDto,
+	): Promise<{ accessToken: string; user: IUser }> => {
 		const payload = await this.http.post(`/google-auth`, data);
 		return payload.data;
 	};

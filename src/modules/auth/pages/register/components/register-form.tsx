@@ -61,7 +61,7 @@ const schema = yup
 
 				return true;
 			},
-		}),
+		}).required(),
 		confirmPassword: yup
 			.string()
 			.oneOf([yup.ref('password')], 'The password confirmation does not match')
@@ -69,7 +69,7 @@ const schema = yup
 	})
 	.defined();
 
-type RegisterFormData = yup.InferType<typeof schema>;
+export type RegisterFormData = yup.InferType<typeof schema>;
 
 interface RegisterFormProps {
 	isLoading: boolean;

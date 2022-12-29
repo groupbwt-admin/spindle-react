@@ -1,18 +1,22 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
-import { isLoggedIn } from 'app/store/auth/selects';
+import { authUserData, isLoggedIn } from 'app/store/auth/selects';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 export const AuthGuard: React.FC<React.PropsWithChildren> = ({ children }) => {
-	const isUserAuth = isLoggedIn()
+	const isUserAuth = isLoggedIn();
+	const userData = authUserData();
 	const location = useLocation();
 	const routerState = location.state as { from?: string };
 
+	const isMustVerifyEmailPage =
+		location.pathname === AUTH_ROUTES.MUST_VERIFY_EMAIL.path;
+
 	const isAuthPage = location.pathname.startsWith(AUTH_ROUTES.ROOT.path);
 
-	if (!isUserAuth && !isAuthPage)
+	if (!isUserAuth && !isAuthPage) {
 		return (
 			<Navigate
 				to={AUTH_ROUTES.LOGIN.path}
@@ -20,6 +24,31 @@ export const AuthGuard: React.FC<React.PropsWithChildren> = ({ children }) => {
 				replace
 			/>
 		);
+	}
+
+	if (isUserAuth && !userData!.isEmailConfirmed && !isMustVerifyEmailPage) {
+		return (
+			<Navigate
+				to={AUTH_ROUTES.MUST_VERIFY_EMAIL.path}
+				state={{ from: location }}
+				replace
+			/>
+		);
+	}
+
+	if (isUserAuth && !userData!.isEmailConfirmed && isMustVerifyEmailPage) {
+		return children;
+	}
+
+	if (!isUserAuth && isMustVerifyEmailPage) {
+		return (
+			<Navigate
+				to={AUTH_ROUTES.LOGIN.path}
+				state={{ from: location }}
+				replace
+			/>
+		);
+	}
 
 	if (isUserAuth && isAuthPage) {
 		return (
