@@ -22,10 +22,13 @@ type ForgotPasswordData = yup.InferType<typeof schema>;
 
 interface ForgotPasswordProps {
 	isLoading: boolean;
-	onSubmit: (data: ForgotPasswordData) => void
+	onSubmit: (data: ForgotPasswordData) => void;
 }
 
-export const ForgotPasswordForm: React.FC<ForgotPasswordProps> = ({isLoading, onSubmit}) => {
+export const ForgotPasswordForm: React.FC<ForgotPasswordProps> = ({
+	isLoading,
+	onSubmit,
+}) => {
 	const {
 		register,
 		handleSubmit,
@@ -50,7 +53,7 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordProps> = ({isLoading, on
 				autoFocus
 				{...register('email')}
 			/>
-			<Button label="Send" type="submit" isLoading={isLoading}/>
+			<Button label="Send" type="submit" isLoading={isLoading} fullWidth />
 		</Box>
 	);
 };

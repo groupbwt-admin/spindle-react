@@ -44,6 +44,7 @@ export const GoogleAuthButtonWidget: React.FC<GoogleAuthButtonWidgetProps> = ({
 			label={label}
 			isLoading={isLoading || googleAuthMutation.isLoading}
 			disabled={!isLoaded}
+			fullWidth
 			onClick={handleClick}
 		/>
 	);

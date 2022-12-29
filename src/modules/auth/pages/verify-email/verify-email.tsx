@@ -73,7 +73,12 @@ export const VerifyEmailPage = () => {
 			<Description variant="body1">
 				Now you can sign in with your email and password
 			</Description>
-			<Button component={Link} to={AUTH_ROUTES.LOGIN.path} label="Sign in" />
+			<Button
+				component={Link}
+				to={AUTH_ROUTES.LOGIN.path}
+				label="Sign in"
+				fullWidth
+			/>
 		</>
 	);
 };

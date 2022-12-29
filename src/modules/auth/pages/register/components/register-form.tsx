@@ -2,12 +2,11 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 import { Input } from 'shared/components/input/input';
 import { PasswordInput } from 'shared/components/input/password-input';
 import { Button } from 'shared/components/button/button';
 import { css, styled } from '@mui/material/styles';
-import { Divider } from '@mui/material';
 import {
 	validatePassword,
 	ValidationPasswordErrors,
@@ -31,6 +30,7 @@ const StyledDivider = styled(Divider)(
 		&::before {
 			border-color: ${theme.palette.text.secondary};
 		}
+
 		&::after {
 			border-color: ${theme.palette.text.secondary};
 		}
@@ -124,6 +124,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 				label="Verify Email Address"
 				type="submit"
 				isLoading={isLoading}
+				fullWidth
 			/>
 		</Box>
 	);

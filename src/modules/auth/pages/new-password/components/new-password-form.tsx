@@ -30,7 +30,11 @@ const schema = yup
 				}
 
 				if (Object.keys(errors).length) {
-					return createError({ message: Object.values(errors).map(error => '– '+ error).join('\n') });
+					return createError({
+						message: Object.values(errors)
+							.map((error) => '– ' + error)
+							.join('\n'),
+					});
 				}
 
 				return true;
@@ -38,10 +42,7 @@ const schema = yup
 		}),
 		confirmPassword: yup
 			.string()
-			.oneOf(
-				[yup.ref('password')],
-				"The password confirmation does not match",
-			)
+			.oneOf([yup.ref('password')], 'The password confirmation does not match')
 			.required(),
 	})
 	.defined();
@@ -50,10 +51,10 @@ type NewPasswordFormData = yup.InferType<typeof schema>;
 
 interface NewPasswordProps {
 	isLoading: boolean;
-	onSubmit: (data: NewPasswordFormData) => void
+	onSubmit: (data: NewPasswordFormData) => void;
 }
 
-export const NewPasswordForm: React.FC<NewPasswordProps> = ({onSubmit}) => {
+export const NewPasswordForm: React.FC<NewPasswordProps> = ({ onSubmit }) => {
 	const {
 		register,
 		handleSubmit,
@@ -86,7 +87,7 @@ export const NewPasswordForm: React.FC<NewPasswordProps> = ({onSubmit}) => {
 				autoFocus
 				{...register('confirmPassword')}
 			/>
-			<Button label="Submit and Sign in" type="submit" />
+			<Button label="Submit and Sign in" type="submit" fullWidth />
 		</Box>
 	);
 };
