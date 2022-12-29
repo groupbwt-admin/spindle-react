@@ -4,15 +4,15 @@ import App from './app/app';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material';
-import {QueryClient, QueryClientProvider} from 'react-query';
-import {ReactQueryDevtools} from "react-query/devtools";
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 const theme = createTheme({
 	palette: {
 		primary: {
 			main: '#2F48D1',
 			light: '#8192E2',
-			contrastText: '#FFFFFF'
+			contrastText: '#FFFFFF',
 		},
 		info: {
 			main: '#FFFFFF',
@@ -46,6 +46,9 @@ const theme = createTheme({
 		caption: {
 			fontSize: '1.125rem',
 			opacity: 0.5,
+		},
+		subtitle2: {
+			fontSize: '12px',
 		},
 	},
 	components: {
@@ -89,19 +92,19 @@ const theme = createTheme({
 					marginRight: '32px',
 					color: '#828CB1',
 					transition: 'color 0.3s ease',
-					"&.Mui-selected": {
-						"fontWeight": "700",
-						"color": "#231D2C"
-					}
+					'&.Mui-selected': {
+						fontWeight: '700',
+						color: '#231D2C',
+					},
 				},
-			}
-		}
+			},
+		},
 	},
 });
 
 const queryClient = new QueryClient();
 
-console.log(theme)
+console.log(theme);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
