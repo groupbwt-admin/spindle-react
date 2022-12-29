@@ -90,6 +90,7 @@ export const useGoogleLogin = ({
 				};
 			},
 			(err) => {
+				console.log(err);
 				onLoadFailure(err);
 				setIsLoaded(false);
 				setIsLoading(false);
