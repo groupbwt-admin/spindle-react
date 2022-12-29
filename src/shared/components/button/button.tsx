@@ -25,6 +25,16 @@ const StyledSpinnerContainer = styled('span')`
 	justify-content: center;
 `;
 
+const StyledLabel = styled('span')<{ isLoading?: boolean }>`
+	position: relative;
+	opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
+	transition: opacity 0.3s ease;
+`;
+
+const SPINNER_COLOR = {
+	info: 'primary',
+};
+
 export interface ButtonProps {
 	component?: React.ElementType;
 	className?: string;
@@ -51,7 +61,7 @@ const ButtonRoot: React.ForwardRefRenderFunction<
 		variant,
 		type,
 		startIcon,
-		color,
+		color = 'primary',
 		to,
 		isLoading,
 		disabled,
@@ -59,12 +69,6 @@ const ButtonRoot: React.ForwardRefRenderFunction<
 	},
 	ref,
 ) => {
-	const StyledLabel = styled('span')`
-		position: relative;
-		opacity: ${isLoading ? 0 : 1};
-		transition: opacity 0.3s ease;
-	`;
-
 	return (
 		<StyledButton
 			ref={ref}
@@ -83,10 +87,10 @@ const ButtonRoot: React.ForwardRefRenderFunction<
 		>
 			{isLoading && (
 				<StyledSpinnerContainer>
-					<CircularProgress color="info" size={24} />
+					<CircularProgress color={SPINNER_COLOR[color] ?? 'info'} size={24} />
 				</StyledSpinnerContainer>
 			)}
-			<StyledLabel>{label}</StyledLabel>
+			<StyledLabel isLoading={isLoading}>{label}</StyledLabel>
 		</StyledButton>
 	);
 };
