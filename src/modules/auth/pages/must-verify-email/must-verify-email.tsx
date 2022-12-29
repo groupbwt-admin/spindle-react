@@ -6,7 +6,7 @@ import { AuthApi } from 'app/api/auth-api/auth-api';
 import { Button } from 'shared/components/button/button';
 import { ButtonList } from 'shared/components/button-list/button-list';
 import { useLogout } from 'shared/hooks/use-logout';
-import { selectUserData } from 'app/store/user/selects';
+import { selectAuthUserData } from 'app/store/auth/selects';
 
 const Title = styled(Typography)`
 	margin-top: 20px;
@@ -33,7 +33,7 @@ const StyledButtonList = styled(ButtonList)`
 `;
 
 export const MustVerifyEmailPage = () => {
-	const userData = selectUserData();
+	const authUserData = selectAuthUserData();
 	const useLogoutHook = useLogout();
 	const resendRegisterMutation = useMutation(AuthApi.resendConfirmationLink);
 
@@ -48,9 +48,11 @@ export const MustVerifyEmailPage = () => {
 	return (
 		<Container>
 			<Title variant="h1">Verify your email address</Title>
-			<Description variant="body1">{`Almost there! We’ve sent an email to ${
-				userData!.email
-			} to verify your email address and activate your account. The link in the email will expire in 24 hours.`}</Description>
+			<Description variant="body1">
+				Almost there! We’ve sent an email to {authUserData!.email} to verify
+				your email address and activate your account. The link in the email will
+				expire in 24 hours.
+			</Description>
 			<Description variant="body1">Didn&apos;t receive the email?</Description>
 			<StyledButtonList>
 				<Button

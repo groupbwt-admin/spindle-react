@@ -5,3 +5,5 @@ import { authState } from 'app/store/auth/state';
 export const selectIsLoggedIn = () => useSnapshot(authState).isLoggedIn;
 // eslint-disable-next-line react-hooks/rules-of-hooks
 export const selectAuthUserData = () => useSnapshot(authState).user;
+// eslint-disable-next-line react-hooks/rules-of-hooks
+export const selectIsEmailConfirmed = () => useSnapshot(authState).user?.isEmailConfirmed;
