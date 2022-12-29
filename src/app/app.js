@@ -1,12 +1,13 @@
 import './app.scss';
-import { AppRoutes } from './routes'
+import { AppRoutes } from './routes';
+import { AppLayout } from '../shared/layout/app-layout';
 
 function App() {
-  return (
-    <>
-			<AppRoutes/>
-    </>
-  );
+	return (
+		<AppLayout>
+			<AppRoutes />
+		</AppLayout>
+	);
 }
 
 export default App;
