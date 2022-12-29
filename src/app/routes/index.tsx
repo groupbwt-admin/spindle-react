@@ -1,24 +1,24 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
-import {AUTH_ROUTES, VIDEO_ROUTES} from 'shared/config/routes';
+import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import { LoginPage } from 'modules/auth/pages/login/login';
 import { RegisterPage } from 'modules/auth/pages/register/register';
 import { ForgotPasswordPage } from 'modules/auth/pages/forgot-password/forgot-password';
 import { AuthPage } from 'modules/auth/pages/auth';
-import {NewPasswordPage} from 'modules/auth/pages/new-password/new-password'
-import {SetUpProfilePage} from "modules/auth/pages/set-up-profile/set-up-profile";
-import {AuthGuard} from "app/auth-guard";
-import {HomePage} from "modules/videos/pages/home";
+import { NewPasswordPage } from 'modules/auth/pages/new-password/new-password';
+import { SetUpProfilePage } from 'modules/auth/pages/set-up-profile/set-up-profile';
+import { AuthGuard } from 'app/auth-guard';
+import { HomePage } from 'modules/videos/pages/home';
 
 export const AppRoutes: React.FC = () => {
 	const routes = useRoutes([
 		{
 			path: AUTH_ROUTES.ROOT.path,
-			element:
+			element: (
 				<AuthGuard>
 					<AuthPage />
 				</AuthGuard>
-			,
+			),
 			children: [
 				{
 					path: AUTH_ROUTES.LOGIN.path,
@@ -34,18 +34,22 @@ export const AppRoutes: React.FC = () => {
 				},
 				{
 					path: AUTH_ROUTES.NEW_PASSWORD.path,
-					element: <NewPasswordPage />
+					element: <NewPasswordPage />,
 				},
 				{
 					path: AUTH_ROUTES.SET_UP_PROFILE.path,
-					element: <SetUpProfilePage />
-				}
+					element: <SetUpProfilePage />,
+				},
 			],
 		},
 
 		{
 			path: VIDEO_ROUTES.MY_VIDEOS.path,
-			element: <HomePage />
+			element: (
+				<AuthGuard>
+					<HomePage />
+				</AuthGuard>
+			),
 		},
 
 		{
