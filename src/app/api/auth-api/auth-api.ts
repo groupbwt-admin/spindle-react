@@ -1,5 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { BaseHttpServices } from 'shared/services/base-http-services';
+import {IUser} from "shared/types/user";
 
 export interface LoginDataDto {
 	username: string;
@@ -25,12 +26,17 @@ export interface SetNewPasswordDto {
 	newDuplicatePassword: string;
 }
 
+export interface GoogleAuthDto {
+	token: string;
+}
+
 interface AuthApiInterface {
 	login: (data: LoginDataDto) => Promise<{ accessToken: string }>;
 	verifyEmail: (data: VerifyEmailDataDto) => Promise<string>;
 	forgotPassword: (data: ForgotPasswordDataDto) => Promise<string>;
 	resetPassword: (data: ResetPasswordDto) => Promise<string>;
 	setNewPassword: (data: SetNewPasswordDto) => Promise<string>;
+	googleAuth: (data: GoogleAuthDto) => Promise<{ accessToken: string, user: IUser }>;
 }
 
 export class AuthApiService implements AuthApiInterface {
@@ -89,7 +95,12 @@ export class AuthApiService implements AuthApiInterface {
 
 	setNewPassword = async (data: SetNewPasswordDto): Promise<string> => {
 		const payload = await this.http.patch(`/auth/reset-password`, data);
-		return payload.data.data;
+		return payload.data;
+	};
+
+	googleAuth = async (data: GoogleAuthDto): Promise<{ accessToken: string, user: IUser }> => {
+		const payload = await this.http.post(`/google-auth`, data);
+		return payload.data;
 	};
 }
 

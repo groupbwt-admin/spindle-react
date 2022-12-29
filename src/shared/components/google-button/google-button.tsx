@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { styled } from '@mui/material/styles';
-import { Button } from 'shared/components/button/button';
+import { Button, ButtonProps } from 'shared/components/button/button';
 import { Icon } from 'shared/components/icon/icon';
 import { ReactComponent as GoogleIcon } from 'shared/components/icon/collection/google.svg';
 
@@ -13,16 +13,20 @@ const GoogleIconStyled = styled(GoogleIcon)`
 	height: 23px;
 `;
 
-interface GoogleButtonProps {
-	label: string;
-}
+type GoogleButtonProps = ButtonProps;
 
-export const GoogleButton: React.FC<GoogleButtonProps> = ({ label }) => {
+const GoogleButtonRoot: React.ForwardRefRenderFunction<
+	HTMLButtonElement,
+	GoogleButtonProps
+> = (props, ref) => {
 	return (
 		<StyledButton
-			label={label}
+			ref={ref}
 			startIcon={<Icon icon={GoogleIconStyled} />}
 			color="info"
+			{...props}
 		/>
 	);
 };
+
+export const GoogleButton = forwardRef(GoogleButtonRoot);

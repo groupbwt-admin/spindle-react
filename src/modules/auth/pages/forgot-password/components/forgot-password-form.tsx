@@ -36,7 +36,7 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordProps> = ({isLoading, on
 
 	return (
 		<Box
-			sx={{ width: 400 }}
+			sx={{ width: '100%', maxWidth: 400 }}
 			component={'form'}
 			onSubmit={handleSubmit(onSubmit)}
 		>

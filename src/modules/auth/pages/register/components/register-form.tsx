@@ -6,13 +6,13 @@ import { Box } from '@mui/material';
 import { Input } from 'shared/components/input/input';
 import { PasswordInput } from 'shared/components/input/password-input';
 import { Button } from 'shared/components/button/button';
-import { GoogleButton } from 'modules/auth/components/google-button';
 import { css, styled } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 import {
 	validatePassword,
 	ValidationPasswordErrors,
 } from 'shared/utils/validation-password';
+import { GoogleAuthButtonWidget } from 'shared/widgets/google-auth-button/google-auth-button';
 
 const StyledInput = styled(Input)`
 	margin-top: 47px;
@@ -90,11 +90,11 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
 	return (
 		<Box
-			sx={{ width: 400 }}
+			sx={{ width: '100%', maxWidth: 400 }}
 			component={'form'}
 			onSubmit={handleSubmit(onSubmit)}
 		>
-			<GoogleButton label="Sign Up with Google" />
+			<GoogleAuthButtonWidget label="Sign Up with Google" />
 			<StyledDivider>or</StyledDivider>
 			<StyledInput
 				type="email"

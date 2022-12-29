@@ -21,6 +21,8 @@ const Container = styled('div')`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	width: 100%;
+	margin-top: 22px;
 `;
 
 const Footer = styled(Typography)`

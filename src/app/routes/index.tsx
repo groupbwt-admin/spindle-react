@@ -1,15 +1,15 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
+import { AuthGuard } from 'app/auth-guard';
 import { LoginPage } from 'modules/auth/pages/login/login';
 import { RegisterPage } from 'modules/auth/pages/register/register';
 import { ForgotPasswordPage } from 'modules/auth/pages/forgot-password/forgot-password';
 import { AuthPage } from 'modules/auth/pages/auth';
 import { NewPasswordPage } from 'modules/auth/pages/new-password/new-password';
 import { SetUpProfilePage } from 'modules/auth/pages/set-up-profile/set-up-profile';
-import { AuthGuard } from 'app/auth-guard';
-import { HomePage } from 'modules/videos/pages/home';
 import { VerifyEmailPage } from 'modules/auth/pages/verify-email/verify-email';
+import { HomePage } from 'modules/videos/pages/home';
 
 export const AppRoutes: React.FC = () => {
 	const routes = useRoutes([
@@ -50,7 +50,11 @@ export const AppRoutes: React.FC = () => {
 
 		{
 			path: VIDEO_ROUTES.MY_VIDEOS.path,
-			element: <HomePage />,
+			element: (
+				<AuthGuard>
+					<HomePage />
+				</AuthGuard>
+			),
 		},
 
 		{

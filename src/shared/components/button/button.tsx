@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes } from 'react';
+import React, { ButtonHTMLAttributes, forwardRef } from 'react';
 import { styled } from '@mui/material/styles';
 import ExternalButton, {
 	ButtonProps as ExternalButtonProps,
@@ -24,7 +24,17 @@ const StyledSpinnerContainer = styled('span')`
 	justify-content: center;
 `;
 
-interface ButtonProps {
+const StyledLabel = styled('span')<{ isLoading?: boolean }>`
+	position: relative;
+	opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
+	transition: opacity 0.3s ease;
+`;
+
+const SPINNER_COLOR = {
+	info: 'primary',
+};
+
+export interface ButtonProps {
 	component?: React.ElementType;
 	className?: string;
 	type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
@@ -36,47 +46,55 @@ interface ButtonProps {
 	sx?: ExternalButtonProps['sx'];
 	fullWidth?: ExternalButtonProps['fullWidth'];
 	isLoading?: boolean;
+	disabled?: boolean;
+	onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
-	component,
-	className,
-	label,
-	variant,
-	type,
-	startIcon,
-	color,
-	to,
-	isLoading,
-	fullWidth,
-	children,
-}) => {
-	const StyledLabel = styled('span')`
-		position: relative;
-		opacity: ${isLoading ? 0 : 1};
-		transition: opacity 0.3s ease;
-	`;
-
+const ButtonRoot: React.ForwardRefRenderFunction<
+	HTMLButtonElement,
+	ButtonProps
+> = (
+	{
+		component,
+		className,
+		label,
+		variant,
+		type,
+		startIcon,
+		color = 'primary',
+		to,
+		isLoading,
+		disabled,
+		fullWidth,
+		onClick,
+	},
+	ref,
+) => {
 	return (
 		<StyledButton
+			ref={ref}
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			component={component}
 			to={to}
+			type={type}
 			className={className}
 			variant={variant || 'contained'}
 			disableElevation
-			type={type}
 			startIcon={startIcon}
 			color={color}
+			disabled={disabled}
 			fullWidth={fullWidth}
+			onClick={onClick}
 		>
 			{isLoading && (
 				<StyledSpinnerContainer>
-					<CircularProgress color="info" size={24} />
+					<CircularProgress color={SPINNER_COLOR[color] ?? 'info'} size={24} />
 				</StyledSpinnerContainer>
 			)}
-			<StyledLabel>{label}</StyledLabel>
+			<StyledLabel isLoading={isLoading}>{label}</StyledLabel>
 		</StyledButton>
 	);
 };
+
+export const Button = forwardRef(ButtonRoot);

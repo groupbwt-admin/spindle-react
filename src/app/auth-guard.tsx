@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import {AUTH_ROUTES, VIDEO_ROUTES} from "shared/config/routes";
-import {isLoggedIn} from "app/store/auth/selects";
+import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
+import { isLoggedIn } from 'app/store/auth/selects';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -22,7 +22,9 @@ export const AuthGuard: React.FC<React.PropsWithChildren> = ({ children }) => {
 		);
 
 	if (isUserAuth && isAuthPage) {
-		return <Navigate to={routerState?.from || VIDEO_ROUTES.MY_VIDEOS.path} replace />;
+		return (
+			<Navigate to={routerState?.from || VIDEO_ROUTES.MY_VIDEOS.path} replace />
+		);
 	}
 
 	return children || null;

@@ -13,7 +13,7 @@
   - envoy run deploy --remove_dir="$remove_dir" --server_dir="$SERVER_DIR_FRONT" --server_user_name="$SSH_USER_NAME" --server_host="$SSH_HOST"
 
 deploy-current-branche:
-  image: groupbwt/gitlab-runner-envoy-node:latest
+  image: naymkazp/gitlab-runner-envoy-node:16.14.2
   script:
     - *base_autodeploy_script
   only:
@@ -23,7 +23,7 @@ deploy-current-branche:
       - $CI_COMMIT_REF_NAME == $AUTO_DEPLOY_BRANCH
 
 manual-deploy:
-  image: groupbwt/gitlab-runner-envoy-node:latest
+  image: naymkazp/gitlab-runner-envoy-node:16.14.2
   script:
     - *base_autodeploy_script
   when: manual
