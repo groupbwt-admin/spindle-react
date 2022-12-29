@@ -1,4 +1,3 @@
-import { proxy } from 'valtio';
 import { proxyWithComputed } from 'valtio/utils';
 import { IToken } from 'shared/types/token';
 
