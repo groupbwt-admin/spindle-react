@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography } from 'shared/components/typography/typography';
 import { LoginForm } from 'modules/auth/pages/login/components/login-form';
@@ -12,8 +12,7 @@ import { IToken } from 'shared/types/token';
 import jwtDecode from 'jwt-decode';
 
 const Title = styled(Typography)`
-	margin-top: 20px;
-	margin-bottom: 24px;
+	margin-bottom: 36px;
 	text-align: center;
 `;
 
@@ -22,16 +21,14 @@ const Container = styled('div')`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	margin-top: 22px;
 `;
 
 const Footer = styled(Typography)`
 	position: absolute;
-	bottom: 10px;
+	bottom: 19px;
 `;
 
 export const LoginPage = () => {
-
 	const loginMutation = useMutation(AuthApi.login, {
 		onSuccess: async (data) => {
 			const userData: IToken = jwtDecode(data.accessToken);
@@ -50,14 +47,11 @@ export const LoginPage = () => {
 			<Title variant="h1" component="h1">
 				Sign in to Spindle
 			</Title>
-					<LoginForm
-						onSubmit={handleSubmit}
-						isLoading={loginMutation.isLoading}
-					/>
-					<Footer variant="subtitle2">
-						Don’t have an account?{' '}
-						<AuthLink to={AUTH_ROUTES.REGISTER.path}>Sign up</AuthLink>
-					</Footer>
+			<LoginForm onSubmit={handleSubmit} isLoading={loginMutation.isLoading} />
+			<Footer variant="subtitle2">
+				Don’t have an account?{' '}
+				<AuthLink to={AUTH_ROUTES.REGISTER.path}>Sign up</AuthLink>
+			</Footer>
 		</Container>
 	);
 };

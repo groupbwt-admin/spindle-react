@@ -2,13 +2,12 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 import { Input } from 'shared/components/input/input';
 import { PasswordInput } from 'shared/components/input/password-input';
 import { Button } from 'shared/components/button/button';
 import { GoogleButton } from 'modules/auth/components/google-button';
 import { css, styled } from '@mui/material/styles';
-import { Divider } from '@mui/material';
 import {
 	validatePassword,
 	ValidationPasswordErrors,
@@ -23,7 +22,7 @@ const StyledInput = styled(Input)`
 
 const StyledPasswordInput = styled(PasswordInput)`
 	margin-top: 36px;
-	margin-bottom: 40px;
+	margin-bottom: 36px;
 `;
 
 const StyledDivider = styled(Divider)(
@@ -34,6 +33,7 @@ const StyledDivider = styled(Divider)(
 		&::before {
 			border-color: ${theme.palette.text.secondary};
 		}
+
 		&::after {
 			border-color: ${theme.palette.text.secondary};
 		}
@@ -72,10 +72,13 @@ type LoginFormData = yup.InferType<typeof schema>;
 
 interface LoginFormProps {
 	isLoading: boolean;
-	onSubmit: (data: LoginFormData) => void
+	onSubmit: (data: LoginFormData) => void;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({isLoading, onSubmit}) => {
+export const LoginForm: React.FC<LoginFormProps> = ({
+	isLoading,
+	onSubmit,
+}) => {
 	const {
 		register,
 		handleSubmit,
@@ -83,7 +86,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({isLoading, onSubmit}) => {
 	} = useForm<LoginFormData>({
 		resolver: yupResolver(schema),
 	});
-
 
 	return (
 		<Box
@@ -117,7 +119,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({isLoading, onSubmit}) => {
 				error={!!errors.password}
 				errorText={errors.password?.message as string}
 			/>
-			<Button label="Sign in" type="submit" isLoading={isLoading} />
+			<Button label="Sign in" type="submit" isLoading={isLoading} fullWidth />
 		</Box>
 	);
 };
