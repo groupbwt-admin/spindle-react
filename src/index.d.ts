@@ -4,3 +4,8 @@ declare module '@mui/private-theming' {
 	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	interface DefaultTheme extends Theme {}
 }
+
+declare interface Window {
+	google?: google;
+	onGoogleLibraryLoad?: onGoogleLibraryLoad;
+}

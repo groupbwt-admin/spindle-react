@@ -57,7 +57,7 @@ export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 
 	return (
 		<Box
-			sx={{ width: 400 }}
+			sx={{ width: '100%', maxWidth: 400 }}
 			component={'form'}
 			onSubmit={handleSubmit(onSubmit)}
 		>
