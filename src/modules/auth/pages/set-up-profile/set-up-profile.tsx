@@ -5,6 +5,7 @@ import { useMutation } from 'react-query';
 import { setAuthUserData } from 'app/store/auth/actions';
 import { UserApi } from 'app/api/user-api/user-api';
 import { useNavigate } from 'react-router-dom';
+import { VIDEO_ROUTES } from 'shared/config/routes';
 
 const ProfileContainer = styled('div')`
 	display: flex;
@@ -20,7 +21,7 @@ export const SetUpProfilePage = () => {
 	const setUpProfileMutation = useMutation(UserApi.updateProfile, {
 		onSuccess: async (userData) => {
 			setAuthUserData(userData);
-			navigate('/');
+			navigate(VIDEO_ROUTES.MY_VIDEOS.path);
 		},
 		onError: async (error) => {
 			console.log(error);
