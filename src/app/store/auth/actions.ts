@@ -1,12 +1,6 @@
 import { authState } from 'app/store/auth/state';
+import { IToken } from 'shared/types/token';
 
-export interface UserData {
-	email?: string;
-	firstName?: string;
-	lastName?: string;
-	avatar?: string;
-}
-
-export const setAuthUserData = (data: UserData) => {
+export const setAuthUserData = (data: IToken | null) => {
 	authState.user = data;
 };
