@@ -4,13 +4,12 @@ import ExternalButton, {
 	ButtonProps as ExternalButtonProps,
 } from '@mui/material/Button';
 import { LinkProps } from 'react-router-dom';
-import {CircularProgress} from "@mui/material";
+import { CircularProgress } from '@mui/material';
 
 const StyledButton = styled(ExternalButton)`
 	position: relative;
 	padding: 17px 24px 15px;
 	border-radius: 60px;
-	width: 100%;
 	text-transform: none;
 `;
 
@@ -23,7 +22,7 @@ const StyledSpinnerContainer = styled('span')`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-`
+`;
 
 interface ButtonProps {
 	component?: React.ElementType;
@@ -35,6 +34,7 @@ interface ButtonProps {
 	startIcon?: ExternalButtonProps['startIcon'];
 	color?: ExternalButtonProps['color'];
 	sx?: ExternalButtonProps['sx'];
+	fullWidth?: ExternalButtonProps['fullWidth'];
 	isLoading?: boolean;
 }
 
@@ -47,15 +47,15 @@ export const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
 	startIcon,
 	color,
 	to,
-																																				 isLoading,
-	children
+	isLoading,
+	fullWidth,
+	children,
 }) => {
 	const StyledLabel = styled('span')`
 		position: relative;
-		opacity:  ${isLoading ? 0 : 1};
+		opacity: ${isLoading ? 0 : 1};
 		transition: opacity 0.3s ease;
-`
-
+	`;
 
 	return (
 		<StyledButton
@@ -69,11 +69,14 @@ export const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
 			type={type}
 			startIcon={startIcon}
 			color={color}
+			fullWidth={fullWidth}
 		>
-			{isLoading && <StyledSpinnerContainer><CircularProgress color="info" size={24}/></StyledSpinnerContainer>}
-			<StyledLabel>
-				{label}
-			</StyledLabel>
+			{isLoading && (
+				<StyledSpinnerContainer>
+					<CircularProgress color="info" size={24} />
+				</StyledSpinnerContainer>
+			)}
+			<StyledLabel>{label}</StyledLabel>
 		</StyledButton>
 	);
 };
