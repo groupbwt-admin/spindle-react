@@ -14,15 +14,22 @@ export interface VerifyEmailDataDto {
 	token: string;
 }
 
-export interface SetNewPasswordDto {
+export interface ResetPasswordDto {
 	token: string;
 	password: string;
+}
+
+export interface SetNewPasswordDto {
+	currentPassword: string;
+	newPassword: string;
+	newDuplicatePassword: string;
 }
 
 interface AuthApiInterface {
 	login: (data: LoginDataDto) => Promise<{ accessToken: string }>;
 	verifyEmail: (data: VerifyEmailDataDto) => Promise<string>;
 	forgotPassword: (data: ForgotPasswordDataDto) => Promise<string>;
+	resetPassword: (data: ResetPasswordDto) => Promise<string>;
 	setNewPassword: (data: SetNewPasswordDto) => Promise<string>;
 }
 
@@ -64,6 +71,16 @@ export class AuthApiService implements AuthApiInterface {
 		const payload = await this.http.post(
 			`/auth/reset-password`,
 			data,
+			undefined,
+		);
+
+		return payload.data.data;
+	};
+
+	resetPassword = async (data: ResetPasswordDto): Promise<string> => {
+		const payload = await this.http.patch(
+			`/auth/reset-password?token=${data.token}`,
+			{ password: 'password' },
 			undefined,
 		);
 
