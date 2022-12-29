@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { isLoggedIn } from 'app/store/auth/selects';
+import { selectIsLoggedIn } from 'app/store/auth/selects';
 import { MainLayout } from 'shared/layout/main-layout';
 import { userState } from 'app/store/user/state';
 import { selectIsLoadingUserData } from 'app/store/user/selects';
@@ -15,7 +15,7 @@ const SpinnerContainer = styled('div')`
 `;
 
 export const AppLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
-	const isUserAuth = isLoggedIn();
+	const isUserAuth = selectIsLoggedIn();
 	const isLoadingUserData = selectIsLoadingUserData();
 
 	useEffect(() => {

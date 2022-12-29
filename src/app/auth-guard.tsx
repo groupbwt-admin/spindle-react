@@ -1,13 +1,13 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
-import { authUserData, isLoggedIn } from 'app/store/auth/selects';
+import { selectAuthUserData, selectIsLoggedIn } from 'app/store/auth/selects';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 export const AuthGuard: React.FC<React.PropsWithChildren> = ({ children }) => {
-	const isUserAuth = isLoggedIn();
-	const userData = authUserData();
+	const isUserAuth = selectIsLoggedIn();
+	const userData = selectAuthUserData();
 	const location = useLocation();
 	const routerState = location.state as { from?: string };
 
