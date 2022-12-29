@@ -1,5 +1,12 @@
-import {authState} from "app/store/auth/state";
+import { authState } from 'app/store/auth/state';
 
-export const setAuthUserData = (data: {username : string}) => {
-	authState.user = data
+export interface UserData {
+	email?: string;
+	firstName?: string;
+	lastName?: string;
+	avatar?: string;
 }
+
+export const setAuthUserData = (data: UserData) => {
+	authState.user = data;
+};

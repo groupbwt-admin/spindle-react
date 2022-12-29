@@ -43,30 +43,34 @@ export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 	});
 
 	const [avatarError, setAvatarError] = useState<string>('');
-	const [avatar, setAvatar] = useState<string>('');
+	const [file, setFile] = useState<string>('');
 
 	const onAvatarChange = (files) => {
 		setAvatarError('');
 		const avatarUrl = URL.createObjectURL(files[0]);
-		setAvatar(avatarUrl);
+		setFile(avatarUrl);
 	};
 
 	const onAvatarDownloadError = (data) => {
 		setAvatarError('File is too big');
 	};
 
+	const handleSubmitSetUpProfileForm = (data) => {
+		onSubmit({ ...data, file });
+	};
+
 	return (
 		<Box
 			sx={{ width: 400 }}
 			component={'form'}
-			onSubmit={handleSubmit(onSubmit)}
+			onSubmit={handleSubmit(handleSubmitSetUpProfileForm)}
 		>
 			<AvatarUploader
 				onChange={onAvatarChange}
 				onError={onAvatarDownloadError}
 				errorMessage={avatarError}
 				maxSize={3000000}
-				avatar={avatar}
+				avatar={file}
 			/>
 			<StyledInput
 				type="first-name"
@@ -87,7 +91,12 @@ export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 				errorText={errors.lastName?.message as string}
 				{...register('lastName')}
 			/>
-			<StyledButton label="Continue" type="submit" isLoading={isLoading} />
+			<StyledButton
+				label="Continue"
+				type="submit"
+				isLoading={isLoading}
+				fullWidth
+			/>
 		</Box>
 	);
 };
