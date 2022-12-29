@@ -2,7 +2,7 @@
 
 export const AUTH_ROUTES = {
 	ROOT: {
-		path: '/auth'
+		path: '/auth',
 	},
 	LOGIN: {
 		path: '/auth/login',
@@ -19,10 +19,13 @@ export const AUTH_ROUTES = {
 	SET_UP_PROFILE: {
 		path: '/auth/fill-account',
 	},
+	VERIFY_EMAIL: {
+		path: '/auth/verify-email',
+	},
 };
 
 export const VIDEO_ROUTES = {
 	MY_VIDEOS: {
 		path: '/',
-	}
-}
+	},
+};
