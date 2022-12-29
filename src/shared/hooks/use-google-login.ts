@@ -1,37 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import jwtDecode from 'jwt-decode';
+import React, { useState, useEffect, useRef } from 'react';
 import { loadScript, removeScript } from '../utils/script-helper';
 
 type GoogleRequestResponse = {
-	clientId: string;
-	client_id: string;
-	credential: string;
-	select_by: string;
-};
-
-type DecodedGoogleUserToken = {
-	iss: string;
-	nbf: number;
-	aud: string;
-	sub: string;
+	access_token: string;
+	token_type: string;
+	expires_in: number;
+	scope: string;
+	authuser: string;
 	hd: string;
-	email: string;
-	email_verified: boolean;
-	azp: string;
-	name: string;
-	picture: string;
-	given_name: string;
-	family_name: string;
-	iat: number;
-	exp: number;
-	jti: string;
+	prompt: string;
 };
 
 interface UseGoogleLoginParams {
-	onSuccess?: (
-		userData: DecodedGoogleUserToken,
-		res: GoogleRequestResponse,
-	) => void;
+	onSuccess?: (res: GoogleRequestResponse) => void;
 	onFailure?: (error: any) => void;
 	onRequest?: () => void;
 	onScriptLoadFailure?: () => void;
@@ -52,13 +33,14 @@ export const useGoogleLogin = ({
 }: UseGoogleLoginParams) => {
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const tokenClient = useRef<{ requestAccessToken: () => void } | null>(null);
 
 	function signIn(e?: React.MouseEvent) {
 		if (e) {
 			e.preventDefault(); // to prevent submit if used within form
 		}
 		if (isLoaded) {
-			window.google.accounts.id.prompt();
+			tokenClient.current?.requestAccessToken();
 		}
 	}
 
@@ -76,17 +58,21 @@ export const useGoogleLogin = ({
 				const params = {
 					client_id: clientId,
 					ux_mode: uxMode,
+					scope: 'https://www.googleapis.com/auth/userinfo.profile',
 					callback: (res: GoogleRequestResponse) => {
-						const userInfo: DecodedGoogleUserToken = jwtDecode(res.credential);
-
-						onSuccess(userInfo, res);
+						onSuccess(res);
+					},
+					error_callback: (error) => {
+						console.log(error);
+						onFailure(error);
 					},
 				};
 
 				window.onGoogleLibraryLoad = () => {
 					setIsLoaded(true);
 					setIsLoading(false);
-					window.google.accounts.id.initialize(params);
+					tokenClient.current =
+						window.google.accounts.oauth2.initTokenClient(params);
 				};
 			},
 			(err) => {

@@ -29,8 +29,8 @@ export const GoogleAuthButtonWidget: React.FC<GoogleAuthButtonWidgetProps> = ({
 
 	const { signIn, isLoading, isLoaded } = useGoogleLogin({
 		clientId: GOOGLE_CLIENT_ID!,
-		onSuccess: (userData, res) => {
-			googleAuthMutation.mutate({ token: res.credential });
+		onSuccess: (res) => {
+			googleAuthMutation.mutate({ token: res.access_token });
 		},
 	});
 

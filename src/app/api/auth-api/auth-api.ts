@@ -83,7 +83,7 @@ export class AuthApiService implements AuthApiInterface {
 
 	googleAuth = async (data: GoogleAuthDto): Promise<{ accessToken: string, user: IUser }> => {
 		const payload = await this.http.post(`/google-auth`, data);
-		return payload.data.data;
+		return payload.data;
 	};
 }
 
