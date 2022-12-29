@@ -47,7 +47,7 @@ export const useGoogleLogin = ({
 	onScriptLoadFailure,
 	clientId,
 	autoLoad,
-	uxMode = 'redirect',
+	uxMode = 'popup',
 	jsSrc = 'https://accounts.google.com/gsi/client',
 }: UseGoogleLoginParams) => {
 	const [isLoaded, setIsLoaded] = useState(false);
