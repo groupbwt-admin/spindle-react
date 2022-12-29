@@ -52,14 +52,8 @@ const schema = yup
 			test: function (value, { createError }) {
 				const errors: ValidationPasswordErrors = validatePassword(value || '');
 
-				if (errors.hasNotValue) {
-					return createError({
-						message: Object.values(errors).join(',  '),
-					});
-				}
-
 				if (Object.keys(errors).length) {
-					return createError({ message: Object.values(errors).join(',  ') });
+					return createError({ message: Object.values(errors).join(';\n') });
 				}
 
 				return true;
