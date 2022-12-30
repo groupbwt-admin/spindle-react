@@ -22,7 +22,6 @@ const SpinnerContainer = styled('div')`
 export const AppLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const location = useLocation();
 	const isUserAuth = selectIsLoggedIn();
-	const isEmailConfirmed = selectIsEmailConfirmed();
 	const isLoadingUserData = selectIsLoadingUserData();
 	const isAuthLayout = location.pathname.startsWith(AUTH_ROUTES.ROOT.path);
 
