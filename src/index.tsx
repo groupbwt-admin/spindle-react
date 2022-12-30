@@ -1,11 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './app/app';
-import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import jwtDecode from 'jwt-decode';
+import { LocalStorageService } from './shared/services/local-storage-service';
+import reportWebVitals from './reportWebVitals';
+import { authState } from './app/store/auth/state';
+import App from './app/app';
+import { IToken } from './shared/types/token';
 
 const theme = createTheme({
 	palette: {
@@ -20,7 +24,6 @@ const theme = createTheme({
 		background: {
 			default: '#F3F5F7',
 			paper: '#F3F5F7',
-			light: '#FFFFFF',
 		},
 		text: {
 			primary: '#231D2C',
@@ -31,7 +34,7 @@ const theme = createTheme({
 		},
 	},
 	typography: {
-		fontFamily: "'Catamaran', sans-serif",
+		fontFamily: 'Catamaran, sans-serif',
 		h1: {
 			fontSize: '32px',
 			lineHeight: '52px',
@@ -67,12 +70,11 @@ const theme = createTheme({
 			},
 		},
 		MuiButton: {
-			color: '#FFFFFF',
-			disabled: {
-				backgroundColor: '#C8CCDA',
-			},
 			styleOverrides: {
 				root: {
+					disabled: {
+						backgroundColor: '#C8CCDA',
+					},
 					fontSize: '1rem',
 					lineHeight: 1.45,
 					fontWeight: 600,
@@ -104,9 +106,26 @@ const theme = createTheme({
 
 const queryClient = new QueryClient();
 
-console.log(theme);
+(function () {
+	const savedToken = LocalStorageService.get('token');
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+	if (savedToken) {
+		const decodedJwtToken: IToken = jwtDecode(LocalStorageService.get('token'));
+
+		const currentTime = Date.now() / 1000;
+		const isExpired = decodedJwtToken.exp <= currentTime;
+
+		if (!isExpired) {
+			authState.setUser(savedToken);
+		}
+
+		if (isExpired) {
+			LocalStorageService.remove('token');
+		}
+	}
+})();
+
+const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
 	<React.StrictMode>
 		<ThemeProvider theme={theme}>
