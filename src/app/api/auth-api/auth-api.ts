@@ -46,7 +46,7 @@ interface AuthApiInterface {
 	verifyEmail: (data: VerifyEmailDataDto) => Promise<{ accessToken: string }>;
 	resendConfirmationLink: () => Promise<void>;
 	forgotPassword: (data: ForgotPasswordDataDto) => Promise<string>;
-	resetPassword: (data: ResetPasswordDto) => Promise<string>;
+	resetPassword: (data: ResetPasswordDto) => Promise<{ accessToken: string }>;
 	setNewPassword: (data: SetNewPasswordDto) => Promise<string>;
 	googleAuth: (
 		data: GoogleAuthDto,
@@ -101,7 +101,7 @@ export class AuthApiService implements AuthApiInterface {
 	resetPassword = async ({
 		token,
 		...data
-	}: ResetPasswordDto): Promise<string> => {
+	}: ResetPasswordDto): Promise<{ accessToken: string }> => {
 		const payload = await this.http.patch(
 			`/auth/reset-password?token=${token}`,
 			data,

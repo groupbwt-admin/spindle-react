@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useMutation } from 'react-query';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { NewPasswordForm } from 'modules/auth/pages/new-password/components/new-password-form';
-import { useMutation } from 'react-query';
 import { AuthApi } from 'app/api/auth-api/auth-api';
 import { Typography } from 'shared/components/typography/typography';
-import { useSearchParams } from 'react-router-dom';
 import { authState } from 'app/store/auth/state';
+import { AUTH_ROUTES } from 'shared/config/routes';
 
 const LoginContainer = styled('div')`
 	display: flex;
@@ -28,18 +29,24 @@ const Description = styled(Typography)`
 
 export const NewPasswordPage = () => {
 	const [searchParams] = useSearchParams();
+	const navigate = useNavigate();
 
 	const resetPasswordMutation = useMutation(AuthApi.resetPassword, {
-		onSuccess: async (token) => {
-			authState.setUser(token);
+		onSuccess: (res) => {
+			authState.setUser(res.accessToken);
 		},
 	});
 
+	useEffect(() => {
+		const token = searchParams.get('token');
+		if (!token) {
+			navigate(AUTH_ROUTES.LOGIN.path);
+		}
+	}, []);
+
 	const handleSubmit = (data) => {
 		const token = searchParams.get('token');
-		if (token) {
-			resetPasswordMutation.mutate({ token: token, password: data.password });
-		}
+		resetPasswordMutation.mutate({ token: token!, password: data.password });
 	};
 
 	return (
