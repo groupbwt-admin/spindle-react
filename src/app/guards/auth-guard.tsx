@@ -12,12 +12,9 @@ export const AuthGuard: React.FC<React.PropsWithChildren> =
 		const location = useLocation();
 		const routerState = location.state as { from?: string };
 
-		const exceptionPages = [AUTH_ROUTES.VERIFY_EMAIL.path];
-		const isAuthPage = location.pathname.startsWith(AUTH_ROUTES.ROOT.path);
-
-		if (exceptionPages.includes(location.pathname)) {
-			return children;
-		}
+		const isAuthPage =
+			location.pathname.startsWith(AUTH_ROUTES.ROOT.path) &&
+			!location.pathname.startsWith(AUTH_ROUTES.EMAIL_ROOT.path);
 
 		if (!isUserAuth && !isAuthPage) {
 			return (

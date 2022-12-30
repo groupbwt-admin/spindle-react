@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { AUTH_ROUTES } from 'shared/config/routes';
+import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import { selectAuthUserData, selectIsLoggedIn } from 'app/store/auth/selects';
 
 export const withEmailVerification = (Component) => {
@@ -13,17 +13,24 @@ export const withEmailVerification = (Component) => {
 		const userData = selectAuthUserData();
 		const isMustVerifyEmailPage =
 			location.pathname === AUTH_ROUTES.MUST_VERIFY_EMAIL.path;
-		const exceptionPages = [AUTH_ROUTES.VERIFY_EMAIL.path];
+		const isEmailPage = location.pathname.startsWith(
+			AUTH_ROUTES.EMAIL_ROOT.path,
+		);
 
-		if (exceptionPages.includes(location.pathname)) {
-			return <Component {...props} />;
+		if (isUserAuth && userData!.isEmailConfirmed && isEmailPage) {
+			return <Navigate to={VIDEO_ROUTES.MY_VIDEOS.path} replace />;
 		}
 
-		if (isUserAuth && !userData!.isEmailConfirmed && !isMustVerifyEmailPage) {
+		if (isUserAuth && !userData!.isEmailConfirmed && !isEmailPage) {
 			return (
 				<Navigate
-					to={AUTH_ROUTES.MUST_VERIFY_EMAIL.path}
-					state={{ from: location }}
+					to={
+						location.state?.from?.pathname?.startsWith(
+							AUTH_ROUTES.EMAIL_ROOT.path,
+						)
+							? location.state.from
+							: AUTH_ROUTES.MUST_VERIFY_EMAIL.path
+					}
 					replace
 				/>
 			);
@@ -31,16 +38,6 @@ export const withEmailVerification = (Component) => {
 
 		if (isUserAuth && !userData!.isEmailConfirmed && isMustVerifyEmailPage) {
 			return props.children;
-		}
-
-		if (!isUserAuth && isMustVerifyEmailPage) {
-			return (
-				<Navigate
-					to={AUTH_ROUTES.LOGIN.path}
-					state={{ from: location }}
-					replace
-				/>
-			);
 		}
 
 		return <Component {...props} />;

@@ -4,6 +4,9 @@ export const AUTH_ROUTES = {
 	ROOT: {
 		path: '/auth',
 	},
+	EMAIL_ROOT: {
+		path: '/auth/email',
+	},
 	LOGIN: {
 		path: '/auth/login',
 	},
@@ -20,10 +23,10 @@ export const AUTH_ROUTES = {
 		path: '/auth/fill-account',
 	},
 	MUST_VERIFY_EMAIL: {
-		path: '/auth/must-verify-email',
+		path: '/auth/email/must-verify',
 	},
 	VERIFY_EMAIL: {
-		path: '/auth/verify-email',
+		path: '/auth/email/verify',
 	},
 };
 

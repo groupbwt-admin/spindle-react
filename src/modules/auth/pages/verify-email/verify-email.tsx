@@ -7,9 +7,8 @@ import { AxiosError } from 'axios';
 import { Typography } from 'shared/components/typography/typography';
 import { Button } from 'shared/components/button/button';
 import { AuthApi, VerifyEmailDataDto } from 'app/api/auth-api/auth-api';
-import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
+import { VIDEO_ROUTES } from 'shared/config/routes';
 import { authState } from 'app/store/auth/state';
-import { selectAuthUserData, selectIsLoggedIn } from 'app/store/auth/selects';
 
 const Title = styled(Typography)`
 	margin-top: 20px;
@@ -25,8 +24,6 @@ const Description = styled(Typography)`
 export const VerifyEmailPage = () => {
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
-	const isLoggedIn = selectIsLoggedIn();
-	const authUserData = selectAuthUserData();
 
 	const verifyEmailMutation = useMutation<
 		{ accessToken: string },
@@ -39,16 +36,11 @@ export const VerifyEmailPage = () => {
 	});
 
 	useEffect(() => {
-		if (authUserData?.isEmailConfirmed) {
-			navigate(VIDEO_ROUTES.MY_VIDEOS.path, { replace: true });
-			return;
-		}
-
 		const token = searchParams.get('token');
 		if (token) {
 			verifyEmailMutation.mutate({ token: token });
 		} else {
-			navigate(AUTH_ROUTES.LOGIN.path);
+			navigate(VIDEO_ROUTES.MY_VIDEOS.path);
 		}
 	}, []);
 
@@ -63,20 +55,11 @@ export const VerifyEmailPage = () => {
 				<Description variant="body1">
 					{verifyEmailMutation.error?.response?.data?.message}
 				</Description>
-				{isLoggedIn && (
-					<Button
-						component={Link}
-						to={VIDEO_ROUTES.MY_VIDEOS.path}
-						label="Go to Dashboard"
-					/>
-				)}
-				{!isLoggedIn && (
-					<Button
-						component={Link}
-						to={VIDEO_ROUTES.MY_VIDEOS.path}
-						label="Sign in"
-					/>
-				)}
+				<Button
+					component={Link}
+					to={VIDEO_ROUTES.MY_VIDEOS.path}
+					label="Go to Dashboard"
+				/>
 			</>
 		);
 	}
