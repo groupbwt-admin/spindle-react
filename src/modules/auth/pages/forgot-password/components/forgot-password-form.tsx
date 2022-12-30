@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { styled } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,10 +22,12 @@ type ForgotPasswordData = yup.InferType<typeof schema>;
 
 interface ForgotPasswordProps {
 	isLoading: boolean;
+	error?: string;
 	onSubmit: (data: ForgotPasswordData) => void;
 }
 
 export const ForgotPasswordForm: React.FC<ForgotPasswordProps> = ({
+	error,
 	isLoading,
 	onSubmit,
 }) => {
@@ -33,9 +35,14 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordProps> = ({
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError
 	} = useForm<ForgotPasswordData>({
 		resolver: yupResolver(schema),
 	});
+
+	useEffect(() => {
+		setError('email', {type: 'custom', message: error})
+	}, [error]);
 
 	return (
 		<Box

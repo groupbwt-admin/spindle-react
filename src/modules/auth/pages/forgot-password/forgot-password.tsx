@@ -5,8 +5,9 @@ import { useMutation } from 'react-query';
 import { Typography } from 'shared/components/typography/typography';
 import { ForgotPasswordForm } from 'modules/auth/pages/forgot-password/components/forgot-password-form';
 import { BackButton } from 'modules/auth/components/back-button';
-import { AuthApi } from 'app/api/auth-api/auth-api';
+import {AuthApi, ForgotPasswordDataDto, LoginDataDto} from 'app/api/auth-api/auth-api';
 import { Button } from 'shared/components/button/button';
+import {AxiosError} from "axios";
 
 const Container = styled('div')`
 	display: flex;
@@ -39,7 +40,11 @@ const ResendButton = styled(Button)`
 export const ForgotPasswordPage = () => {
 	const [sentTo, setSentTo] = useState<null | string>(null);
 
-	const forgotPasswordMutation = useMutation(AuthApi.forgotPassword, {
+	const forgotPasswordMutation = useMutation<
+		string,
+		AxiosError<{ message: string }>,
+		ForgotPasswordDataDto
+	>(AuthApi.forgotPassword, {
 		onSuccess: (res, payload) => {
 			setSentTo(payload.email);
 		},
@@ -88,8 +93,9 @@ export const ForgotPasswordPage = () => {
 							reset your password.
 						</Description>
 						<ForgotPasswordForm
-							onSubmit={handleSubmit}
+							error={forgotPasswordMutation.error?.response?.data?.message}
 							isLoading={forgotPasswordMutation.isLoading}
+							onSubmit={handleSubmit}
 						/>
 						<Footer variant="subtitle2">
 							<BackButton />
