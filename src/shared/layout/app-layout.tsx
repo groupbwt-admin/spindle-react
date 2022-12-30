@@ -8,6 +8,8 @@ import {
 import { MainLayout } from 'shared/layout/main-layout';
 import { userState } from 'app/store/user/state';
 import { selectIsLoadingUserData } from 'app/store/user/selects';
+import { useLocation } from 'react-router-dom';
+import { AUTH_ROUTES } from 'shared/config/routes';
 
 const SpinnerContainer = styled('div')`
 	display: flex;
@@ -18,9 +20,11 @@ const SpinnerContainer = styled('div')`
 `;
 
 export const AppLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
+	const location = useLocation();
 	const isUserAuth = selectIsLoggedIn();
 	const isEmailConfirmed = selectIsEmailConfirmed();
 	const isLoadingUserData = selectIsLoadingUserData();
+	const isAuthLayout = location.pathname.startsWith(AUTH_ROUTES.ROOT.path);
 
 	useEffect(() => {
 		if (isUserAuth) {
@@ -36,7 +40,7 @@ export const AppLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
 		);
 	}
 
-	if (isUserAuth && isEmailConfirmed) {
+	if (!isAuthLayout) {
 		return <MainLayout>{children}</MainLayout>;
 	}
 

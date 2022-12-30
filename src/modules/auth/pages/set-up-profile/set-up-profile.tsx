@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { SetUpProfileForm } from 'modules/auth/pages/set-up-profile/components/set-up-profile-form';
 import { UserApi } from 'app/api/user-api/user-api';
 import { userState } from 'app/store/user/state';
+import { useLogout } from 'shared/hooks/use-logout';
 
 const ProfileContainer = styled('div')`
 	display: flex;
@@ -14,6 +15,7 @@ const ProfileContainer = styled('div')`
 `;
 
 export const SetUpProfilePage = () => {
+	const logoutHook = useLogout();
 	const setUpProfileMutation = useMutation(UserApi.updateProfile, {
 		onSuccess: async (userData) => {
 			userState.setProfile(userData);
@@ -27,11 +29,16 @@ export const SetUpProfilePage = () => {
 		setUpProfileMutation.mutate(data);
 	};
 
+	const handleSignOut = () => {
+		logoutHook.logout();
+	};
+
 	return (
 		<ProfileContainer>
 			<SetUpProfileForm
-				onSubmit={handleSubmit}
 				isLoading={setUpProfileMutation.isLoading}
+				onSubmit={handleSubmit}
+				onSignOut={handleSignOut}
 			/>
 		</ProfileContainer>
 	);

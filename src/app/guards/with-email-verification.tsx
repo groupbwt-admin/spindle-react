@@ -10,18 +10,18 @@ export const withEmailVerification = (Component) => {
 
 		const location = useLocation();
 		const isUserAuth = selectIsLoggedIn();
-		const userData = selectAuthUserData();
+		const authUserData = selectAuthUserData();
 		const isMustVerifyEmailPage =
 			location.pathname === AUTH_ROUTES.MUST_VERIFY_EMAIL.path;
 		const isEmailPage = location.pathname.startsWith(
 			AUTH_ROUTES.EMAIL_ROOT.path,
 		);
 
-		if (isUserAuth && userData!.isEmailConfirmed && isEmailPage) {
+		if (isUserAuth && authUserData!.isEmailConfirmed && isEmailPage) {
 			return <Navigate to={VIDEO_ROUTES.MY_VIDEOS.path} replace />;
 		}
 
-		if (isUserAuth && !userData!.isEmailConfirmed && !isEmailPage) {
+		if (isUserAuth && !authUserData!.isEmailConfirmed && !isEmailPage) {
 			return (
 				<Navigate
 					to={
@@ -36,7 +36,7 @@ export const withEmailVerification = (Component) => {
 			);
 		}
 
-		if (isUserAuth && !userData!.isEmailConfirmed && isMustVerifyEmailPage) {
+		if (isUserAuth && !authUserData!.isEmailConfirmed && isMustVerifyEmailPage) {
 			return props.children;
 		}
 
