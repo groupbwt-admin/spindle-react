@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
-import { AuthGuard } from 'app/auth-guard';
+import { AuthGuard } from 'app/guards/auth-guard';
 import { LoginPage } from 'modules/auth/pages/login/login';
 import { RegisterPage } from 'modules/auth/pages/register/register';
 import { ForgotPasswordPage } from 'modules/auth/pages/forgot-password/forgot-password';
