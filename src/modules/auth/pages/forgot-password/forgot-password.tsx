@@ -34,7 +34,7 @@ const Description = styled(Typography)`
 
 const ResendButton = styled(Button)`
 	margin-top: 12px;
-`
+`;
 
 export const ForgotPasswordPage = () => {
 	const [sentTo, setSentTo] = useState<null | string>(null);
@@ -57,22 +57,27 @@ export const ForgotPasswordPage = () => {
 		<>
 			<Container>
 				{sentTo ? (
-					<Box>
-						<Title variant="h1">Check your email</Title>
-						<Description variant="body1">
-							We&apos;ve sent a link to your email address to reset your
-							password.
-						</Description>
-						<Description variant="body1">
-							Didn&apos;t receive the email?
-						</Description>
-						<ResendButton
-							label="Resend Email"
-							isLoading={forgotPasswordMutation.isLoading}
-							onClick={handleResendEmail}
-							fullWidth
-						/>
-					</Box>
+					<>
+						<Box>
+							<Title variant="h1">Check your email</Title>
+							<Description variant="body1">
+								We&apos;ve sent a link to your email address to reset your
+								password.
+							</Description>
+							<Description variant="body1">
+								Didn&apos;t receive the email?
+							</Description>
+							<ResendButton
+								label="Resend Email"
+								isLoading={forgotPasswordMutation.isLoading}
+								onClick={handleResendEmail}
+								fullWidth
+							/>
+						</Box>
+						<Footer variant="subtitle2">
+							<BackButton />
+						</Footer>
+					</>
 				) : (
 					<>
 						<Title variant="h1" component="h1">

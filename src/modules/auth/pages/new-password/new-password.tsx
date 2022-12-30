@@ -7,8 +7,9 @@ import { AuthApi } from 'app/api/auth-api/auth-api';
 import { Typography } from 'shared/components/typography/typography';
 import { authState } from 'app/store/auth/state';
 import { AUTH_ROUTES } from 'shared/config/routes';
+import { BackButton } from 'modules/auth/components/back-button';
 
-const LoginContainer = styled('div')`
+const Container = styled('div')`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -25,6 +26,11 @@ const Title = styled(Typography)`
 const Description = styled(Typography)`
 	max-width: 424px;
 	text-align: center;
+`;
+
+const Footer = styled(Typography)`
+	position: absolute;
+	bottom: 0;
 `;
 
 export const NewPasswordPage = () => {
@@ -50,7 +56,7 @@ export const NewPasswordPage = () => {
 	};
 
 	return (
-		<LoginContainer>
+		<Container>
 			<Title variant="h1" component="h1">
 				Create new password
 			</Title>
@@ -61,6 +67,9 @@ export const NewPasswordPage = () => {
 				onSubmit={handleSubmit}
 				isLoading={resetPasswordMutation.isLoading}
 			/>
-		</LoginContainer>
+			<Footer variant="subtitle2">
+				<BackButton />
+			</Footer>
+		</Container>
 	);
 };
