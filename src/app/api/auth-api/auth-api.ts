@@ -95,7 +95,7 @@ export class AuthApiService implements AuthApiInterface {
 	forgotPassword = async (data: ForgotPasswordDataDto): Promise<string> => {
 		const payload = await this.http.post(`/auth/reset-password`, data);
 
-		return payload.data.data;
+		return payload.data;
 	};
 
 	resetPassword = async ({
@@ -105,10 +105,9 @@ export class AuthApiService implements AuthApiInterface {
 		const payload = await this.http.patch(
 			`/auth/reset-password?token=${token}`,
 			data,
-			undefined,
 		);
 
-		return payload.data.data;
+		return payload.data;
 	};
 
 	setNewPassword = async (data: SetNewPasswordDto): Promise<string> => {
