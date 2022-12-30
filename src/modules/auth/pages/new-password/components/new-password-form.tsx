@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { styled } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -51,10 +51,12 @@ type NewPasswordFormData = yup.InferType<typeof schema>;
 
 interface NewPasswordProps {
 	isLoading: boolean;
+	error?: string;
 	onSubmit: (data: NewPasswordFormData) => void;
 }
 
 export const NewPasswordForm: React.FC<NewPasswordProps> = ({
+	error,
 	onSubmit,
 	isLoading,
 }) => {
@@ -62,9 +64,14 @@ export const NewPasswordForm: React.FC<NewPasswordProps> = ({
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError
 	} = useForm<NewPasswordFormData>({
 		resolver: yupResolver(schema),
 	});
+
+	useEffect(() => {
+		setError('password', {type: 'custom', message: error})
+	}, [error]);
 
 	return (
 		<Box

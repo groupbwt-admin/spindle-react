@@ -5,9 +5,9 @@ import { useMutation } from 'react-query';
 import { Typography } from 'shared/components/typography/typography';
 import { ForgotPasswordForm } from 'modules/auth/pages/forgot-password/components/forgot-password-form';
 import { BackButton } from 'modules/auth/components/back-button';
-import {AuthApi, ForgotPasswordDataDto, LoginDataDto} from 'app/api/auth-api/auth-api';
+import { AuthApi, ForgotPasswordDataDto } from 'app/api/auth-api/auth-api';
 import { Button } from 'shared/components/button/button';
-import {AxiosError} from "axios";
+import { AxiosError } from 'axios';
 
 const Container = styled('div')`
 	display: flex;

@@ -3,11 +3,12 @@ import { useMutation } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { NewPasswordForm } from 'modules/auth/pages/new-password/components/new-password-form';
-import { AuthApi } from 'app/api/auth-api/auth-api';
+import {AuthApi, ResetPasswordDto} from 'app/api/auth-api/auth-api';
 import { Typography } from 'shared/components/typography/typography';
 import { authState } from 'app/store/auth/state';
 import { AUTH_ROUTES } from 'shared/config/routes';
 import { BackButton } from 'modules/auth/components/back-button';
+import {AxiosError} from "axios";
 
 const Container = styled('div')`
 	display: flex;
@@ -37,7 +38,11 @@ export const NewPasswordPage = () => {
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 
-	const resetPasswordMutation = useMutation(AuthApi.resetPassword, {
+	const resetPasswordMutation = useMutation<
+		{ accessToken: string },
+		AxiosError<{ message: string }>,
+		ResetPasswordDto
+	>(AuthApi.resetPassword, {
 		onSuccess: (res) => {
 			authState.setUser(res.accessToken);
 		},
@@ -64,8 +69,9 @@ export const NewPasswordPage = () => {
 				Your new password must be different from previously used passwords.
 			</Description>
 			<NewPasswordForm
-				onSubmit={handleSubmit}
+				error={resetPasswordMutation.error?.response?.data?.message}
 				isLoading={resetPasswordMutation.isLoading}
+				onSubmit={handleSubmit}
 			/>
 			<Footer variant="subtitle2">
 				<BackButton />

@@ -5,6 +5,8 @@ import { SetUpProfileForm } from 'modules/auth/pages/set-up-profile/components/s
 import { UserApi } from 'app/api/user-api/user-api';
 import { userState } from 'app/store/user/state';
 import { useLogout } from 'shared/hooks/use-logout';
+import {useNavigate} from "react-router-dom";
+import {VIDEO_ROUTES} from "shared/config/routes";
 
 const ProfileContainer = styled('div')`
 	display: flex;
@@ -15,10 +17,12 @@ const ProfileContainer = styled('div')`
 `;
 
 export const SetUpProfilePage = () => {
+	const navigate = useNavigate();
 	const logoutHook = useLogout();
 	const setUpProfileMutation = useMutation(UserApi.updateProfile, {
 		onSuccess: async (userData) => {
 			userState.setProfile(userData);
+			navigate(VIDEO_ROUTES.MY_VIDEOS.path)
 		},
 		onError: async (error) => {
 			console.log(error);
