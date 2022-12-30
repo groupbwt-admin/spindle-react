@@ -10,7 +10,6 @@ const StyledButton = styled(ExternalButton)`
 	position: relative;
 	padding: 17px 24px 15px;
 	border-radius: 60px;
-	width: 100%;
 	text-transform: none;
 `;
 
@@ -45,6 +44,7 @@ export interface ButtonProps {
 	startIcon?: ExternalButtonProps['startIcon'];
 	color?: ExternalButtonProps['color'];
 	sx?: ExternalButtonProps['sx'];
+	fullWidth?: ExternalButtonProps['fullWidth'];
 	isLoading?: boolean;
 	disabled?: boolean;
 	onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -65,6 +65,7 @@ const ButtonRoot: React.ForwardRefRenderFunction<
 		to,
 		isLoading,
 		disabled,
+		fullWidth,
 		onClick,
 	},
 	ref,
@@ -83,6 +84,7 @@ const ButtonRoot: React.ForwardRefRenderFunction<
 			startIcon={startIcon}
 			color={color}
 			disabled={disabled}
+			fullWidth={fullWidth}
 			onClick={onClick}
 		>
 			{isLoading && (

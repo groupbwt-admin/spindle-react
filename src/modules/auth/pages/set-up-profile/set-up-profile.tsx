@@ -1,13 +1,12 @@
-import React, {useEffect} from 'react';
+import React from 'react';
+import { useMutation } from 'react-query';
 import { styled } from '@mui/material/styles';
 import { SetUpProfileForm } from 'modules/auth/pages/set-up-profile/components/set-up-profile-form';
-import { useMutation } from 'react-query';
-import { AuthApi } from 'app/api/auth-api/auth-api';
-import { IToken } from 'shared/types/token';
-import jwtDecode from 'jwt-decode';
-import { LocalStorageService } from 'shared/services/local-storage-service';
-import { setAuthUserData } from 'app/store/auth/actions';
-import {useNavigate, useSearchParams} from "react-router-dom";
+import { UserApi } from 'app/api/user-api/user-api';
+import { userState } from 'app/store/user/state';
+import { useLogout } from 'shared/hooks/use-logout';
+import {useNavigate} from "react-router-dom";
+import {VIDEO_ROUTES} from "shared/config/routes";
 
 const ProfileContainer = styled('div')`
 	display: flex;
@@ -18,48 +17,32 @@ const ProfileContainer = styled('div')`
 `;
 
 export const SetUpProfilePage = () => {
-	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
-
-	const setUpProfileMutation = useMutation(AuthApi.verifyEmail, {
-		onSuccess: async (token) => {
-			// const userData: IToken = jwtDecode(token);
-			// LocalStorageService.set('token', token);
-			//
-			// setAuthUserData(userData);
+	const logoutHook = useLogout();
+	const setUpProfileMutation = useMutation(UserApi.updateProfile, {
+		onSuccess: async (userData) => {
+			userState.setProfile(userData);
+			navigate(VIDEO_ROUTES.MY_VIDEOS.path)
+		},
+		onError: async (error) => {
+			console.log(error);
 		},
 	});
-
-	const verifyEmailMutation = useMutation(AuthApi.verifyEmail, {
-		onSuccess: async (token) => {
-			const userData: IToken = jwtDecode(token);
-			LocalStorageService.set('token', token);
-
-			setAuthUserData(userData);
-		},
-	});
-
-	useEffect(() => {
-		const token = searchParams.get("token");
-		if(token) {
-			verifyEmailMutation.mutate({token: token})
-		}
-		else {
-			navigate('/auth/login')
-		}
-		return
-	}, [])
-
 
 	const handleSubmit = (data) => {
 		setUpProfileMutation.mutate(data);
 	};
 
+	const handleSignOut = () => {
+		logoutHook.logout();
+	};
+
 	return (
 		<ProfileContainer>
 			<SetUpProfileForm
-				onSubmit={handleSubmit}
 				isLoading={setUpProfileMutation.isLoading}
+				onSubmit={handleSubmit}
+				onSignOut={handleSignOut}
 			/>
 		</ProfileContainer>
 	);

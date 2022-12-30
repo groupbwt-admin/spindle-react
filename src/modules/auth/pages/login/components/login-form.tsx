@@ -1,13 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 import { Input } from 'shared/components/input/input';
 import { PasswordInput } from 'shared/components/input/password-input';
 import { Button } from 'shared/components/button/button';
 import { css, styled } from '@mui/material/styles';
-import { Divider } from '@mui/material';
 import {
 	validatePassword,
 	ValidationPasswordErrors,
@@ -23,7 +22,7 @@ const StyledInput = styled(Input)`
 
 const StyledPasswordInput = styled(PasswordInput)`
 	margin-top: 36px;
-	margin-bottom: 40px;
+	margin-bottom: 36px;
 `;
 
 const StyledDivider = styled(Divider)(
@@ -34,6 +33,7 @@ const StyledDivider = styled(Divider)(
 		&::before {
 			border-color: ${theme.palette.text.secondary};
 		}
+
 		&::after {
 			border-color: ${theme.palette.text.secondary};
 		}
@@ -52,14 +52,8 @@ const schema = yup
 			test: function (value, { createError }) {
 				const errors: ValidationPasswordErrors = validatePassword(value || '');
 
-				if (errors.hasNotValue) {
-					return createError({
-						message: Object.values(errors).join(',  '),
-					});
-				}
-
 				if (Object.keys(errors).length) {
-					return createError({ message: Object.values(errors).join(',  ') });
+					return createError({ message: Object.values(errors).join(';\n') });
 				}
 
 				return true;
@@ -72,20 +66,29 @@ type LoginFormData = yup.InferType<typeof schema>;
 
 interface LoginFormProps {
 	isLoading: boolean;
+	error?: string;
 	onSubmit: (data: LoginFormData) => void;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({
+	error,
 	isLoading,
 	onSubmit,
 }) => {
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError
 	} = useForm<LoginFormData>({
 		resolver: yupResolver(schema),
 	});
+
+	useEffect(() => {
+		setError('email', {type: 'custom', message: error})
+	}, [error]);
+
 
 	return (
 		<Box
@@ -119,7 +122,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 				error={!!errors.password}
 				errorText={errors.password?.message as string}
 			/>
-			<Button label="Sign in" type="submit" isLoading={isLoading} />
+			<Button label="Sign in" type="submit" isLoading={isLoading} fullWidth />
 		</Box>
 	);
 };

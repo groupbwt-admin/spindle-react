@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { styled } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -25,12 +25,16 @@ const schema = yup
 
 				if (errors.hasNotValue) {
 					return createError({
-						message: Object.values(errors).join(',  '),
+						message: errors.hasNotValue,
 					});
 				}
 
 				if (Object.keys(errors).length) {
-					return createError({ message: Object.values(errors).map(error => '– '+ error).join('\n') });
+					return createError({
+						message: Object.values(errors)
+							.map((error) => '– ' + error)
+							.join('\n'),
+					});
 				}
 
 				return true;
@@ -38,10 +42,7 @@ const schema = yup
 		}),
 		confirmPassword: yup
 			.string()
-			.oneOf(
-				[yup.ref('password')],
-				"The password confirmation does not match",
-			)
+			.oneOf([yup.ref('password')], 'The password confirmation does not match')
 			.required(),
 	})
 	.defined();
@@ -50,17 +51,27 @@ type NewPasswordFormData = yup.InferType<typeof schema>;
 
 interface NewPasswordProps {
 	isLoading: boolean;
-	onSubmit: (data: NewPasswordFormData) => void
+	error?: string;
+	onSubmit: (data: NewPasswordFormData) => void;
 }
 
-export const NewPasswordForm: React.FC<NewPasswordProps> = ({onSubmit}) => {
+export const NewPasswordForm: React.FC<NewPasswordProps> = ({
+	error,
+	onSubmit,
+	isLoading,
+}) => {
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError
 	} = useForm<NewPasswordFormData>({
 		resolver: yupResolver(schema),
 	});
+
+	useEffect(() => {
+		setError('password', {type: 'custom', message: error})
+	}, [error]);
 
 	return (
 		<Box
@@ -86,7 +97,12 @@ export const NewPasswordForm: React.FC<NewPasswordProps> = ({onSubmit}) => {
 				autoFocus
 				{...register('confirmPassword')}
 			/>
-			<Button label="Submit and Sign in" type="submit" />
+			<Button
+				label="Submit and Sign in"
+				type="submit"
+				isLoading={isLoading}
+				fullWidth
+			/>
 		</Box>
 	);
 };

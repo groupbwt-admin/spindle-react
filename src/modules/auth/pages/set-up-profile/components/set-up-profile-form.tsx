@@ -7,12 +7,14 @@ import { Input } from 'shared/components/input/input';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AvatarUploader } from 'shared/components/avatar-uploader/avatar-uploader';
+import { ButtonList } from 'shared/components/button-list/button-list';
 
 const StyledInput = styled(Input)`
 	margin-top: 32px;
 `;
 
-const StyledButton = styled(Button)`
+const StyledButtonList = styled(ButtonList)`
+	flex-direction: column;
 	margin-top: 40px;
 `;
 
@@ -28,11 +30,13 @@ type SetUpProfileFormData = yup.InferType<typeof schema>;
 interface SetUpProfileFormProps {
 	isLoading: boolean;
 	onSubmit: (data: SetUpProfileFormData) => void;
+	onSignOut: () => void;
 }
 
 export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 	isLoading,
 	onSubmit,
+	onSignOut
 }) => {
 	const {
 		register,
@@ -43,30 +47,34 @@ export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 	});
 
 	const [avatarError, setAvatarError] = useState<string>('');
-	const [avatar, setAvatar] = useState<string>('');
+	const [file, setFile] = useState<string>('');
 
 	const onAvatarChange = (files) => {
 		setAvatarError('');
 		const avatarUrl = URL.createObjectURL(files[0]);
-		setAvatar(avatarUrl);
+		setFile(avatarUrl);
 	};
 
 	const onAvatarDownloadError = (data) => {
 		setAvatarError('File is too big');
 	};
 
+	const handleSubmitSetUpProfileForm = (data) => {
+		onSubmit({ ...data, file });
+	};
+
 	return (
 		<Box
 			sx={{ width: '100%', maxWidth: 400 }}
 			component={'form'}
-			onSubmit={handleSubmit(onSubmit)}
+			onSubmit={handleSubmit(handleSubmitSetUpProfileForm)}
 		>
 			<AvatarUploader
 				onChange={onAvatarChange}
 				onError={onAvatarDownloadError}
 				errorMessage={avatarError}
 				maxSize={3000000}
-				avatar={avatar}
+				avatar={file}
 			/>
 			<StyledInput
 				type="first-name"
@@ -87,7 +95,22 @@ export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 				errorText={errors.lastName?.message as string}
 				{...register('lastName')}
 			/>
-			<StyledButton label="Continue" type="submit" isLoading={isLoading} />
+			<StyledButtonList>
+				<Button
+					label="Continue"
+					type="submit"
+					isLoading={isLoading}
+					fullWidth
+				/>
+				<Button
+					label="Sign Out"
+					type="button"
+					variant="outlined"
+					disabled={isLoading}
+					onClick={onSignOut}
+					fullWidth
+				/>
+			</StyledButtonList>
 		</Box>
 	);
 };

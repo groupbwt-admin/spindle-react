@@ -1,3 +1,7 @@
 export interface IToken {
-	username: string
+	id: string;
+	email: string;
+	isEmailConfirmed: boolean;
+	iat: number;
+	exp: number;
 }

@@ -1,13 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 import { Input } from 'shared/components/input/input';
 import { PasswordInput } from 'shared/components/input/password-input';
 import { Button } from 'shared/components/button/button';
 import { css, styled } from '@mui/material/styles';
-import { Divider } from '@mui/material';
 import {
 	validatePassword,
 	ValidationPasswordErrors,
@@ -31,6 +30,7 @@ const StyledDivider = styled(Divider)(
 		&::before {
 			border-color: ${theme.palette.text.secondary};
 		}
+
 		&::after {
 			border-color: ${theme.palette.text.secondary};
 		}
@@ -40,28 +40,33 @@ const StyledDivider = styled(Divider)(
 const schema = yup
 	.object({
 		email: yup.string().email().required('This field is required'),
-		password: yup.string().test({
-			name: 'password',
-			test: function (value, { createError }) {
-				const errors: ValidationPasswordErrors = validatePassword(value || '');
+		password: yup
+			.string()
+			.test({
+				name: 'password',
+				test: function (value, { createError }) {
+					const errors: ValidationPasswordErrors = validatePassword(
+						value || '',
+					);
 
-				if (errors.hasNotValue) {
-					return createError({
-						message: Object.values(errors).join(',  '),
-					});
-				}
+					if (errors.hasNotValue) {
+						return createError({
+							message: errors.hasNotValue,
+						});
+					}
 
-				if (Object.keys(errors).length) {
-					return createError({
-						message: Object.values(errors)
-							.map((error) => '– ' + error)
-							.join('\n'),
-					});
-				}
+					if (Object.keys(errors).length) {
+						return createError({
+							message: Object.values(errors)
+								.map((error) => '– ' + error)
+								.join('\n'),
+						});
+					}
 
-				return true;
-			},
-		}),
+					return true;
+				},
+			})
+			.required(),
 		confirmPassword: yup
 			.string()
 			.oneOf([yup.ref('password')], 'The password confirmation does not match')
@@ -69,24 +74,32 @@ const schema = yup
 	})
 	.defined();
 
-type RegisterFormData = yup.InferType<typeof schema>;
+export type RegisterFormData = yup.InferType<typeof schema>;
 
 interface RegisterFormProps {
 	isLoading: boolean;
+	error?: string;
 	onSubmit: (data: RegisterFormData) => void;
 }
 
 export const RegisterForm: React.FC<RegisterFormProps> = ({
+	error,
 	isLoading,
 	onSubmit,
 }) => {
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError
 	} = useForm<RegisterFormData>({
 		resolver: yupResolver(schema),
 	});
+
+	useEffect(() => {
+		setError('email', {type: 'custom', message: error})
+	}, [error]);
 
 	return (
 		<Box
@@ -124,6 +137,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 				label="Verify Email Address"
 				type="submit"
 				isLoading={isLoading}
+				fullWidth
 			/>
 		</Box>
 	);
