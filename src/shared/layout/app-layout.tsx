@@ -23,10 +23,10 @@ export const AppLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const isLoadingUserData = selectIsLoadingUserData();
 
 	useEffect(() => {
-		if (isUserAuth && isEmailConfirmed) {
+		if (isUserAuth) {
 			userState.getProfile();
 		}
-	}, [isUserAuth, isEmailConfirmed]);
+	}, [isUserAuth]);
 
 	if (isLoadingUserData) {
 		return (

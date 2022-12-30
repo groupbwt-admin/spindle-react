@@ -43,7 +43,7 @@ export interface GoogleAuthDto {
 interface AuthApiInterface {
 	login: (data: LoginDataDto) => Promise<{ accessToken: string }>;
 	register: (data: RegisterDataDto) => Promise<{ accessToken: string }>;
-	verifyEmail: (data: VerifyEmailDataDto) => Promise<string>;
+	verifyEmail: (data: VerifyEmailDataDto) => Promise<{ accessToken: string }>;
 	resendConfirmationLink: () => Promise<void>;
 	forgotPassword: (data: ForgotPasswordDataDto) => Promise<string>;
 	resetPassword: (data: ResetPasswordDto) => Promise<string>;
@@ -77,13 +77,15 @@ export class AuthApiService implements AuthApiInterface {
 		return payload.data;
 	};
 
-	verifyEmail = async (data: VerifyEmailDataDto): Promise<string> => {
-		const payload = await this.http.post<
-			AxiosError<{ error: string; status: number }>,
-			AxiosResponse<string>
+	verifyEmail = async (
+		data: VerifyEmailDataDto,
+	): Promise<{ accessToken: string }> => {
+		const res = await this.http.post<
+			AxiosError<{ error: string }>,
+			AxiosResponse<{ accessToken: string }>
 		>(`/email/confirm?token=${data.token}`);
 
-		return payload.data;
+		return res.data;
 	};
 
 	resendConfirmationLink = async (): Promise<void> => {

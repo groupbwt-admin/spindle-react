@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { useMutation } from 'react-query';
-import { styled } from '@mui/material/styles';
-import { Typography } from 'shared/components/typography/typography';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { AxiosError } from 'axios';
+import { Typography } from 'shared/components/typography/typography';
 import { Button } from 'shared/components/button/button';
 import { AuthApi, VerifyEmailDataDto } from 'app/api/auth-api/auth-api';
-import { CircularProgress } from '@mui/material';
-import { AUTH_ROUTES } from 'shared/config/routes';
-import { AxiosError } from 'axios';
+import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import { authState } from 'app/store/auth/state';
+import { selectAuthUserData, selectIsLoggedIn } from 'app/store/auth/selects';
 
 const Title = styled(Typography)`
 	margin-top: 20px;
@@ -24,25 +25,31 @@ const Description = styled(Typography)`
 export const VerifyEmailPage = () => {
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
+	const isLoggedIn = selectIsLoggedIn();
+	const authUserData = selectAuthUserData();
 
 	const verifyEmailMutation = useMutation<
-		string,
+		{ accessToken: string },
 		AxiosError<{ message: string }>,
 		VerifyEmailDataDto
 	>(AuthApi.verifyEmail, {
-		onSuccess: async (token) => {
-			authState.setUser(token);
+		onSuccess: async (res) => {
+			authState.setUser(res.accessToken);
 		},
 	});
 
 	useEffect(() => {
+		if (authUserData?.isEmailConfirmed) {
+			navigate(VIDEO_ROUTES.MY_VIDEOS.path, { replace: true });
+			return;
+		}
+
 		const token = searchParams.get('token');
 		if (token) {
 			verifyEmailMutation.mutate({ token: token });
 		} else {
 			navigate(AUTH_ROUTES.LOGIN.path);
 		}
-		return;
 	}, []);
 
 	if (verifyEmailMutation.isLoading) {
@@ -56,23 +63,23 @@ export const VerifyEmailPage = () => {
 				<Description variant="body1">
 					{verifyEmailMutation.error?.response?.data?.message}
 				</Description>
-				<Button component={Link} to={AUTH_ROUTES.LOGIN.path} label="Sign in" />
+				{isLoggedIn && (
+					<Button
+						component={Link}
+						to={VIDEO_ROUTES.MY_VIDEOS.path}
+						label="Go to Dashboard"
+					/>
+				)}
+				{!isLoggedIn && (
+					<Button
+						component={Link}
+						to={VIDEO_ROUTES.MY_VIDEOS.path}
+						label="Sign in"
+					/>
+				)}
 			</>
 		);
 	}
 
-	return (
-		<>
-			<Title variant="h1">Your email address has been verified</Title>
-			<Description variant="body1">
-				Now you can sign in with your email and password
-			</Description>
-			<Button
-				component={Link}
-				to={AUTH_ROUTES.LOGIN.path}
-				label="Sign in"
-				fullWidth
-			/>
-		</>
-	);
+	return null;
 };
