@@ -14,7 +14,7 @@ export interface RegisterDataDto {
 }
 
 export interface ForgotPasswordDataDto {
-	usernameOrEmail: string;
+	email: string;
 }
 
 export interface VerifyEmailDataDto {
@@ -93,11 +93,7 @@ export class AuthApiService implements AuthApiInterface {
 	};
 
 	forgotPassword = async (data: ForgotPasswordDataDto): Promise<string> => {
-		const payload = await this.http.post(
-			`/auth/reset-password`,
-			data,
-			undefined,
-		);
+		const payload = await this.http.post(`/auth/reset-password`, data);
 
 		return payload.data.data;
 	};
