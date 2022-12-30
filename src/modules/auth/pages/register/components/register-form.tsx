@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -78,20 +78,28 @@ export type RegisterFormData = yup.InferType<typeof schema>;
 
 interface RegisterFormProps {
 	isLoading: boolean;
+	error?: string;
 	onSubmit: (data: RegisterFormData) => void;
 }
 
 export const RegisterForm: React.FC<RegisterFormProps> = ({
+	error,
 	isLoading,
 	onSubmit,
 }) => {
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError
 	} = useForm<RegisterFormData>({
 		resolver: yupResolver(schema),
 	});
+
+	useEffect(() => {
+		setError('email', {type: 'custom', message: error})
+	}, [error]);
 
 	return (
 		<Box

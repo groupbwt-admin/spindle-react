@@ -8,8 +8,9 @@ import {
 	RegisterForm,
 	RegisterFormData,
 } from 'modules/auth/pages/register/components/register-form';
-import { AuthApi } from 'app/api/auth-api/auth-api';
+import {AuthApi, LoginDataDto, RegisterDataDto} from 'app/api/auth-api/auth-api';
 import { authState } from 'app/store/auth/state';
+import {AxiosError} from "axios";
 
 const Title = styled(Typography)`
 	margin-top: 20px;
@@ -32,7 +33,8 @@ const LoginFootnote = styled(Typography)`
 `;
 
 export const RegisterPage = () => {
-	const registerMutation = useMutation(AuthApi.register, {
+	const registerMutation = useMutation<{ accessToken: string },
+		AxiosError<{ message: string }>, RegisterDataDto>(AuthApi.register, {
 		onSuccess: (data) => {
 			authState.setUser(data.accessToken);
 		},
@@ -48,8 +50,9 @@ export const RegisterPage = () => {
 				Sign up to Spindle
 			</Title>
 			<RegisterForm
-				onSubmit={handleSubmit}
 				isLoading={registerMutation.isLoading}
+				error={registerMutation.error?.response?.data?.message}
+				onSubmit={handleSubmit}
 			/>
 			<LoginFootnote variant="subtitle2">
 				Already have an account?{' '}
