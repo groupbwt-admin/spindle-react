@@ -3,7 +3,6 @@ import * as React from 'react';
 import { CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
-	selectIsEmailConfirmed,
 	selectIsLoggedIn,
 } from 'app/store/auth/selects';
 import { MainLayout } from 'shared/layout/main-layout';

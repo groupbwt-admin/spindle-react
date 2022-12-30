@@ -7,7 +7,7 @@ import {
 	RegisterForm,
 	RegisterFormData,
 } from 'modules/auth/pages/register/components/register-form';
-import {AuthApi, LoginDataDto, RegisterDataDto} from 'app/api/auth-api/auth-api';
+import {AuthApi, RegisterDataDto} from 'app/api/auth-api/auth-api';
 import { authState } from 'app/store/auth/state';
 import {AxiosError} from "axios";
 
