@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';

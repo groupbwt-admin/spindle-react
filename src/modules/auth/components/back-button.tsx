@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button } from 'shared/components/button/button';
 import { Link } from 'react-router-dom';
 import { AUTH_ROUTES } from 'shared/config/routes';

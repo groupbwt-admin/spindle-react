@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { css, styled } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
@@ -65,7 +65,7 @@ const QuoteIconStyled = styled(Icon)`
 const UserDesc = styled(Typography)``;
 
 export const AuthSlider = () => {
-	const [activeStep, setActiveStep] = React.useState(0);
+	const [activeStep, setActiveStep] = useState(0);
 	const maxSteps = steps.length;
 
 	const handleNext = () => {

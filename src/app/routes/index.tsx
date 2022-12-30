@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import { AuthGuard } from 'app/guards/auth-guard';

@@ -1,5 +1,5 @@
 import {Avatar, Box} from "@mui/material";
-import React from "react";
+import * as React from "react";
 import {styled} from "@mui/material/styles";
 import {FileInput, FileInputProps} from "shared/components/input/file-input";
 

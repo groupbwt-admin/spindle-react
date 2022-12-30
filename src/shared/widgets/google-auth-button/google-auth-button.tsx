@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import * as React from 'react';
 import { useMutation } from 'react-query';
 import { GoogleButton } from 'shared/components/google-button/google-button';
 import { useGoogleLogin } from 'shared/hooks/use-google-login';

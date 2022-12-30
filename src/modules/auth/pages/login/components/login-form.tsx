@@ -1,4 +1,5 @@
-import React, {useEffect} from 'react';
+import { useEffect } from 'react';
+import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';

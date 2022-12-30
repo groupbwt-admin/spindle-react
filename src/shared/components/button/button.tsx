@@ -1,4 +1,5 @@
-import React, { ButtonHTMLAttributes, forwardRef } from 'react';
+import { ButtonHTMLAttributes, forwardRef } from 'react';
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import ExternalButton, {
 	ButtonProps as ExternalButtonProps,

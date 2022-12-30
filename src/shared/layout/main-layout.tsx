@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { Container } from '@mui/material';
 import { AppMenu } from 'shared/layout/components/app-menu';

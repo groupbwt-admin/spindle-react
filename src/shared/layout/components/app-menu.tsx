@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { css } from '@mui/material/styles';
 import styled from '@emotion/styled/macro';
@@ -160,7 +160,7 @@ const StyledUserIconButton = styled(IconButton)`
 `
 
 export const AppMenu = () => {
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
 
 	const toggleDrawer = () => {
 		setOpen((prev) => !prev);

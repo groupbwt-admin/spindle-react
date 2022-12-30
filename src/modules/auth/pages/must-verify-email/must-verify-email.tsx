@@ -1,4 +1,3 @@
-import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography } from 'shared/components/typography/typography';
 import { useMutation } from 'react-query';

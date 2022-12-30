@@ -1,4 +1,5 @@
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { Button, ButtonProps } from 'shared/components/button/button';
 import { Icon } from 'shared/components/icon/icon';

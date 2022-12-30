@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { AuthLayout } from 'modules/auth/components/layout';
 import {Outlet, useLocation} from 'react-router-dom';
 import { AUTH_ROUTES } from 'shared/config/routes';

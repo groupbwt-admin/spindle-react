@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import * as React from 'react';
 import { CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {

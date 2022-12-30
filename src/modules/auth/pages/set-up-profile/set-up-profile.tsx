@@ -1,4 +1,3 @@
-import React from 'react';
 import { useMutation } from 'react-query';
 import { styled } from '@mui/material/styles';
 import { SetUpProfileForm } from 'modules/auth/pages/set-up-profile/components/set-up-profile-form';

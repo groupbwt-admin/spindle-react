@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import { selectUserData } from 'app/store/user/selects';

@@ -1,4 +1,5 @@
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
+import * as React from 'react';
 import { Input, InputProps } from './input';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';

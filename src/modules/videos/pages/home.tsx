@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Typography } from 'shared/components/typography/typography';
 import styled from '@emotion/styled/macro';
 import { Button } from 'shared/components/button/button';
