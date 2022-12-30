@@ -5,8 +5,9 @@ import { LoginForm } from 'modules/auth/pages/login/components/login-form';
 import { AuthLink } from 'modules/auth/components/link';
 import { AUTH_ROUTES } from 'shared/config/routes';
 import { useMutation } from 'react-query';
-import { AuthApi } from 'app/api/auth-api/auth-api';
+import { AuthApi, LoginDataDto } from 'app/api/auth-api/auth-api';
 import { authState } from 'app/store/auth/state';
+import { AxiosError } from 'axios/index';
 
 const Title = styled(Typography)`
 	margin-bottom: 36px;
@@ -28,7 +29,11 @@ const Footer = styled(Typography)`
 `;
 
 export const LoginPage = () => {
-	const loginMutation = useMutation(AuthApi.login, {
+	const loginMutation = useMutation<
+		{ accessToken: string },
+		AxiosError<{ message: string }>,
+		LoginDataDto
+	>(AuthApi.login, {
 		onSuccess: async (data) => {
 			authState.setUser(data.accessToken);
 		},
@@ -43,7 +48,11 @@ export const LoginPage = () => {
 			<Title variant="h1" component="h1">
 				Sign in to Spindle
 			</Title>
-			<LoginForm onSubmit={handleSubmit} isLoading={loginMutation.isLoading} />
+			<LoginForm
+				onSubmit={handleSubmit}
+				isLoading={loginMutation.isLoading}
+				error={loginMutation.error?.response?.data?.message}
+			/>
 			<Footer variant="subtitle2">
 				Don’t have an account?{' '}
 				<AuthLink to={AUTH_ROUTES.REGISTER.path}>Sign up</AuthLink>
