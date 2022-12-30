@@ -40,28 +40,33 @@ const StyledDivider = styled(Divider)(
 const schema = yup
 	.object({
 		email: yup.string().email().required('This field is required'),
-		password: yup.string().test({
-			name: 'password',
-			test: function (value, { createError }) {
-				const errors: ValidationPasswordErrors = validatePassword(value || '');
+		password: yup
+			.string()
+			.test({
+				name: 'password',
+				test: function (value, { createError }) {
+					const errors: ValidationPasswordErrors = validatePassword(
+						value || '',
+					);
 
-				if (errors.hasNotValue) {
-					return createError({
-						message: Object.values(errors).join(',  '),
-					});
-				}
+					if (errors.hasNotValue) {
+						return createError({
+							message: errors.hasNotValue,
+						});
+					}
 
-				if (Object.keys(errors).length) {
-					return createError({
-						message: Object.values(errors)
-							.map((error) => '– ' + error)
-							.join('\n'),
-					});
-				}
+					if (Object.keys(errors).length) {
+						return createError({
+							message: Object.values(errors)
+								.map((error) => '– ' + error)
+								.join('\n'),
+						});
+					}
 
-				return true;
-			},
-		}).required(),
+					return true;
+				},
+			})
+			.required(),
 		confirmPassword: yup
 			.string()
 			.oneOf([yup.ref('password')], 'The password confirmation does not match')

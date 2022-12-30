@@ -25,7 +25,7 @@ const schema = yup
 
 				if (errors.hasNotValue) {
 					return createError({
-						message: Object.values(errors).join(',  '),
+						message: errors.hasNotValue,
 					});
 				}
 
