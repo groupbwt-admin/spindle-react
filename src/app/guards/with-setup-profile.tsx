@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { AUTH_ROUTES } from 'shared/config/routes';
+import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import { selectUserData } from 'app/store/user/selects';
 import { selectIsLoggedIn } from 'app/store/auth/selects';
 
@@ -23,6 +23,24 @@ export const withSetupProfile = (Component) => {
 			!isSetupProfilePage
 		) {
 			return <Navigate to={AUTH_ROUTES.SET_UP_PROFILE.path} replace />;
+		}
+
+		if (
+			isLoggedIn &&
+			userData &&
+			isSetupProfilePage &&
+			(userData.firstName || userData.lastName)
+		) {
+			return (
+				<Navigate
+					to={
+						location.state?.from
+							? location.state.from
+							: VIDEO_ROUTES.MY_VIDEOS.path
+					}
+					replace
+				/>
+			);
 		}
 
 		return <Component {...props} />;
