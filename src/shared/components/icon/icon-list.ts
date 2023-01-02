@@ -4,6 +4,8 @@ import { ReactComponent as ArrowLeftOutlined } from 'shared/components/icon/coll
 import { ReactComponent as QuoteIcon } from 'shared/components/icon/collection/quote.svg';
 import { ReactComponent as ChevronDown } from 'shared/components/icon/collection/chevron-down.svg';
 import { ReactComponent as EmptyCheckbox } from 'shared/components/icon/collection/empty-checkbox.svg';
+import { ReactComponent as Logout } from 'shared/components/icon/collection/logout.svg';
+import { ReactComponent as Edit } from 'shared/components/icon/collection/edit.svg';
 
 export const ICON_COLLECTION = {
 	arrow_left: ArrowLeft,
@@ -12,6 +14,8 @@ export const ICON_COLLECTION = {
 	quote: QuoteIcon,
 	chevron_down: ChevronDown,
 	empty_checkbox: EmptyCheckbox,
+	logout: Logout,
+	edit: Edit,
 };
 
 type Keys = keyof typeof ICON_COLLECTION;
