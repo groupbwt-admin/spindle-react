@@ -41,7 +41,7 @@ const StyledDivider = styled(Divider)(
 
 const StyledCheckbox = styled(Checkbox)`
 	margin-top: 4px;
-	margin-bottom: 44px;
+	margin-bottom: 38px;
 `;
 
 const schema = yup

@@ -25,10 +25,6 @@ const StyledCheckbox = styled(ExternalCheckbox)`
 		width: 16px;
 		height: 16px;
 	}
-
-	svg {
-		opacity: 1;
-	}
 `;
 
 const RootCheckbox: React.ForwardRefRenderFunction<
