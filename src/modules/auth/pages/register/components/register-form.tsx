@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Box, Divider } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import { Input } from 'shared/components/input/input';
 import { PasswordInput } from 'shared/components/input/password-input';
 import { Button } from 'shared/components/button/button';
@@ -13,6 +13,8 @@ import {
 	ValidationPasswordErrors,
 } from 'shared/utils/validation-password';
 import { GoogleAuthButtonWidget } from 'shared/widgets/google-auth-button/google-auth-button';
+import { Checkbox } from 'shared/components/checkbox/checkbox';
+import { AuthLink } from 'modules/auth/components/link';
 
 const StyledInput = styled(Input)`
 	margin-top: 47px;
@@ -20,7 +22,6 @@ const StyledInput = styled(Input)`
 
 const StyledPasswordInput = styled(PasswordInput)`
 	margin-top: 36px;
-	margin-bottom: 40px;
 `;
 
 const StyledDivider = styled(Divider)(
@@ -37,6 +38,11 @@ const StyledDivider = styled(Divider)(
 		}
 	`,
 );
+
+const StyledCheckbox = styled(Checkbox)`
+	margin-top: 4px;
+	margin-bottom: 44px;
+`;
 
 const schema = yup
 	.object({
@@ -83,24 +89,37 @@ interface RegisterFormProps {
 	onSubmit: (data: RegisterFormData) => void;
 }
 
+const CheckboxLabel = (
+	<Typography variant="subtitle2">
+		By signing up, I agree to Spindle’s{' '}
+		<AuthLink to={'/terms-of-use'}>Terms</AuthLink> and{' '}
+		<AuthLink to={'/privacy-policy'}>Privacy Policy</AuthLink>.
+	</Typography>
+);
+
 export const RegisterForm: React.FC<RegisterFormProps> = ({
 	error,
 	isLoading,
 	onSubmit,
 }) => {
-
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-		setError
+		setError,
 	} = useForm<RegisterFormData>({
 		resolver: yupResolver(schema),
 	});
 
+	const [isTermsAgreed, setIsTermsAgreed] = useState(false);
+
 	useEffect(() => {
-		setError('email', {type: 'custom', message: error})
+		setError('email', { type: 'custom', message: error });
 	}, [error]);
+
+	const handleTermsAgreement = (val) => {
+		setIsTermsAgreed(val.target.checked);
+	};
 
 	return (
 		<Box
@@ -134,9 +153,16 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 				error={!!errors.confirmPassword}
 				errorText={errors.confirmPassword?.message as string}
 			/>
+			<StyledCheckbox
+				label={CheckboxLabel}
+				checked={isTermsAgreed}
+				required
+				onChange={handleTermsAgreement}
+			/>
 			<Button
 				label="Verify Email Address"
 				type="submit"
+				disabled={!isTermsAgreed}
 				isLoading={isLoading}
 				fullWidth
 			/>
