@@ -7,13 +7,12 @@ import {
 	RegisterForm,
 	RegisterFormData,
 } from 'modules/auth/pages/register/components/register-form';
-import {AuthApi, RegisterDataDto} from 'app/api/auth-api/auth-api';
+import { AuthApi, RegisterDataDto } from 'app/api/auth-api/auth-api';
 import { authState } from 'app/store/auth/state';
-import {AxiosError} from "axios";
+import { AxiosError } from 'axios';
 
 const Title = styled(Typography)`
-	margin-top: 20px;
-	margin-bottom: 24px;
+	margin-bottom: 40px;
 	text-align: center;
 `;
 
@@ -28,12 +27,15 @@ const LoginContainer = styled('div')`
 
 const LoginFootnote = styled(Typography)`
 	position: absolute;
-	bottom: 10px;
+	bottom: 24px;
 `;
 
 export const RegisterPage = () => {
-	const registerMutation = useMutation<{ accessToken: string },
-		AxiosError<{ message: string }>, RegisterDataDto>(AuthApi.register, {
+	const registerMutation = useMutation<
+		{ accessToken: string },
+		AxiosError<{ message: string }>,
+		RegisterDataDto
+	>(AuthApi.register, {
 		onSuccess: (data) => {
 			authState.setUser(data.accessToken);
 		},
