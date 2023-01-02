@@ -12,7 +12,6 @@ import { authState } from 'app/store/auth/state';
 import { AxiosError } from 'axios';
 
 const Title = styled(Typography)`
-	margin-top: 4px;
 	margin-bottom: 40px;
 	text-align: center;
 `;

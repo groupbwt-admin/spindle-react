@@ -4,17 +4,8 @@ import { styled } from '@mui/material/styles';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { Icon } from 'shared/components/icon/icon';
 
-export interface CheckboxProps {
-	checked: boolean;
-	required?: boolean;
-	className?: string;
-	label?: React.ReactNode | string;
-	tabIndex?: InputHTMLAttributes<HTMLInputElement>['tabIndex'];
-	onChange?: InputHTMLAttributes<HTMLInputElement>['onChange'];
-}
-
 const StyledCheckbox = styled(ExternalCheckbox)`
-	margin-right: 8px;
+	margin-right: 12px;
 	width: 16px;
 	height: 16px;
 	color: #eeeff1;
@@ -26,6 +17,15 @@ const StyledCheckbox = styled(ExternalCheckbox)`
 		height: 16px;
 	}
 `;
+
+export interface CheckboxProps {
+	checked: boolean;
+	required?: boolean;
+	className?: string;
+	label?: React.ReactNode | string;
+	tabIndex?: InputHTMLAttributes<HTMLInputElement>['tabIndex'];
+	onChange?: InputHTMLAttributes<HTMLInputElement>['onChange'];
+}
 
 const RootCheckbox: React.ForwardRefRenderFunction<
 	HTMLInputElement,

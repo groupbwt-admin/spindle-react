@@ -21,7 +21,7 @@ const StyledInput = styled(Input)`
 `;
 
 const StyledPasswordInput = styled(PasswordInput)`
-	margin-top: 36px;
+	margin-top: 32px;
 `;
 
 const StyledDivider = styled(Divider)(
@@ -43,6 +43,18 @@ const StyledCheckbox = styled(Checkbox)`
 	margin-top: 4px;
 	margin-bottom: 38px;
 `;
+
+const StyledCheckboxLabel = styled(Typography)`
+	line-height: 12px;
+`;
+
+const CheckboxLabel = (
+	<StyledCheckboxLabel variant="subtitle2">
+		By signing up, I agree to Spindle’s{' '}
+		<AuthLink to={'/terms-of-use'}>Terms</AuthLink> and{' '}
+		<AuthLink to={'/privacy-policy'}>Privacy Policy</AuthLink>.
+	</StyledCheckboxLabel>
+);
 
 const schema = yup
 	.object({
@@ -88,14 +100,6 @@ interface RegisterFormProps {
 	error?: string;
 	onSubmit: (data: RegisterFormData) => void;
 }
-
-const CheckboxLabel = (
-	<Typography variant="subtitle2">
-		By signing up, I agree to Spindle’s{' '}
-		<AuthLink to={'/terms-of-use'}>Terms</AuthLink> and{' '}
-		<AuthLink to={'/privacy-policy'}>Privacy Policy</AuthLink>.
-	</Typography>
-);
 
 export const RegisterForm: React.FC<RegisterFormProps> = ({
 	error,
