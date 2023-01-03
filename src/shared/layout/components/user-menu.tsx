@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled/macro';
-import { Avatar, Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem } from '@mui/material';
 import { css } from '@mui/material/styles';
 import { useLogout } from 'shared/hooks/use-logout';
 import { selectUserData } from 'app/store/user/selects';
@@ -8,6 +8,7 @@ import { APP_ROLE_NAMES } from 'shared/constants/roles';
 import { Typography } from 'shared/components/typography/typography';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
+import { Avatar } from 'shared/components/avatar/avatar';
 
 const UserInfo = styled.div`
 	max-width: calc(100% - 92px);
@@ -45,11 +46,7 @@ const UserInfoContainer = styled.div<{
 `;
 
 const UserAvatar = styled(Avatar)`
-	width: 42px;
-	height: 42px;
-	border: 2px solid #ffffff;
 	margin-right: 10px;
-	flex-shrink: 0;
 `;
 
 const StyledUserIcon = styled(Icon)<{
@@ -143,7 +140,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 				aria-haspopup="true"
 				aria-expanded={open ? 'true' : undefined}
 			>
-				<UserAvatar alt={userName} />
+				<UserAvatar src={user.avatar} alt={userName} />
 				<UserInfo>
 					<Typography variant="h3">{userName}</Typography>
 					{userRole && <Typography variant="body2">{userRole}</Typography>}
@@ -173,7 +170,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 				}}
 			>
 				<MenuUserBio>
-					<UserAvatar alt={userName} />
+					<UserAvatar src={user.avatar} alt={userName} />
 					<UserInfo>
 						<Typography variant="h3">{userName}</Typography>
 						<MenuUserVideosInfo variant="body2">8 videos</MenuUserVideosInfo>
