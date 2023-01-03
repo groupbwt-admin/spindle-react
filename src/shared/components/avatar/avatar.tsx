@@ -1,6 +1,7 @@
-import React from "react";
-import { Avatar as MuiAvatar } from '@mui/material';
+import React from 'react';
 import styled from '@emotion/styled/macro';
+import { Avatar as MuiAvatar } from '@mui/material';
+import { USER_AVATAR_STORAGE_PATH } from 'shared/constants/file-storage-path';
 
 const StyledAvatar = styled(MuiAvatar)`
 	width: 42px;
@@ -16,5 +17,11 @@ interface AvatarProps {
 }
 
 export const Avatar: React.FC<AvatarProps> = ({ className, src, alt }) => {
-	return <StyledAvatar className={className} src={src} alt={alt} />;
+	return (
+		<StyledAvatar
+			className={className}
+			src={USER_AVATAR_STORAGE_PATH + src}
+			alt={alt}
+		/>
+	);
 };
