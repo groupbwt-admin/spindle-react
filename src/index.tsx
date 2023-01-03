@@ -147,7 +147,7 @@ root.render(
 			<QueryClientProvider client={queryClient}>
 				<BrowserRouter>
 					<App />
-					<ReactQueryDevtools initialIsOpen={false} />
+					<ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
 				</BrowserRouter>
 			</QueryClientProvider>
 		</ThemeProvider>

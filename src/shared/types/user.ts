@@ -4,6 +4,7 @@ export interface IUser {
 	firstName: string;
 	lastName: string;
 	avatar: string;
+	role: string;
 	hashedPassword: string;
 	isRegisteredWithGoogle: boolean;
 	isEmailConfirmed: boolean;
