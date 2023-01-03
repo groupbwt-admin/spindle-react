@@ -59,7 +59,9 @@ export const useGoogleLogin = ({
 				const params = {
 					client_id: clientId,
 					ux_mode: uxMode,
-					scope: 'https://www.googleapis.com/auth/userinfo.profile',
+					scope:
+						'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+
 					callback: (res: GoogleRequestResponse) => {
 						onSuccess(res);
 					},
