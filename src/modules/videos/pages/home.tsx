@@ -7,8 +7,7 @@ import {ReactComponent as IconRecord} from "shared/components/icon/collection/re
 import {TabsList} from "shared/components/tabs/tabs-list";
 import {Tab} from "shared/components/tabs/tab";
 ///recording
-import VideoJSComponent from '../components/VideoJSComponent'
-
+import {useRecording} from '../hooks/useRecording'
 
 const HeaderContainer = styled.div`
 	display: flex;
@@ -34,48 +33,9 @@ export const HomePage = () => {
 		setValue(newValue);
 	};
 	/////// recording example
-	const playerRef = React.useRef(null);
+	const videoR: any = React.useRef(null);
+	const {startRecording, stopRecording, pause, resume} = useRecording({videoR})
 
-	const videoJsOptions = {
-		controls: true,
-		bigPlayButton: false,
-		width: 320,
-		height: 240,
-		fluid: false,
-		plugins: {
-			record: {
-				screen: true,
-				audio: true,
-				maxLength: 10,
-				debug: true,
-
-			}
-		}
-	};
-
-	const handlePlayerReady = (player: any) => {
-		playerRef.current = player;
-
-		player.on('deviceReady', () => {
-			console.log('device is ready!');
-		});
-
-		player.on('startRecord', () => {
-			console.log('started recording!');
-		});
-
-		player.on('finishRecord', () => {
-			console.log('finished recording: ', player.recordedData);
-		});
-
-		player.on('error', (element, error) => {
-			console.warn(error);
-		});
-
-		player.on('deviceError', () => {
-			console.error('device error:', player.deviceErrorCode);
-		});
-	};
 
 	return <MainLayout>
 		<HeaderContainer>
@@ -92,7 +52,11 @@ export const HomePage = () => {
 			</TabsList>
 		</ContentContainer>
 		<div>Rest of app here</div>
-		<VideoJSComponent options={videoJsOptions} onReady={handlePlayerReady}/>
+		<video src="" ref={videoR}></video>
 		<div>Rest of app here</div>
+		<button onClick={() => startRecording()}>start</button>
+		<button onClick={() => stopRecording()}>stop</button>
+		<button onClick={() => pause()}>pause</button>
+		<button onClick={() => resume()}>resume</button>
 	</MainLayout>
 }
