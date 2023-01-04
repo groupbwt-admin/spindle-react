@@ -1,14 +1,19 @@
 import React, {useEffect, useState} from 'react';
-
+import {useStopWatch} from './useStopWatch'
 
 export const useRecording = (props: any) => {
+	const {
+		startTimer,
+		stopTimer,
+		time,
+	} = useStopWatch()
 	const {videoR} = props
 	let stream: any = null
 	let audio: any = null
 	let mixedStream: any = null
 	let recorder: any = null
 	let chunks: Blob[] = []
-
+	console.log(time)
 	async function setupStream() {
 		try {
 			stream = await navigator.mediaDevices.getDisplayMedia({
@@ -37,6 +42,7 @@ export const useRecording = (props: any) => {
 			recorder.ondataavailable = handleDataAvailable;
 			recorder.onstop = handleStop;
 			recorder.start(1000);
+			// startTimer()
 			console.log('Recording started');
 		} else {
 			console.warn('No stream available.');
@@ -64,14 +70,17 @@ export const useRecording = (props: any) => {
 		audio.getTracks().forEach((track) => track.stop());
 
 		console.log('Recording stopped');
+
 	}
 
 	function pause() {
 		recorder.pause()
+		// stopTimer()
 	}
 
 	function resume() {
 		recorder.resume()
+		// startTimer()
 	}
 
 

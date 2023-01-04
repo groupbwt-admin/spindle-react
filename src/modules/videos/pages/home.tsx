@@ -32,7 +32,7 @@ export const HomePage = () => {
 	const handleChange = (event: React.SyntheticEvent, newValue: number) => {
 		setValue(newValue);
 	};
-	/////// recording example
+
 	const videoR: any = React.useRef(null);
 	const {startRecording, stopRecording, pause, resume} = useRecording({videoR})
 
