@@ -130,7 +130,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 
 	if (!user) return <></>;
 
-	const userName = `${user.firstName} ${user.lastName}`;
 	const userRole = APP_ROLE_NAMES[user.role];
 	const open = Boolean(anchorEl);
 
@@ -143,9 +142,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 				aria-haspopup="true"
 				aria-expanded={open ? 'true' : undefined}
 			>
-				<UserAvatar src={user.avatar} alt={userName} />
+				<UserAvatar src={user.avatar} alt={user.fullName} />
 				<UserInfo>
-					<Typography variant="h3">{userName}</Typography>
+					<Typography variant="h3">{user.fullName}</Typography>
 					{userRole && <Typography variant="body2">{userRole}</Typography>}
 				</UserInfo>
 				<StyledUserIcon icon={ICON_COLLECTION.chevron_down} open={open} />
@@ -173,9 +172,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 				}}
 			>
 				<MenuUserBio>
-					<UserAvatar src={user.avatar} alt={userName} />
+					<UserAvatar src={user.avatar} alt={user.fullName} />
 					<UserInfo>
-						<Typography variant="h3">{userName}</Typography>
+						<Typography variant="h3">{user.fullName}</Typography>
 						<MenuUserVideosInfo variant="body2">8 videos</MenuUserVideosInfo>
 					</UserInfo>
 				</MenuUserBio>

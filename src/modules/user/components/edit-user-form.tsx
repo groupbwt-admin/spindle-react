@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import styled from '@emotion/styled/macro';
 import { Box } from '@mui/material';
 import { Input } from 'shared/components/input/input';
-import { useForm } from 'react-hook-form';
+import { FormState, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AvatarUploader } from 'shared/components/avatar-uploader/avatar-uploader';
 import { IUser } from 'shared/types/user';
@@ -11,7 +11,6 @@ import {
 	DropzoneErrors,
 	FileInvalidDropzone,
 } from 'shared/components/input/file-input';
-import {getUserAvatarURL} from "shared/utils/get-file-url";
 
 const FormGroup = styled.div`
 	display: flex;
@@ -34,7 +33,7 @@ const schema = yup
 	.object({
 		firstName: yup.string().trim().required(),
 		lastName: yup.string().trim().required(),
-		avatar: yup.mixed(),
+		file: yup.mixed(),
 	})
 	.defined();
 
@@ -43,32 +42,37 @@ type SetUpProfileFormData = yup.InferType<typeof schema>;
 interface SetUpProfileFormProps {
 	user?: IUser | null;
 	isLoading: boolean;
-	onSubmit: (data: SetUpProfileFormData) => void;
+	onSubmit: (data: Partial<SetUpProfileFormData>) => void;
+	children: (formState: FormState<SetUpProfileFormData>) => React.ReactNode;
 }
 
-export const EditUserForm: React.FC<
-	React.PropsWithChildren<SetUpProfileFormProps>
-> = ({ user, isLoading, onSubmit, children }) => {
+export const EditUserForm: React.FC<SetUpProfileFormProps> = ({
+	user,
+	isLoading,
+	onSubmit,
+	children,
+}) => {
 	const {
 		register,
 		watch,
 		setValue,
 		handleSubmit,
 		setError,
+		formState,
 		formState: { errors },
 	} = useForm<SetUpProfileFormData>({
 		resolver: yupResolver(schema),
 		defaultValues: {
 			firstName: user?.firstName,
 			lastName: user?.lastName,
-			avatar: user ? getUserAvatarURL(user.avatar) : undefined
+			file: user ? user.avatar : undefined,
 		},
 	});
 
-	const avatar = watch('avatar');
+	const avatar = watch('file');
 
 	const onAvatarChange = ([file]: File[]) => {
-		setValue('avatar', file, {
+		setValue('file', file, {
 			shouldValidate: true,
 			shouldDirty: true,
 		});
@@ -76,29 +80,36 @@ export const EditUserForm: React.FC<
 
 	const onAvatarDownloadError = ([invalidFile]: FileInvalidDropzone[]) => {
 		if (invalidFile.errors.includes(DropzoneErrors.MAX_SIZE)) {
-			setError('avatar', {
+			setError('file', {
 				message: 'Max size 3 mb',
 			});
 			return;
 		}
 		if (invalidFile.errors.includes(DropzoneErrors.TYPE)) {
-			setError('avatar', {
+			setError('file', {
 				message: 'Allowed types: jpeg, jpg, png',
 			});
 			return;
 		}
-		setError('avatar', { message: invalidFile.errors[0] });
+		setError('file', { message: invalidFile.errors[0] });
 	};
 
 	const onRemoveAvatar = () => {
-		setValue('avatar', null, {
+		setValue('file', null, {
 			shouldValidate: true,
 			shouldDirty: true,
 		});
 	};
 
 	const handleSubmitSetUpProfileForm = (data) => {
-		onSubmit(data);
+		const payload = {};
+		for (const fieldName in formState.dirtyFields) {
+			const isDirty = formState.dirtyFields[fieldName];
+			if (isDirty) {
+				payload[fieldName] = data[fieldName];
+			}
+		}
+		onSubmit(payload);
 	};
 
 	return (
@@ -112,7 +123,7 @@ export const EditUserForm: React.FC<
 					onChange={onAvatarChange}
 					onError={onAvatarDownloadError}
 					onRemove={onRemoveAvatar}
-					errorMessage={errors?.avatar?.message as string}
+					errorMessage={errors?.file?.message as string}
 					avatar={avatar}
 				/>
 				<FormGroup>
@@ -137,7 +148,7 @@ export const EditUserForm: React.FC<
 					/>
 				</FormGroup>
 			</FormContainer>
-			{children}
+			{children(formState)}
 		</Box>
 	);
 };

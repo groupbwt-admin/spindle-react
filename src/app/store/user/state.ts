@@ -1,23 +1,43 @@
-import { proxy } from 'valtio';
 import { UserApi } from 'app/api/user-api/user-api';
-import { IUser } from 'shared/types/user';
+import { IUser, IUserExtended } from 'shared/types/user';
+import { proxyWithComputed } from 'valtio/utils';
+import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
 interface IUserState {
-	user: IUser | null;
+	userData: IUser | null;
 	isLoading: boolean;
 	getProfile: () => Promise<void>;
 	setProfile: (user: IUser | null) => void;
 }
 
-export const userState = proxy<IUserState>({
-	user: null,
-	isLoading: false,
-	getProfile: async function () {
-		this.isLoading = true;
-		this.user = await UserApi.getProfile();
-		this.isLoading = false;
+interface IUserStateComputed {
+	user: IUserExtended | null;
+}
+
+export const userState = proxyWithComputed<IUserState, IUserStateComputed>(
+	{
+		userData: null,
+		isLoading: false,
+		getProfile: async function () {
+			this.isLoading = true;
+			this.userData = await UserApi.getProfile();
+			this.isLoading = false;
+		},
+		setProfile(user: IUser | null) {
+			this.userData = user;
+		},
 	},
-	setProfile(user: IUser | null) {
-		this.user = user;
+	{
+		user: (state) => {
+			if (!state.userData) return null;
+
+			return {
+				...state.userData,
+				fullName: `${state.userData.firstName} ${state.userData.lastName}`,
+				avatar: state.userData.avatar
+					? getUserAvatarURL(state.userData.avatar)
+					: state.userData.avatar,
+			};
+		},
 	},
-});
+);

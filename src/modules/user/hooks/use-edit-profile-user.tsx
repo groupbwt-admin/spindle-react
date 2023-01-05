@@ -15,7 +15,7 @@ export function useEditProfileUser() {
 	const setUpProfileMutation = useMutation(UserApi.updateProfile, {
 		onSuccess: async (userData) => {
 			userState.setProfile(userData);
-			handleClose()
+			handleClose();
 		},
 		onError: async (error) => {
 			console.log(error);
@@ -40,15 +40,24 @@ export function useEditProfileUser() {
 				isLoading={setUpProfileMutation.isLoading}
 				onSubmit={handleSubmit}
 			>
-				<Modal.Footer>
-					<Button
-						label="Cancel"
-						fullWidth
-						variant="outlined"
-						color="secondary"
-					/>
-					<Button label="Save Changes" fullWidth type="submit" />
-				</Modal.Footer>
+				{(formState) => (
+					<Modal.Footer>
+						<Button
+							label="Cancel"
+							fullWidth
+							variant="outlined"
+							color="secondary"
+							disabled={setUpProfileMutation.isLoading}
+						/>
+						<Button
+							label="Save Changes"
+							fullWidth
+							type="submit"
+							disabled={!formState.isDirty}
+							isLoading={setUpProfileMutation.isLoading}
+						/>
+					</Modal.Footer>
+				)}
 			</EditUserForm>
 		</Modal.Root>
 	);

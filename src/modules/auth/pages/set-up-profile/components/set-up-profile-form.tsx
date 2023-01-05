@@ -23,7 +23,7 @@ const schema = yup
 	.object({
 		firstName: yup.string().trim().required(),
 		lastName: yup.string().trim().required(),
-		avatar: yup.mixed()
+		file: yup.mixed()
 	})
 	.defined();
 
@@ -51,10 +51,10 @@ export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 		resolver: yupResolver(schema),
 	});
 
-	const avatar = watch('avatar');
+	const avatar = watch('file');
 
 	const onAvatarChange = ([file]: File[]) => {
-		setValue('avatar', file, {
+		setValue('file', file, {
 			shouldValidate: true,
 			shouldDirty: true,
 		});
@@ -62,22 +62,22 @@ export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 
 	const onAvatarDownloadError = ([invalidFile]: FileInvalidDropzone[]) => {
 		if (invalidFile.errors.includes(DropzoneErrors.MAX_SIZE)) {
-			setError('avatar', {
+			setError('file', {
 				message: 'Max size 3 mb',
 			});
 			return;
 		}
 		if (invalidFile.errors.includes(DropzoneErrors.TYPE)) {
-			setError('avatar', {
+			setError('file', {
 				message: 'Allowed types: jpeg, jpg, png',
 			});
 			return;
 		}
-		setError('avatar', { message: invalidFile.errors[0] });
+		setError('file', { message: invalidFile.errors[0] });
 	};
 
 	const onRemoveAvatar = () => {
-		setValue('avatar', null, {
+		setValue('file', null, {
 			shouldValidate: true,
 			shouldDirty: true,
 		});
@@ -94,8 +94,7 @@ export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 			onSubmit={handleSubmit(handleSubmitSetUpProfileForm)}
 		>
 			<AvatarUploader
-				errorMessage={errors?.avatar?.message as string}
-				maxSize={3000000}
+				errorMessage={errors?.file?.message as string}
 				avatar={avatar}
 				onChange={onAvatarChange}
 				onError={onAvatarDownloadError}
