@@ -13,9 +13,23 @@ export const withEmailVerification = (Component) => {
 		const authUserData = selectAuthUserData();
 		const isMustVerifyEmailPage =
 			location.pathname === AUTH_ROUTES.MUST_VERIFY_EMAIL.path;
+		const isVerifyingEmailPage =
+			location.pathname === AUTH_ROUTES.VERIFY_EMAIL.path;
 		const isEmailPage = location.pathname.startsWith(
 			AUTH_ROUTES.EMAIL_ROOT.path,
 		);
+
+		if (
+			isUserAuth &&
+			!authUserData!.isEmailConfirmed &&
+			isMustVerifyEmailPage
+		) {
+			return props.children;
+		}
+
+		if (isUserAuth && !authUserData!.isEmailConfirmed && isVerifyingEmailPage) {
+			return props.children;
+		}
 
 		if (isUserAuth && authUserData!.isEmailConfirmed && isEmailPage) {
 			return <Navigate to={VIDEO_ROUTES.MY_VIDEOS.path} replace />;
@@ -34,10 +48,6 @@ export const withEmailVerification = (Component) => {
 					replace
 				/>
 			);
-		}
-
-		if (isUserAuth && !authUserData!.isEmailConfirmed && isMustVerifyEmailPage) {
-			return props.children;
 		}
 
 		return <Component {...props} />;

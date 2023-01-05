@@ -1,3 +1,4 @@
+import { devtools } from 'valtio/utils'
 import { UserApi } from 'app/api/user-api/user-api';
 import { IUser, IUserExtended } from 'shared/types/user';
 import { proxyWithComputed } from 'valtio/utils';
@@ -41,3 +42,5 @@ export const userState = proxyWithComputed<IUserState, IUserStateComputed>(
 		},
 	},
 );
+
+devtools(userState, { name: 'userState', enabled: true });

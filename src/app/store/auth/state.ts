@@ -1,21 +1,18 @@
-import { proxyWithComputed } from 'valtio/utils';
+import { devtools, proxyWithComputed } from 'valtio/utils';
 import { IToken } from 'shared/types/token';
 import jwtDecode from 'jwt-decode';
 import { LocalStorageService } from 'shared/services/local-storage-service';
 
-interface AuthStateProps {
+interface IAuthState {
 	user: IToken | null;
 	setUser: (token: string | null) => void;
 }
 
-interface AuthStateComputedProps {
+interface IAuthStateComputed {
 	isLoggedIn: boolean;
 }
 
-export const authState = proxyWithComputed<
-	AuthStateProps,
-	AuthStateComputedProps
->(
+export const authState = proxyWithComputed<IAuthState, IAuthStateComputed>(
 	{
 		user: null,
 		setUser(token: string | null) {
@@ -36,3 +33,5 @@ export const authState = proxyWithComputed<
 		isLoggedIn: (state) => !!state.user,
 	},
 );
+
+devtools(authState, { name: 'authState', enabled: true });
