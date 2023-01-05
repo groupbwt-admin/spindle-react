@@ -1,9 +1,5 @@
 import {useState, useRef, useEffect} from "react";
 
-export type LapData = {
-	time: string;
-	lap: number;
-};
 
 const padStart = (num: number) => {
 	return num.toString().padStart(2, "0");
@@ -32,20 +28,12 @@ const formatMs = (milliseconds: number) => {
 	return str;
 };
 
-const ASYNC_KEYS = {
-	timeWhenLastStopped: "useStopWatch::timeWhenLastStopped",
-	isRunning: "useStopWatch::isRunning",
-	startTime: "useStopWatch::startTime",
-	laps: "useStopWatch::laps",
-};
 
 export const useStopWatch = () => {
 	const [time, setTime] = useState(0);
 	const [isRunning, setIsRunning] = useState(false);
 	const [startTime, setStartTime] = useState<number>(0);
 	const [timeWhenLastStopped, setTimeWhenLastStopped] = useState<number>(0);
-	const [laps, setLaps] = useState<number[]>([]);
-	const [dataLoaded, setDataLoaded] = useState(false);
 
 	const interval = useRef<ReturnType<typeof setInterval>>();
 
@@ -69,59 +57,24 @@ export const useStopWatch = () => {
 	};
 
 	const stopTimer = () => {
+		console.log('stop')
 		setIsRunning(false);
 		setStartTime(0);
 		setTimeWhenLastStopped(time);
 	};
 
-	const reset = () => {
+	const resetTimer = () => {
 		setIsRunning(false);
 		setStartTime(0);
 		setTimeWhenLastStopped(0);
 		setTime(0);
-		setLaps([]);
 	};
-
-	const lap = () => {
-		setLaps((laps) => [time, ...laps]);
-	};
-
-	let slowestLapTime: number | undefined;
-	let fastestLapTime: number | undefined;
-
-	const formattedLapData: LapData[] = laps.map((l, index) => {
-		const previousLap = laps[index + 1] || 0;
-		const lapTime = l - previousLap;
-
-		if (!slowestLapTime || lapTime > slowestLapTime) {
-			slowestLapTime = lapTime;
-		}
-
-		if (!fastestLapTime || lapTime < fastestLapTime) {
-			fastestLapTime = lapTime;
-		}
-
-		return {
-			time: formatMs(lapTime),
-			lap: laps.length - index,
-		};
-	});
-
 	return {
 		startTimer,
 		stopTimer,
-		reset,
-		lap,
-
+		resetTimer,
 		isRunning,
 		time: formatMs(time),
 
-		laps: formattedLapData,
-		currentLapTime: laps[0] ? formatMs(time - laps[0]) : formatMs(time),
-		hasStarted: time > 0,
-		slowestLapTime: formatMs(slowestLapTime || 0),
-		fastestLapTime: formatMs(fastestLapTime || 0),
-
-		dataLoaded,
 	};
 };

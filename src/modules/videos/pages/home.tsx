@@ -6,8 +6,8 @@ import {Button} from "shared/components/button/button";
 import {ReactComponent as IconRecord} from "shared/components/icon/collection/record.svg";
 import {TabsList} from "shared/components/tabs/tabs-list";
 import {Tab} from "shared/components/tabs/tab";
-///recording
 import {useRecording} from '../hooks/useRecording'
+
 
 const HeaderContainer = styled.div`
 	display: flex;
@@ -34,7 +34,26 @@ export const HomePage = () => {
 	};
 
 	const videoR: any = React.useRef(null);
-	const {startRecording, stopRecording, pause, resume} = useRecording({videoR})
+
+	const {
+		timeRecording,
+		pauseRecording,
+		resetRecording,
+		resumeRecording,
+		startRecording,
+		status,
+		chunks,
+		stopRecording,
+	} = useRecording({audio: true});
+
+	const watchVideo = () => {
+		const blob = new Blob(chunks, {'type': 'video/mp4'});
+		videoR.current.src = URL.createObjectURL(blob);
+		videoR.current.load();
+		videoR.current.onloadeddata = function () {
+			videoR.current.play();
+		}
+	}
 
 
 	return <MainLayout>
@@ -51,12 +70,18 @@ export const HomePage = () => {
 				<Tab label='All videos'/>
 			</TabsList>
 		</ContentContainer>
-		<div>Rest of app here</div>
+
+		<div>
+			<p>Status: {status}</p>
+			<p>Time: {timeRecording}</p>
+			<button onClick={startRecording}>Start Recording</button>
+			<button onClick={stopRecording}>Stop Recording</button>
+			<button onClick={pauseRecording}>Pause Recording</button>
+			<button onClick={resumeRecording}>Resume Recording</button>
+			<button onClick={resetRecording}>Reset Recording</button>
+			<button onClick={watchVideo}>watchVideo</button>
+		</div>
+
 		<video src="" ref={videoR}></video>
-		<div>Rest of app here</div>
-		<button onClick={() => startRecording()}>start</button>
-		<button onClick={() => stopRecording()}>stop</button>
-		<button onClick={() => pause()}>pause</button>
-		<button onClick={() => resume()}>resume</button>
 	</MainLayout>
 }
