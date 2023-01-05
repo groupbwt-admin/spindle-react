@@ -6,6 +6,7 @@ import { ReactComponent as ChevronDown } from 'shared/components/icon/collection
 import { ReactComponent as EmptyCheckbox } from 'shared/components/icon/collection/empty-checkbox.svg';
 import { ReactComponent as Logout } from 'shared/components/icon/collection/logout.svg';
 import { ReactComponent as Edit } from 'shared/components/icon/collection/edit.svg';
+import {ReactComponent as Close} from 'shared/components/icon/collection/close.svg';
 
 export const ICON_COLLECTION = {
 	arrow_left: ArrowLeft,
@@ -16,6 +17,7 @@ export const ICON_COLLECTION = {
 	empty_checkbox: EmptyCheckbox,
 	logout: Logout,
 	edit: Edit,
+	close: Close
 };
 
 type Keys = keyof typeof ICON_COLLECTION;

@@ -17,6 +17,7 @@ interface AvatarProps {
 }
 
 export const Avatar: React.FC<AvatarProps> = ({ className, src, alt }) => {
+
 	return (
 		<StyledAvatar
 			className={className}

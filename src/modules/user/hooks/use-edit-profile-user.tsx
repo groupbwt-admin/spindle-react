@@ -1,0 +1,57 @@
+import { useState } from 'react';
+import { Modal } from 'shared/components/modal';
+import { Typography } from 'shared/components/typography/typography';
+import { Button } from 'shared/components/button/button';
+import { EditUserForm } from 'modules/user/components/edit-user-form';
+import { useMutation } from 'react-query';
+import { UserApi } from 'app/api/user-api/user-api';
+import { userState } from 'app/store/user/state';
+import { selectUserData } from 'app/store/user/selects';
+
+export function useEditProfileUser() {
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const user = selectUserData();
+
+	const setUpProfileMutation = useMutation(UserApi.updateProfile, {
+		onSuccess: async (userData) => {
+			userState.setProfile(userData);
+			handleClose()
+		},
+		onError: async (error) => {
+			console.log(error);
+		},
+	});
+
+	const handleClose = () => setIsModalOpen(false);
+
+	const handleOpen = () => setIsModalOpen(true);
+
+	const handleSubmit = (data) => {
+		setUpProfileMutation.mutate(data);
+	};
+
+	const modal = (
+		<Modal.Root open={isModalOpen} onClose={handleClose}>
+			<Modal.Header onClose={handleClose}>
+				<Typography variant="h3">Profile Settings</Typography>
+			</Modal.Header>
+			<EditUserForm
+				user={user}
+				isLoading={setUpProfileMutation.isLoading}
+				onSubmit={handleSubmit}
+			>
+				<Modal.Footer>
+					<Button
+						label="Cancel"
+						fullWidth
+						variant="outlined"
+						color="secondary"
+					/>
+					<Button label="Save Changes" fullWidth type="submit" />
+				</Modal.Footer>
+			</EditUserForm>
+		</Modal.Root>
+	);
+
+	return { modal, handleOpen };
+}

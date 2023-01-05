@@ -1,54 +1,68 @@
 import * as React from 'react';
 import * as yup from 'yup';
-import { Button } from 'shared/components/button/button';
+import styled from '@emotion/styled/macro';
 import { Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { Input } from 'shared/components/input/input';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AvatarUploader } from 'shared/components/avatar-uploader/avatar-uploader';
-import { ButtonList } from 'shared/components/button-list/button-list';
-import {DropzoneErrors, FileInvalidDropzone} from "shared/components/input/file-input";
+import { IUser } from 'shared/types/user';
+import {
+	DropzoneErrors,
+	FileInvalidDropzone,
+} from 'shared/components/input/file-input';
+import {getUserAvatarURL} from "shared/utils/get-file-url";
 
-const StyledInput = styled(Input)`
-	margin-top: 32px;
+const FormGroup = styled.div`
+	display: flex;
+	gap: 24px;
+
+	& > * {
+		flex-grow: 1;
+	}
 `;
 
-const StyledButtonList = styled(ButtonList)`
-	flex-direction: column;
-	margin-top: 40px;
+const StyledAvatarUploader = styled(AvatarUploader)`
+	margin-bottom: 32px;
+`;
+
+const FormContainer = styled.div`
+	padding: 48px 32px;
 `;
 
 const schema = yup
 	.object({
 		firstName: yup.string().trim().required(),
 		lastName: yup.string().trim().required(),
-		avatar: yup.mixed()
+		avatar: yup.mixed(),
 	})
 	.defined();
 
 type SetUpProfileFormData = yup.InferType<typeof schema>;
 
 interface SetUpProfileFormProps {
+	user?: IUser | null;
 	isLoading: boolean;
 	onSubmit: (data: SetUpProfileFormData) => void;
-	onSignOut: () => void;
 }
 
-export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
-	isLoading,
-	onSubmit,
-	onSignOut
-}) => {
+export const EditUserForm: React.FC<
+	React.PropsWithChildren<SetUpProfileFormProps>
+> = ({ user, isLoading, onSubmit, children }) => {
 	const {
-		watch,
 		register,
-		handleSubmit,
+		watch,
 		setValue,
+		handleSubmit,
 		setError,
 		formState: { errors },
 	} = useForm<SetUpProfileFormData>({
 		resolver: yupResolver(schema),
+		defaultValues: {
+			firstName: user?.firstName,
+			lastName: user?.lastName,
+			avatar: user ? getUserAvatarURL(user.avatar) : undefined
+		},
 	});
 
 	const avatar = watch('avatar');
@@ -89,53 +103,41 @@ export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 
 	return (
 		<Box
-			sx={{ width: '100%', maxWidth: 400 }}
+			sx={{ width: '100%' }}
 			component={'form'}
 			onSubmit={handleSubmit(handleSubmitSetUpProfileForm)}
 		>
-			<AvatarUploader
-				errorMessage={errors?.avatar?.message as string}
-				maxSize={3000000}
-				avatar={avatar}
-				onChange={onAvatarChange}
-				onError={onAvatarDownloadError}
-				onRemove={onRemoveAvatar}
-			/>
-			<StyledInput
-				type="first-name"
-				label="First name"
-				placeholder="Your first name"
-				autoComplete="first-name"
-				error={!!errors.firstName}
-				errorText={errors.firstName?.message as string}
-				autoFocus
-				{...register('firstName')}
-			/>
-			<StyledInput
-				type="last-name"
-				label="Last name"
-				placeholder="Your last name"
-				autoComplete="last-name"
-				error={!!errors.lastName}
-				errorText={errors.lastName?.message as string}
-				{...register('lastName')}
-			/>
-			<StyledButtonList>
-				<Button
-					label="Continue"
-					type="submit"
-					isLoading={isLoading}
-					fullWidth
+			<FormContainer>
+				<StyledAvatarUploader
+					onChange={onAvatarChange}
+					onError={onAvatarDownloadError}
+					onRemove={onRemoveAvatar}
+					errorMessage={errors?.avatar?.message as string}
+					avatar={avatar}
 				/>
-				<Button
-					label="Sign Out"
-					type="button"
-					variant="outlined"
-					disabled={isLoading}
-					onClick={onSignOut}
-					fullWidth
-				/>
-			</StyledButtonList>
+				<FormGroup>
+					<Input
+						type="first-name"
+						label="First name"
+						placeholder="Your first name"
+						autoComplete="first-name"
+						error={!!errors.firstName}
+						errorText={errors.firstName?.message as string}
+						autoFocus
+						{...register('firstName')}
+					/>
+					<Input
+						type="last-name"
+						label="Last name"
+						placeholder="Your last name"
+						autoComplete="last-name"
+						error={!!errors.lastName}
+						errorText={errors.lastName?.message as string}
+						{...register('lastName')}
+					/>
+				</FormGroup>
+			</FormContainer>
+			{children}
 		</Box>
 	);
 };
