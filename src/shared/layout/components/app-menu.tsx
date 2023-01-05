@@ -53,12 +53,13 @@ const MenuContainer = styled.aside<{
 }>`
 	display: flex;
 	flex-direction: column;
-	background-color: ${({ theme }) => theme.palette.primary.main};
+	flex-shrink: 0;
 	height: 100%;
 	width: 81px;
-	border-right: 1px solid #eeedf1;
 	padding: 40px 15px 32px;
 	color: ${({ theme }) => theme.palette.primary.light};
+	border-right: 1px solid #eeedf1;
+	background-color: ${({ theme }) => theme.palette.primary.main};
 	overflow: hidden;
 	transition: width 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
 

@@ -1,11 +1,11 @@
-@import "normalize.css";
+@import 'normalize.css';
 
 @font-face {
 	font-family: 'Catamaran';
 	src: url('../shared/assets/fonts/Catamaran/Catamaran-Regular.ttf');
 	src: local('Catamaran Regular'), local('Catamaran-Regular'),
-	url('../shared/assets/fonts/Catamaran/Catamaran-Regular.ttf')
-	format('truetype');
+		url('../shared/assets/fonts/Catamaran/Catamaran-Regular.ttf')
+			format('truetype');
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
@@ -15,8 +15,8 @@
 	font-family: 'Catamaran';
 	src: url('../shared/assets/fonts/Catamaran/Catamaran-Bold.ttf');
 	src: local('Catamaran Bold'), local('Catamaran-Bold'),
-	url('../shared/assets/fonts/Catamaran/Catamaran-Bold.ttf')
-	format('truetype');
+		url('../shared/assets/fonts/Catamaran/Catamaran-Bold.ttf')
+			format('truetype');
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
@@ -33,11 +33,11 @@ body {
 	font-size: 16px;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	background-color: #F3F5F7;
+	background-color: #f3f5f7;
+	overflow-x: hidden;
 }
 
 a {
 	font-weight: 700;
 	text-decoration: none;
 }
-

@@ -7,7 +7,8 @@ const ModalBody = styled.div`
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	min-width: 600px;
+	width: 100%;
+	max-width: 600px;
 	background: linear-gradient(0deg, #FFFFFF, #FFFFFF), #F3F5F7;
 	box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.15);
 	border-radius: 10px;
