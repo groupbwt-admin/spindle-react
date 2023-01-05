@@ -4,7 +4,7 @@ import { IUser } from 'shared/types/user';
 export interface UpdateProfileDto {
 	firstName: string;
 	lastName: string;
-	file: File;
+	avatar: File;
 }
 
 interface UserApiInterface {
@@ -27,10 +27,9 @@ export class UserApiService implements UserApiInterface {
 
 	updateProfile = async (data: UpdateProfileDto): Promise<IUser> => {
 		const profileData = new FormData();
-		profileData.append('firstName', data.firstName);
-		profileData.append('lastName', data.lastName);
-		profileData.append('file', data.file);
-
+		for(const field in data) {
+			profileData.append(field, data[field]);
+		}
 		const payload = await this.http.patch(`/users/me`, profileData);
 
 		return payload.data;

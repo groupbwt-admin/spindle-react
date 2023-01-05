@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import * as React from 'react';
 import * as yup from 'yup';
 import { Button } from 'shared/components/button/button';
@@ -9,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AvatarUploader } from 'shared/components/avatar-uploader/avatar-uploader';
 import { ButtonList } from 'shared/components/button-list/button-list';
+import {DropzoneErrors, FileInvalidDropzone} from "shared/components/input/file-input";
 
 const StyledInput = styled(Input)`
 	margin-top: 32px;
@@ -23,6 +23,7 @@ const schema = yup
 	.object({
 		firstName: yup.string().trim().required(),
 		lastName: yup.string().trim().required(),
+		file: yup.mixed()
 	})
 	.defined();
 
@@ -40,28 +41,50 @@ export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 	onSignOut
 }) => {
 	const {
+		watch,
 		register,
 		handleSubmit,
+		setValue,
+		setError,
 		formState: { errors },
 	} = useForm<SetUpProfileFormData>({
 		resolver: yupResolver(schema),
 	});
 
-	const [avatarError, setAvatarError] = useState<string>('');
-	const [file, setFile] = useState<string>('');
+	const avatar = watch('file');
 
-	const onAvatarChange = (files) => {
-		setAvatarError('');
-		const avatarUrl = URL.createObjectURL(files[0]);
-		setFile(avatarUrl);
+	const onAvatarChange = ([file]: File[]) => {
+		setValue('file', file, {
+			shouldValidate: true,
+			shouldDirty: true,
+		});
 	};
 
-	const onAvatarDownloadError = (data) => {
-		setAvatarError('File is too big');
+	const onAvatarDownloadError = ([invalidFile]: FileInvalidDropzone[]) => {
+		if (invalidFile.errors.includes(DropzoneErrors.MAX_SIZE)) {
+			setError('file', {
+				message: 'Max size 3 mb',
+			});
+			return;
+		}
+		if (invalidFile.errors.includes(DropzoneErrors.TYPE)) {
+			setError('file', {
+				message: 'Allowed types: jpeg, jpg, png',
+			});
+			return;
+		}
+		setError('file', { message: invalidFile.errors[0] });
+	};
+
+	const onRemoveAvatar = () => {
+		setValue('file', null, {
+			shouldValidate: true,
+			shouldDirty: true,
+		});
 	};
 
 	const handleSubmitSetUpProfileForm = (data) => {
-		onSubmit({ ...data, file });
+		onSubmit(data);
 	};
 
 	return (
@@ -71,11 +94,11 @@ export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 			onSubmit={handleSubmit(handleSubmitSetUpProfileForm)}
 		>
 			<AvatarUploader
+				errorMessage={errors?.file?.message as string}
+				avatar={avatar}
 				onChange={onAvatarChange}
 				onError={onAvatarDownloadError}
-				errorMessage={avatarError}
-				maxSize={3000000}
-				avatar={file}
+				onRemove={onRemoveAvatar}
 			/>
 			<StyledInput
 				type="first-name"

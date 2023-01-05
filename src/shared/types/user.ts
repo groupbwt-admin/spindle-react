@@ -11,3 +11,7 @@ export interface IUser {
 	createdAt: string;
 	deletedAt: string;
 }
+
+export interface IUserExtended extends IUser {
+	fullName: string
+}

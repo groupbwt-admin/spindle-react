@@ -18,6 +18,9 @@ const theme = createTheme({
 			light: '#8192E2',
 			contrastText: '#FFFFFF',
 		},
+		secondary: {
+			main: '#EEEFF1',
+		},
 		info: {
 			main: '#FFFFFF',
 		},
@@ -71,6 +74,15 @@ const theme = createTheme({
 		},
 		MuiButton: {
 			styleOverrides: {
+				sizeMedium: {
+					padding: '17px 24px 15px',
+				},
+				sizeSmall: {
+					padding: '8px 16px',
+					fontSize: '12px',
+					lineHeight: '18px'
+
+				},
 				root: {
 					disabled: {
 						backgroundColor: '#C8CCDA',

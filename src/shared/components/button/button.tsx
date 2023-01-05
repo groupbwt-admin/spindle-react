@@ -1,6 +1,6 @@
-import { ButtonHTMLAttributes, forwardRef } from 'react';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import styled from "@emotion/styled/macro";
+import { ButtonHTMLAttributes, forwardRef } from 'react';
 import ExternalButton, {
 	ButtonProps as ExternalButtonProps,
 } from '@mui/material/Button';
@@ -9,9 +9,12 @@ import { CircularProgress } from '@mui/material';
 
 const StyledButton = styled(ExternalButton)`
 	position: relative;
-	padding: 17px 24px 15px;
 	border-radius: 60px;
 	text-transform: none;
+
+	&.MuiButton-outlinedSecondary {
+		color: ${({theme}) => theme.palette.text.primary};
+	}
 `;
 
 const StyledSpinnerContainer = styled('span')`
@@ -44,6 +47,7 @@ export interface ButtonProps {
 	to?: LinkProps['to'];
 	startIcon?: ExternalButtonProps['startIcon'];
 	color?: ExternalButtonProps['color'];
+	size?: ExternalButtonProps['size'];
 	sx?: ExternalButtonProps['sx'];
 	fullWidth?: ExternalButtonProps['fullWidth'];
 	isLoading?: boolean;
@@ -63,6 +67,7 @@ const ButtonRoot: React.ForwardRefRenderFunction<
 		type,
 		startIcon,
 		color = 'primary',
+		size = "medium",
 		to,
 		isLoading,
 		disabled,
@@ -84,6 +89,7 @@ const ButtonRoot: React.ForwardRefRenderFunction<
 			disableElevation
 			startIcon={startIcon}
 			color={color}
+			size={size}
 			disabled={disabled}
 			fullWidth={fullWidth}
 			onClick={onClick}
