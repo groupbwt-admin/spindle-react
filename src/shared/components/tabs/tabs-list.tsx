@@ -1,5 +1,5 @@
-import React from 'react'
-import {Tabs as ExternalTabs, useTheme} from "@mui/material";
+import * as React from 'react';
+import {Tabs as ExternalTabs} from "@mui/material";
 
 interface TabsProps{
 	value: number;

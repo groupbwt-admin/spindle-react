@@ -8,11 +8,8 @@ const axiosInstance = Axios.create({
 
 axiosInstance.interceptors.request.use(
 	function (config) {
-		config.headers = {
-			Authorization: LocalStorageService.get('token'),
-			...config.headers,
-		};
-
+		(config.headers || {})['Authorization'] =
+			'Bearer ' + LocalStorageService.get('token');
 		return config;
 	},
 	function (error) {

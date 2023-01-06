@@ -1,4 +1,5 @@
-import React from 'react';
+import { useEffect } from 'react';
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,21 +23,31 @@ type ForgotPasswordData = yup.InferType<typeof schema>;
 
 interface ForgotPasswordProps {
 	isLoading: boolean;
-	onSubmit: (data: ForgotPasswordData) => void
+	error?: string;
+	onSubmit: (data: ForgotPasswordData) => void;
 }
 
-export const ForgotPasswordForm: React.FC<ForgotPasswordProps> = ({isLoading, onSubmit}) => {
+export const ForgotPasswordForm: React.FC<ForgotPasswordProps> = ({
+	error,
+	isLoading,
+	onSubmit,
+}) => {
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError
 	} = useForm<ForgotPasswordData>({
 		resolver: yupResolver(schema),
 	});
 
+	useEffect(() => {
+		setError('email', {type: 'custom', message: error})
+	}, [error]);
+
 	return (
 		<Box
-			sx={{ width: 400 }}
+			sx={{ width: '100%', maxWidth: 400 }}
 			component={'form'}
 			onSubmit={handleSubmit(onSubmit)}
 		>
@@ -50,7 +61,7 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordProps> = ({isLoading, on
 				autoFocus
 				{...register('email')}
 			/>
-			<Button label="Send" type="submit" isLoading={isLoading}/>
+			<Button label="Send" type="submit" isLoading={isLoading} fullWidth />
 		</Box>
 	);
 };

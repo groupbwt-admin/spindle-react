@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
+import { useMutation } from 'react-query';
 import { Typography } from 'shared/components/typography/typography';
 import { AuthLink } from 'modules/auth/components/link';
 import { AUTH_ROUTES } from 'shared/config/routes';
-import { RegisterForm } from 'modules/auth/pages/register/components/register-form';
-import { useMutation } from 'react-query';
-import { AuthApi } from 'app/api/auth-api/auth-api';
-import { IToken } from 'shared/types/token';
-import jwtDecode from 'jwt-decode';
-import { LocalStorageService } from 'shared/services/local-storage-service';
-import { setAuthUserData } from 'app/store/auth/actions';
-import { ConfirmationMessage } from 'modules/auth/components/confirmation-message';
+import {
+	RegisterForm,
+	RegisterFormData,
+} from 'modules/auth/pages/register/components/register-form';
+import { AuthApi, RegisterDataDto } from 'app/api/auth-api/auth-api';
+import { authState } from 'app/store/auth/state';
+import { AxiosError } from 'axios';
 
 const Title = styled(Typography)`
-	margin-top: 20px;
-	margin-bottom: 24px;
+	margin-bottom: 40px;
 	text-align: center;
 `;
 
@@ -23,56 +21,44 @@ const LoginContainer = styled('div')`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	width: 100%;
 	height: 100%;
 `;
 
 const LoginFootnote = styled(Typography)`
 	position: absolute;
-	bottom: 10px;
+	bottom: 24px;
 `;
 
 export const RegisterPage = () => {
-	const [userEmail, setUserEmail] = useState('');
-	const [isFormSent, setIsFormSent] = useState(false);
-
-	const registerMutation = useMutation(AuthApi.register, {
-		onSuccess: async (token) => {
-			const userData: IToken = jwtDecode(token);
-			LocalStorageService.set('token', token);
-
-			setAuthUserData(userData);
-		},
-		onSettled: () => {
-			setIsFormSent(true);
+	const registerMutation = useMutation<
+		{ accessToken: string },
+		AxiosError<{ message: string }>,
+		RegisterDataDto
+	>(AuthApi.register, {
+		onSuccess: (data) => {
+			authState.setUser(data.accessToken);
 		},
 	});
 
-	const handleSubmit = (data) => {
-		registerMutation.mutate(data);
+	const handleSubmit = (data: RegisterFormData) => {
+		registerMutation.mutate({ ...data });
 	};
 
 	return (
 		<LoginContainer>
-			{isFormSent ? (
-				<ConfirmationMessage
-					title="Verify your email address"
-					description={`Almost there! We’ve sent an email to ${userEmail} to verify your email address and activate your account. The link in the email will expire in 24 hours.`}
-				/>
-			) : (
-				<>
-					<Title variant="h1" component="h1">
-						Sign up to Spindle
-					</Title>
-					<RegisterForm
-						onSubmit={handleSubmit}
-						isLoading={registerMutation.isLoading}
-					/>
-					<LoginFootnote variant="subtitle2">
-						Already have an account?{' '}
-						<AuthLink to={AUTH_ROUTES.LOGIN.path}>Sign in</AuthLink>
-					</LoginFootnote>
-				</>
-			)}
+			<Title variant="h1" component="h1">
+				Sign up to Spindle
+			</Title>
+			<RegisterForm
+				isLoading={registerMutation.isLoading}
+				error={registerMutation.error?.response?.data?.message}
+				onSubmit={handleSubmit}
+			/>
+			<LoginFootnote variant="subtitle2">
+				Already have an account?{' '}
+				<AuthLink to={AUTH_ROUTES.LOGIN.path}>Sign in</AuthLink>
+			</LoginFootnote>
 		</LoginContainer>
 	);
 };

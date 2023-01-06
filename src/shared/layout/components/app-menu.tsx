@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { css } from '@mui/material/styles';
 import styled from '@emotion/styled/macro';
@@ -8,36 +8,30 @@ import { ReactComponent as IconSearch } from 'shared/components/icon/collection/
 import { ReactComponent as IconVideos } from 'shared/components/icon/collection/video.svg';
 import { ReactComponent as IconProfile } from 'shared/components/icon/collection/profile.svg';
 import { ReactComponent as IconSettings } from 'shared/components/icon/collection/setting.svg';
-import {ReactComponent as IconNotification } from 'shared/components/icon/collection/notification.svg';
+import { ReactComponent as IconNotification } from 'shared/components/icon/collection/notification.svg';
 import { Typography } from 'shared/components/typography/typography';
-import {Avatar} from "@mui/material";
-import {ICON_COLLECTION} from "shared/components/icon/icon-list";
-import {IconButton} from "shared/components/button/icon-button";
+import { UserMenu } from 'shared/layout/components/user-menu';
 
 const StyledLinkTitle = styled(Typography)`
 	white-space: nowrap;
 	opacity: 0;
 	transform: translateX(-10px);
-	transition: opacity 0.3s
-	${({ theme }) => theme.transitions.easing.easeIn},
-	transform 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
+	transition: opacity 0.3s ${({ theme }) => theme.transitions.easing.easeIn},
+		transform 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
 `;
 
 const LogoWrapper = styled('div')`
 	width: 158px;
 	cursor: pointer;
+
 	svg {
 		path:last-of-type {
 			opacity: 0;
 			transition: opacity 0.3s
-			${({ theme }) => theme.transitions.easing.easeInOut};
+				${({ theme }) => theme.transitions.easing.easeInOut};
 		}
 	}
 `;
-
-interface AppMenuProps {
-	open?: boolean;
-}
 
 const StyledNavIcon = styled(Icon)`
 	margin-right: 14px;
@@ -54,25 +48,27 @@ const StyledNavIcon = styled(Icon)`
 	}
 `;
 
-const MenuContainer = styled.aside<AppMenuProps>`
+const MenuContainer = styled.aside<{
+	open?: boolean;
+}>`
 	display: flex;
 	flex-direction: column;
-	background-color: ${({ theme }) => theme.palette.primary.main};
+	flex-shrink: 0;
 	height: 100%;
 	width: 81px;
-	border-right: 1px solid #eeedf1;
 	padding: 40px 15px 32px;
 	color: ${({ theme }) => theme.palette.primary.light};
+	border-right: 1px solid #eeedf1;
+	background-color: ${({ theme }) => theme.palette.primary.main};
 	overflow: hidden;
 	transition: width 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
-
 
 	${({ open }) =>
 		open &&
 		css`
 			width: 236px;
 
-			${StyledLinkTitle}, ${UserInfo} {
+			${StyledLinkTitle} {
 				transform: translateX(0);
 				opacity: 1;
 			}
@@ -96,6 +92,7 @@ const MenuContainer = styled.aside<AppMenuProps>`
 const NavContainer = styled('nav')`
 	margin-top: 60px;
 	flex-grow: 1;
+
 	ul {
 		list-style: none;
 		padding: 0;
@@ -104,36 +101,15 @@ const NavContainer = styled('nav')`
 		flex-direction: column;
 		height: 100%;
 	}
+
 	li {
 		margin-bottom: 24px;
 	}
+
 	li:last-child {
 		margin-top: auto;
 	}
 `;
-
-const UserInfoContainer = styled.div`
-	display: flex;
-	align-items: center;
-	padding: 0 4px;
-`
-
-const UserAvatar = styled(Avatar)`
-	width: 42px;
-	height: 42px;
-	border: 2px solid #8192E2;
-	margin-right: 10px;
-	flex-shrink: 0;
-`
-
-const UserInfo = styled.div`
-	white-space: nowrap;
-	opacity: 0;
-	transform: translateX(-10px);
-	transition: opacity 0.3s
-	${({ theme }) => theme.transitions.easing.easeIn},
-	transform 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
-`
 
 const StyledNavLink = styled(NavLink)(
 	({ theme }) => css`
@@ -154,13 +130,8 @@ const StyledNavLink = styled(NavLink)(
 	`,
 );
 
-const StyledUserIconButton = styled(IconButton)`
-	padding: 10px;
-	margin-left: 6px;
-`
-
 export const AppMenu = () => {
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
 
 	const toggleDrawer = () => {
 		setOpen((prev) => !prev);
@@ -205,20 +176,7 @@ export const AppMenu = () => {
 					</li>
 				</ul>
 			</NavContainer>
-			<UserInfoContainer>
-				<UserAvatar />
-				<UserInfo>
-					<Typography variant='h3'>
-						Oliver Brown
-					</Typography>
-					<Typography variant='body2'>
-						Administrator
-					</Typography>
-				</UserInfo>
-				<StyledUserIconButton>
-					<Icon icon={ICON_COLLECTION.chevron_down} />
-				</StyledUserIconButton>
-			</UserInfoContainer>
+			<UserMenu expanded={open} />
 		</MenuContainer>
 	);
 };

@@ -1,4 +1,5 @@
-import React, { forwardRef, InputHTMLAttributes, useId } from 'react';
+import { forwardRef, InputHTMLAttributes, useId } from 'react';
+import * as React from 'react';
 import { InputLabel } from '@mui/material';
 import { InputBase, InputBaseProps } from '@mui/material';
 import { styled, css } from '@mui/material/styles';

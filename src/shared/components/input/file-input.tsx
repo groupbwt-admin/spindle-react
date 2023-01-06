@@ -1,5 +1,6 @@
-import React, { forwardRef, InputHTMLAttributes, useRef } from 'react';
-import {css, styled} from '@mui/material/styles';
+import { forwardRef, InputHTMLAttributes, useRef } from 'react';
+import * as React from 'react';
+import { css, styled } from '@mui/material/styles';
 import { Box, Button } from '@mui/material';
 import mergeRefs from 'shared/utils/merge-refs';
 
@@ -9,7 +10,7 @@ export interface FileInputProps {
 	accept?: Array<string>;
 	multiple?: boolean;
 	maxSize?: number; //in bytes
-	errorMessage?: React.ReactNode;
+	errorMessage?: string;
 	onChange: (files: File[]) => void;
 	onError: (files: FileInvalidDropzone[]) => void;
 }
@@ -30,7 +31,6 @@ const StyledError = styled('div')(
 		color: ${theme.palette.error.main};
 		padding: 8px 0 0 8px;
 		width: 100%;
-
 	`,
 );
 
@@ -112,18 +112,14 @@ const FileInputRoot: React.ForwardRefRenderFunction<
 				<span>Upload picture</span>
 				<input
 					hidden
-					accept="image/*"
+					accept={accept?.join(', ')}
 					multiple
 					type="file"
 					onChange={filesSelected}
 					ref={mergeRefs(fileInputRef, ref)}
 				/>
 			</Button>
-			{errorMessage && (
-				<StyledError>
-					{errorMessage}
-				</StyledError>
-			)}
+			{errorMessage && <StyledError>{errorMessage}</StyledError>}
 		</Box>
 	);
 };

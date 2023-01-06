@@ -1,4 +1,5 @@
-import React, {FormEventHandler} from "react";
+import { FormEventHandler } from "react";
+import * as React from "react";
 import {Tab as ExternalTab, TabProps} from "@mui/material";
 
 interface TabProp extends TabProps{

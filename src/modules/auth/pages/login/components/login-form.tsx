@@ -1,14 +1,13 @@
-import React from 'react';
+import { useEffect } from 'react';
+import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 import { Input } from 'shared/components/input/input';
 import { PasswordInput } from 'shared/components/input/password-input';
 import { Button } from 'shared/components/button/button';
-import { GoogleButton } from 'modules/auth/components/google-button';
 import { css, styled } from '@mui/material/styles';
-import { Divider } from '@mui/material';
 import {
 	validatePassword,
 	ValidationPasswordErrors,
@@ -16,6 +15,7 @@ import {
 import { AuthLink } from 'modules/auth/components/link';
 import { AUTH_ROUTES } from 'shared/config/routes';
 import { Typography } from 'shared/components/typography/typography';
+import { GoogleAuthButtonWidget } from 'shared/widgets/google-auth-button/google-auth-button';
 
 const StyledInput = styled(Input)`
 	margin-top: 47px;
@@ -23,7 +23,7 @@ const StyledInput = styled(Input)`
 
 const StyledPasswordInput = styled(PasswordInput)`
 	margin-top: 36px;
-	margin-bottom: 40px;
+	margin-bottom: 36px;
 `;
 
 const StyledDivider = styled(Divider)(
@@ -34,6 +34,7 @@ const StyledDivider = styled(Divider)(
 		&::before {
 			border-color: ${theme.palette.text.secondary};
 		}
+
 		&::after {
 			border-color: ${theme.palette.text.secondary};
 		}
@@ -52,14 +53,8 @@ const schema = yup
 			test: function (value, { createError }) {
 				const errors: ValidationPasswordErrors = validatePassword(value || '');
 
-				if (errors.hasNotValue) {
-					return createError({
-						message: Object.values(errors).join(',  '),
-					});
-				}
-
 				if (Object.keys(errors).length) {
-					return createError({ message: Object.values(errors).join(',  ') });
+					return createError({ message: Object.values(errors).join(';\n') });
 				}
 
 				return true;
@@ -72,26 +67,37 @@ type LoginFormData = yup.InferType<typeof schema>;
 
 interface LoginFormProps {
 	isLoading: boolean;
-	onSubmit: (data: LoginFormData) => void
+	error?: string;
+	onSubmit: (data: LoginFormData) => void;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({isLoading, onSubmit}) => {
+export const LoginForm: React.FC<LoginFormProps> = ({
+	error,
+	isLoading,
+	onSubmit,
+}) => {
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError
 	} = useForm<LoginFormData>({
 		resolver: yupResolver(schema),
 	});
 
+	useEffect(() => {
+		setError('email', {type: 'custom', message: error})
+	}, [error]);
+
 
 	return (
 		<Box
-			sx={{ width: 400 }}
+			sx={{ width: '100%', maxWidth: 400 }}
 			component={'form'}
 			onSubmit={handleSubmit(onSubmit)}
 		>
-			<GoogleButton label="Sign In with Google" />
+			<GoogleAuthButtonWidget label="Sign In with Google" />
 			<StyledDivider>or</StyledDivider>
 			<StyledInput
 				type="email"
@@ -117,7 +123,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({isLoading, onSubmit}) => {
 				error={!!errors.password}
 				errorText={errors.password?.message as string}
 			/>
-			<Button label="Sign in" type="submit" isLoading={isLoading} />
+			<Button label="Sign in" type="submit" isLoading={isLoading} fullWidth />
 		</Box>
 	);
 };

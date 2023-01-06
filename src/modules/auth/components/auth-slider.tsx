@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { css, styled } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
@@ -32,7 +32,6 @@ const QuoteContainer = styled(Box)(
 		max-width: 560px;
 		padding: 32px;
 		padding-top: 42px;
-		margin-bottom: 37px;
 		background-color: ${theme.palette.common.white};
 		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 		border-radius: 20px;
@@ -60,15 +59,13 @@ const AuthIconButton = styled(IconButton)`
 
 const QuoteIconStyled = styled(Icon)`
 	margin-right: auto;
-	margin-bottom: 10px;
+	margin-bottom: 12px;
 `;
 
-const UserDesc = styled(Typography)`
-	margin-top: 12px;
-`;
+const UserDesc = styled(Typography)``;
 
 export const AuthSlider = () => {
-	const [activeStep, setActiveStep] = React.useState(0);
+	const [activeStep, setActiveStep] = useState(0);
 	const maxSteps = steps.length;
 
 	const handleNext = () => {
@@ -107,7 +104,7 @@ export const AuthSlider = () => {
 			<MobileStepper
 				sx={{
 					background: 'transparent',
-					mt: 10,
+					mt: '80px',
 					p: '8px 0',
 					ml: '-8px',
 					mr: '-8px',

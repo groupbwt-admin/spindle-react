@@ -1,2 +1,0 @@
-[runners.docker]
-  image = "node:14.17.1"

@@ -1,18 +1,25 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './app/app';
-import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material';
-import {QueryClient, QueryClientProvider} from 'react-query';
-import {ReactQueryDevtools} from "react-query/devtools";
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import jwtDecode from 'jwt-decode';
+import { LocalStorageService } from './shared/services/local-storage-service';
+import reportWebVitals from './reportWebVitals';
+import { authState } from './app/store/auth/state';
+import App from './app/app';
+import { IToken } from './shared/types/token';
 
 const theme = createTheme({
 	palette: {
 		primary: {
 			main: '#2F48D1',
 			light: '#8192E2',
-			contrastText: '#FFFFFF'
+			contrastText: '#FFFFFF',
+		},
+		secondary: {
+			main: '#EEEFF1',
 		},
 		info: {
 			main: '#FFFFFF',
@@ -20,7 +27,6 @@ const theme = createTheme({
 		background: {
 			default: '#F3F5F7',
 			paper: '#F3F5F7',
-			light: '#FFFFFF',
 		},
 		text: {
 			primary: '#231D2C',
@@ -31,7 +37,7 @@ const theme = createTheme({
 		},
 	},
 	typography: {
-		fontFamily: "'Catamaran', sans-serif",
+		fontFamily: 'Catamaran, sans-serif',
 		h1: {
 			fontSize: '32px',
 			lineHeight: '52px',
@@ -46,6 +52,9 @@ const theme = createTheme({
 		caption: {
 			fontSize: '1.125rem',
 			opacity: 0.5,
+		},
+		subtitle2: {
+			fontSize: '12px',
 		},
 	},
 	components: {
@@ -64,12 +73,20 @@ const theme = createTheme({
 			},
 		},
 		MuiButton: {
-			color: '#FFFFFF',
-			disabled: {
-				backgroundColor: '#C8CCDA',
-			},
 			styleOverrides: {
+				sizeMedium: {
+					padding: '17px 24px 15px',
+				},
+				sizeSmall: {
+					padding: '8px 16px',
+					fontSize: '12px',
+					lineHeight: '18px'
+
+				},
 				root: {
+					disabled: {
+						backgroundColor: '#C8CCDA',
+					},
 					fontSize: '1rem',
 					lineHeight: 1.45,
 					fontWeight: 600,
@@ -89,32 +106,64 @@ const theme = createTheme({
 					marginRight: '32px',
 					color: '#828CB1',
 					transition: 'color 0.3s ease',
-					"&.Mui-selected": {
-						"fontWeight": "700",
-						"color": "#231D2C"
-					}
+					'&.Mui-selected': {
+						fontWeight: '700',
+						color: '#231D2C',
+					},
 				},
-			}
-		}
+			},
+		},
+		MuiCheckbox: {
+			styleOverrides: {
+				root: {
+					padding: 0,
+					borderRadius: 0,
+				},
+			},
+		},
+		MuiFormControlLabel: {
+			styleOverrides: {
+				root: {
+					marginLeft: 0,
+				},
+			},
+		},
 	},
 });
 
 const queryClient = new QueryClient();
 
-console.log(theme)
+(function () {
+	const savedToken = LocalStorageService.get('token');
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+	if (savedToken) {
+		const decodedJwtToken: IToken = jwtDecode(LocalStorageService.get('token'));
+
+		const currentTime = Date.now() / 1000;
+		const isExpired = decodedJwtToken.exp <= currentTime;
+
+		if (!isExpired) {
+			authState.setUser(savedToken);
+		}
+
+		if (isExpired) {
+			LocalStorageService.remove('token');
+		}
+	}
+})();
+
+const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
-	<React.StrictMode>
+	<StrictMode>
 		<ThemeProvider theme={theme}>
 			<QueryClientProvider client={queryClient}>
 				<BrowserRouter>
 					<App />
-					<ReactQueryDevtools initialIsOpen={false} />
+					<ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
 				</BrowserRouter>
 			</QueryClientProvider>
 		</ThemeProvider>
-	</React.StrictMode>,
+	</StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
