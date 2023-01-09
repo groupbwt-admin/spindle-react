@@ -95,7 +95,6 @@ export const NewPasswordForm: React.FC<NewPasswordProps> = ({
 				autoComplete="new-password-confirmation"
 				error={!!errors.confirmPassword}
 				errorText={errors.confirmPassword?.message as string}
-				autoFocus
 				{...register('confirmPassword')}
 			/>
 			<Button
