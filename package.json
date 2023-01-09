@@ -6,10 +6,10 @@
     "@emotion/babel-plugin": "^11.10.5",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@hookform/resolvers": "^2.9.10",
-    "@loadable/component": "^5.15.2",
-    "@mui/icons-material": "^5.11.0",
-    "@mui/material": "^5.11.3",
+		"@mui/icons-material": "^5.11.0",
+		"@mui/material": "^5.11.4",
+		"@hookform/resolvers": "^2.9.10",
+		"@loadable/component": "^5.15.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
@@ -29,7 +29,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.4.0",
+    "@commitlint/cli": "^17.4.1",
     "@commitlint/config-conventional": "^17.4.0",
     "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
@@ -41,7 +41,7 @@
     "eslint-plugin-react": "^7.31.11",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
-    "prettier": "^2.8.1",
+    "prettier": "^2.8.2",
     "typescript-plugin-styled-components": "^2.0.0"
   },
   "scripts": {
