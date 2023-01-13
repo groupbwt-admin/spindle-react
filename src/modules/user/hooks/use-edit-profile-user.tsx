@@ -48,6 +48,7 @@ export function useEditProfileUser() {
 							variant="outlined"
 							color="secondary"
 							disabled={setUpProfileMutation.isLoading}
+							onClick={handleClose}
 						/>
 						<Button
 							label="Save Changes"
