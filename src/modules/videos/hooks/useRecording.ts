@@ -1,5 +1,6 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useStopWatch} from './useStopWatch'
+import {useSocketStream} from './useSocketStream'
 
 export type Status =
 	| 'recording'
@@ -13,6 +14,7 @@ export const useRecording = ({options, audio = false,}: {
 	options?: MediaRecorderOptions;
 	audio?: boolean;
 }) => {
+	const {socket,socketId, saveVideo} = useSocketStream()
 
 	const {
 		startTimer,
@@ -51,11 +53,16 @@ export const useRecording = ({options, audio = false,}: {
 				stream.getAudioTracks()[0].enabled = false
 			}
 			const mediaRecorder = new MediaRecorder(stream, options);
-			mediaRecorder.start(1000);
+			mediaRecorder.start(250);
 
 			mediaRecorder.ondataavailable = (event) => {
 				setChunks(prev => [...prev, event.data])
 
+				////append
+				socket.emit('record:append', {
+					chunk: event.data,
+					socketId: socketId,
+				})
 
 			};
 
@@ -83,6 +90,9 @@ export const useRecording = ({options, audio = false,}: {
 		if (!mediaRecorder) throw Error('No media stream!');
 		mediaRecorder?.stop();
 
+		socket.emit('record:disconnect', { socketId: socketId })
+		saveVideo()
+
 		setStatus('stopped');
 		stopTimer()
 
@@ -93,11 +103,18 @@ export const useRecording = ({options, audio = false,}: {
 	};
 
 	const startRecording = async () => {
+		// setStart(true)
+		await	socket.emit('record:start', {
+			socketId: socketId,
+		});
 		let recorder = mediaRecorder;
 		if (!mediaRecorder) {
+
 			recorder = await requestMediaStream();
 		}
+
 		(recorder as MediaRecorder).start();
+
 		setStatus('recording');
 		startTimer()
 
@@ -106,6 +123,7 @@ export const useRecording = ({options, audio = false,}: {
 	const pauseRecording = () => {
 		if (!mediaRecorder) throw Error('No media stream!');
 		mediaRecorder?.pause();
+
 		setStatus('paused');
 		stopTimer()
 	};
@@ -113,6 +131,7 @@ export const useRecording = ({options, audio = false,}: {
 	const resumeRecording = () => {
 		if (!mediaRecorder) throw Error('No media stream!');
 		mediaRecorder?.resume();
+
 		setStatus('recording');
 		startTimer()
 	};

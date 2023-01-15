@@ -6,6 +6,7 @@ import { ReactComponent as IconRecord } from 'shared/components/icon/collection/
 import { TabsList } from 'shared/components/tabs/tabs-list';
 import { Tab } from 'shared/components/tabs/tab';
 import {useRecording} from '../hooks/useRecording'
+
 const HeaderContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
@@ -28,8 +29,6 @@ export const HomePage = () => {
 	const handleChange = (event: React.SyntheticEvent, newValue: number) => {
 		setValue(newValue);
 	};
-
-
 	const videoR: any = React.useRef(null);
 
 	const {
@@ -51,8 +50,6 @@ export const HomePage = () => {
 			videoR.current.play();
 		}
 	}
-
-
 
 	return (
 		<>
@@ -76,9 +73,7 @@ export const HomePage = () => {
 					<button onClick={resetRecording}>Reset Recording</button>
 					<button onClick={watchVideo}>watchVideo</button>
 				</div>
-
 				<video src="" ref={videoR}></video>
-
 			</ContentContainer>
 		</>
 	);
