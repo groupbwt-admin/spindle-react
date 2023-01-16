@@ -10,11 +10,11 @@ export type Status =
 	| 'paused'
 	| 'permission-requested';
 
-export const useRecording = ({options, audio = false,}: {
+export const useRecording = ({options, audio = true,}: {
 	options?: MediaRecorderOptions;
 	audio?: boolean;
 }) => {
-	const {socket,socketId, saveVideo} = useSocketStream()
+	const {socket, socketId, saveVideo, socketConnect} = useSocketStream()
 
 	const {
 		startTimer,
@@ -89,27 +89,22 @@ export const useRecording = ({options, audio = false,}: {
 	const stopRecording = () => {
 		if (!mediaRecorder) throw Error('No media stream!');
 		mediaRecorder?.stop();
-
-		socket.emit('record:disconnect', { socketId: socketId })
-		saveVideo()
-
-		setStatus('stopped');
 		stopTimer()
-
+		setStatus('stopped');
 		mediaRecorder.stream.getTracks().map((track) => {
 			track.stop();
 		});
 		setMediaRecorder(null);
+		saveVideo()
 	};
 
 	const startRecording = async () => {
 		// setStart(true)
-		await	socket.emit('record:start', {
+		await socket.emit('record:start', {
 			socketId: socketId,
 		});
 		let recorder = mediaRecorder;
 		if (!mediaRecorder) {
-
 			recorder = await requestMediaStream();
 		}
 
@@ -156,6 +151,7 @@ export const useRecording = ({options, audio = false,}: {
 		chunks,
 		stopRecording,
 		streams,
+		socketConnect,
 	};
 };
 
