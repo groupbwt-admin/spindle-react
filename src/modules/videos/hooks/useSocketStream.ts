@@ -6,10 +6,7 @@ import {axios} from 'app/config/axios/axios';
 
 
 export const useSocketStream = () => {
-	const userData = selectUserData();
-
-	const [socketId, setSocketId] = useState<number | string>('')
-	console.log(socketId)
+	const [socket, setSocket] = useState<Socket | null>(null);
 	const socketOptions = {
 		transportOptions: {
 			polling: {
@@ -20,41 +17,26 @@ export const useSocketStream = () => {
 		}
 	};
 /////91.225.201.50:10000
-	const socket: Socket = io('91.225.201.50:10000', socketOptions)
-	const socketConnect = () => {
-		socket.emit('user:connect', {userId: userData?.id});
-		socket.on('user:connect:response', (data) => {
-			setSocketId(data)
-		});
-	}
+
 	useEffect(() => {
-		socket.emit('user:connect', {userId: userData?.id});
-		socket.on('user:connect:response', (data) => {
-			setSocketId(data)
-		});
+		return () => {
+			setSocket(io('91.225.201.50:10000', socketOptions))
+		};
 	}, []);
 
 
 
 	const saveVideo = async () => {
-	await socket.emit('record:stop', { socketId: socketId })
-		await	socket.emit('record:disconnect', {socketId: socketId})
-
-		const data = {
-			"socketId": socketId,
-			"title": `${userData?.email} `,
-			"tags": [
-				"test",
-			]
+		if(socket){
+			socket.emit('record:save')
+			console.log('save stop')
 		}
-		await axios.post('http://spindle-api.groupbwt.com/api/videos/save', data);
-		await console.log('save stop')
+
 	}
 
 
 	return {
-		socketConnect,
-		socket, socketId,
+		socket,
 		saveVideo
 	}
 

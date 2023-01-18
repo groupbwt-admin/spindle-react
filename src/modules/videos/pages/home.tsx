@@ -40,7 +40,6 @@ export const HomePage = () => {
 		status,
 		chunks,
 		stopRecording,
-		socketConnect
 	} = useRecording({audio: false});
 
 	const watchVideo = () => {
@@ -73,7 +72,6 @@ export const HomePage = () => {
 					<button onClick={resumeRecording}>Resume Recording</button>
 					<button onClick={resetRecording}>Reset Recording</button>
 					<button onClick={watchVideo}>watchVideo</button>
-					<button onClick={socketConnect}>Connect</button>
 				</div>
 				<video src="" ref={videoR}></video>
 			</ContentContainer>

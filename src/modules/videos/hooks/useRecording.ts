@@ -14,7 +14,7 @@ export const useRecording = ({options, audio = true,}: {
 	options?: MediaRecorderOptions;
 	audio?: boolean;
 }) => {
-	const {socket, socketId, saveVideo, socketConnect} = useSocketStream()
+	const {socket,saveVideo, } = useSocketStream()
 
 	const {
 		startTimer,
@@ -49,21 +49,18 @@ export const useRecording = ({options, audio = true,}: {
 				startTimer()
 			}
 			const stream: MediaStream = new MediaStream(tracks);
+			/// off microphone
 			if (!audio) {
 				stream.getAudioTracks()[0].enabled = false
 			}
 			const mediaRecorder = new MediaRecorder(stream, options);
 			mediaRecorder.start(250);
-
 			mediaRecorder.ondataavailable = (event) => {
 				setChunks(prev => [...prev, event.data])
-
 				////append
-				socket.emit('record:append', {
+				socket?.emit('record:start', {
 					chunk: event.data,
-					socketId: socketId,
 				})
-
 			};
 
 			setMediaRecorder(mediaRecorder);
@@ -99,10 +96,6 @@ export const useRecording = ({options, audio = true,}: {
 	};
 
 	const startRecording = async () => {
-		// setStart(true)
-		await socket.emit('record:start', {
-			socketId: socketId,
-		});
 		let recorder = mediaRecorder;
 		if (!mediaRecorder) {
 			recorder = await requestMediaStream();
@@ -129,6 +122,7 @@ export const useRecording = ({options, audio = true,}: {
 
 		setStatus('recording');
 		startTimer()
+		socket?.emit('record:reset')
 	};
 
 	const resetRecording = () => {
@@ -151,7 +145,6 @@ export const useRecording = ({options, audio = true,}: {
 		chunks,
 		stopRecording,
 		streams,
-		socketConnect,
 	};
 };
 
