@@ -51,7 +51,6 @@ export const useStopWatch = () => {
 	};
 
 	const stopTimer = () => {
-		console.log('stop')
 		setIsRunning(false);
 		setStartTime(0);
 		setTimeWhenLastStopped(time);

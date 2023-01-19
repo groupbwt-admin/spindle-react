@@ -1,4 +1,4 @@
-// import { generatePath } from 'react-router-dom';
+import { generatePath } from 'react-router-dom';
 
 export const AUTH_ROUTES = {
 	ROOT: {
@@ -33,5 +33,9 @@ export const AUTH_ROUTES = {
 export const VIDEO_ROUTES = {
 	MY_VIDEOS: {
 		path: '/',
+	},
+	VIDEO: {
+		path: '/videos/:id',
+		generate: (id: string) => generatePath('/videos/:id', { id }),
 	},
 };

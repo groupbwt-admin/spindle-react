@@ -1,5 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import loadable from '@loadable/component';
+import { RouteObject } from 'react-router-dom';
 import { AUTH_ROUTES } from 'shared/config/routes';
 import { AuthGuard } from 'app/guards/auth-guard';
 
@@ -53,7 +54,7 @@ const MustVerifyEmailPage = loadable(
 	},
 );
 
-export const authRoutes = [
+export const authRoutes: RouteObject[] = [
 	{
 		path: AUTH_ROUTES.ROOT.path,
 		element: (
