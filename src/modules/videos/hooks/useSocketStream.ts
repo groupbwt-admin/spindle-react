@@ -1,7 +1,7 @@
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {io, Socket} from 'socket.io-client'
 import {LocalStorageService} from 'shared/services/local-storage-service';
-
+import {SERVER_BASE_IP} from 'shared/config/variables';
 
 export const useSocketStream = () => {
 	const socketOptions = {
@@ -13,17 +13,36 @@ export const useSocketStream = () => {
 			}
 		}
 	};
-	const [socket, setSocket] = useState<Socket | null>(io('91.225.201.50:10000', socketOptions));
+	const [socket, setSocket] = useState<Socket | null>(io(SERVER_BASE_IP, socketOptions));
 
 /////91.225.201.50:10000
+	const socketConnect = () => {
+		if (!socket?.connected) {
+			setSocket(io(SERVER_BASE_IP, socketOptions))
+		}
+	}
 
-	const saveVideo =  () => {
-			socket?.emit('record:save')
+	const socketStart = (videoChunk: Blob) => {
+		socket?.emit('record:start', {
+			chunk: videoChunk,
+		})
+	}
+	const socketReset = () => {
+		if (!socket) throw Error('No socket connection!');
+		socket.emit('record:save')
+	}
+	const socketSave = async () => {
+		if (!socket) throw Error('No socket connection!');
+		await socket.emit('record:save')
+		await socket.disconnect()
+
 	}
 
 	return {
-		socket,
-		saveVideo
+		socketConnect,
+		socketStart,
+		socketSave,
+		socketReset
 	}
 
 }

@@ -40,7 +40,7 @@ export const HomePage = () => {
 		status,
 		chunks,
 		stopRecording,
-	} = useRecording({audio: false});
+	} = useRecording({audio: true});
 
 	const watchVideo = () => {
 		const blob = new Blob(chunks, {'type': 'video/mp4'});

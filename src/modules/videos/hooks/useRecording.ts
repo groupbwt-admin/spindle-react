@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useStopWatch} from './useStopWatch'
 import {useSocketStream} from './useSocketStream'
+import {logger} from "react-query/types/react/logger";
 
 export type Status =
 	| 'recording'
@@ -14,7 +15,12 @@ export const useRecording = ({options, audio = true,}: {
 	options?: MediaRecorderOptions;
 	audio?: boolean;
 }) => {
-	const {socket,saveVideo, } = useSocketStream()
+	const {
+		socketConnect,
+		socketStart,
+		socketSave,
+		socketReset
+	} = useSocketStream()
 
 	const {
 		startTimer,
@@ -58,9 +64,8 @@ export const useRecording = ({options, audio = true,}: {
 			mediaRecorder.ondataavailable = (event) => {
 				setChunks(prev => [...prev, event.data])
 				////append
-				socket?.emit('record:start', {
-					chunk: event.data,
-				})
+				socketStart(event.data)
+
 			};
 
 			setMediaRecorder(mediaRecorder);
@@ -84,25 +89,30 @@ export const useRecording = ({options, audio = true,}: {
 	};
 
 	const stopRecording = () => {
+
 		if (!mediaRecorder) throw Error('No media stream!');
 		mediaRecorder?.stop();
 		stopTimer()
+
 		setStatus('stopped');
 		mediaRecorder.stream.getTracks().map((track) => {
 			track.stop();
+			socketSave()
+
 		});
 		setMediaRecorder(null);
-		saveVideo()
+
+
 	};
 
 	const startRecording = async () => {
-		let recorder = mediaRecorder;
-		if (!mediaRecorder) {
-			recorder = await requestMediaStream();
-		}
+		await	socketConnect()
+		// let recorder = mediaRecorder;
+		// if (!mediaRecorder) {
+		const	recorder = await requestMediaStream();
+		// }
 
-		(recorder as MediaRecorder).start();
-
+		await recorder?.start();
 		setStatus('recording');
 		startTimer()
 
@@ -122,7 +132,6 @@ export const useRecording = ({options, audio = true,}: {
 
 		setStatus('recording');
 		startTimer()
-		socket?.emit('record:reset')
 	};
 
 	const resetRecording = () => {
@@ -131,6 +140,7 @@ export const useRecording = ({options, audio = true,}: {
 		setStatus('idle');
 		setChunks([])
 		resetTimer()
+		socketReset()
 	};
 
 
