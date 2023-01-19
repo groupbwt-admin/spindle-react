@@ -1,7 +1,6 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {useStopWatch} from './useStopWatch'
 import {useSocketStream} from './useSocketStream'
-import {logger} from "react-query/types/react/logger";
 
 export type Status =
 	| 'recording'
@@ -32,10 +31,6 @@ export const useRecording = ({options, audio = true,}: {
 	const [error, setError] = useState<any>();
 	const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>();
 	const [status, setStatus] = useState<Status>('permission-requested');
-	const [streams, setStreams] = useState<{
-		audio?: MediaStreamTrack | null;
-		screen?: MediaStreamTrack | null;
-	}>({audio: null, screen: null});
 
 	const requestMediaStream = async () => {
 		try {
@@ -55,31 +50,22 @@ export const useRecording = ({options, audio = true,}: {
 				startTimer()
 			}
 			const stream: MediaStream = new MediaStream(tracks);
-			/// off microphone
+			///  microphone setting
 			if (!audio) {
 				stream.getAudioTracks()[0].enabled = false
 			}
-			const mediaRecorder = new MediaRecorder(stream, options);
-			mediaRecorder.start(250);
-			mediaRecorder.ondataavailable = (event) => {
+
+			const mediaRecorderLocal = new MediaRecorder(stream, options);
+			mediaRecorderLocal.start(250);
+			mediaRecorderLocal.ondataavailable = (event) => {
 				setChunks(prev => [...prev, event.data])
 				////append
 				socketStart(event.data)
-
 			};
 
-			setMediaRecorder(mediaRecorder);
-			setStreams({
-				audio:
-					userMedia?.getTracks().find((track) => track.kind === 'audio') ||
-					null,
-				screen:
-					displayMedia
-						.getTracks()
-						.find((track: MediaStreamTrack) => track.kind === 'video') || null,
-			});
+			setMediaRecorder(mediaRecorderLocal);
 
-			return mediaRecorder;
+			return mediaRecorderLocal;
 		} catch (e) {
 			setError(e);
 			setStatus('error');
@@ -89,34 +75,29 @@ export const useRecording = ({options, audio = true,}: {
 	};
 
 	const stopRecording = () => {
-
 		if (!mediaRecorder) throw Error('No media stream!');
 		mediaRecorder?.stop();
 		stopTimer()
-
+		socketSave()
 		setStatus('stopped');
+		//TODO: read0
 		mediaRecorder.stream.getTracks().map((track) => {
 			track.stop();
-			socketSave()
-
 		});
 		setMediaRecorder(null);
-
-
 	};
 
 	const startRecording = async () => {
+	try {
 		await	socketConnect()
-		// let recorder = mediaRecorder;
-		// if (!mediaRecorder) {
 		const	recorder = await requestMediaStream();
-		// }
-
 		await recorder?.start();
 		setStatus('recording');
 		startTimer()
-
-	};
+	} catch (e) {
+		console.error(e)
+	}
+};
 
 	const pauseRecording = () => {
 		if (!mediaRecorder) throw Error('No media stream!');
@@ -154,7 +135,6 @@ export const useRecording = ({options, audio = true,}: {
 		status,
 		chunks,
 		stopRecording,
-		streams,
 	};
 };
 
