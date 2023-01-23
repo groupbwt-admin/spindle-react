@@ -38,18 +38,10 @@ export const HomePage = () => {
 		resumeRecording,
 		startRecording,
 		status,
-		chunks,
 		stopRecording,
 	} = useRecording({audio: true});
 
-	const watchVideo = () => {
-		const blob = new Blob(chunks, {'type': 'video/mp4'});
-		videoR.current.src = URL.createObjectURL(blob);
-		videoR.current.load();
-		videoR.current.onloadeddata = function () {
-			videoR.current.play();
-		}
-	}
+
 
 	return (
 		<>
@@ -71,9 +63,7 @@ export const HomePage = () => {
 					<button onClick={pauseRecording}>Pause Recording</button>
 					<button onClick={resumeRecording}>Resume Recording</button>
 					<button onClick={resetRecording}>Reset Recording</button>
-					<button onClick={watchVideo}>watchVideo</button>
 				</div>
-				<video src="" ref={videoR}></video>
 			</ContentContainer>
 		</>
 	);

@@ -2,23 +2,21 @@ import {useState} from 'react';
 import {useStopWatch} from './useStopWatch'
 import {useSocketStream} from './useSocketStream'
 
-export type Status =
-	| 'recording'
-	| 'idle'
-	| 'error'
-	| 'stopped'
-	| 'paused'
-	| 'permission-requested';
 
+const RECORDING_STATUS = {
+	recording: 'recording',
+	idle: 'idle',
+	error: 'error',
+	stopped: 'stopped',
+	paused: 'paused',
+	permissionRequested: 'permission-requested'
+}
 export const useRecording = ({options, audio = true,}: {
 	options?: MediaRecorderOptions;
 	audio?: boolean;
 }) => {
 	const {
-		socketConnect,
-		socketStart,
-		socketSave,
-		socketReset
+		socketEmit,
 	} = useSocketStream()
 
 	const {
@@ -27,10 +25,8 @@ export const useRecording = ({options, audio = true,}: {
 		resetTimer,
 		time
 	} = useStopWatch()
-	const [chunks, setChunks] = useState<Blob[]>([]);
-	const [error, setError] = useState<any>();
 	const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>();
-	const [status, setStatus] = useState<Status>('permission-requested');
+	const [status, setStatus] = useState<string>(RECORDING_STATUS.permissionRequested);
 
 	const requestMediaStream = async () => {
 		try {
@@ -45,95 +41,86 @@ export const useRecording = ({options, audio = true,}: {
 				},
 			});
 			const tracks = [...displayMedia.getTracks(), ...userMedia.getTracks()];
-			if (tracks) {
-				setStatus('idle')
+			if (tracks.length) {
+				setStatus(RECORDING_STATUS.idle)
 				startTimer()
 			}
 			const stream: MediaStream = new MediaStream(tracks);
-			///  microphone setting
 			if (!audio) {
 				stream.getAudioTracks()[0].enabled = false
 			}
-
-			const mediaRecorderLocal = new MediaRecorder(stream, options);
+			const mediaRecorderLocal = new MediaRecorder(stream);
 			mediaRecorderLocal.start(250);
+
 			mediaRecorderLocal.ondataavailable = (event) => {
-				setChunks(prev => [...prev, event.data])
-				////append
-				socketStart(event.data)
+				socketEmit.start(event.data)
 			};
-
 			setMediaRecorder(mediaRecorderLocal);
-
 			return mediaRecorderLocal;
 		} catch (e) {
-			setError(e);
-			setStatus('error');
+			console.log(e)
+			setStatus(RECORDING_STATUS.error);
 			stopTimer()
 		}
-		return;
+
 	};
 
-	const stopRecording = () => {
-		if (!mediaRecorder) throw Error('No media stream!');
-		mediaRecorder?.stop();
-		stopTimer()
-		socketSave()
-		setStatus('stopped');
-		//TODO: read0
-		mediaRecorder.stream.getTracks().map((track) => {
-			track.stop();
-		});
-		setMediaRecorder(null);
+	const stopRecording = async () => {
+		try {
+			await mediaRecorder?.stop();
+			stopTimer()
+			setStatus(RECORDING_STATUS.stopped);
+			mediaRecorder?.stream.getTracks().map((track) => {
+				track.stop();
+			});
+			setMediaRecorder(null);
+			await socketEmit.save()
+		} catch (e) {
+			console.log('Stop Recording: ' + e)
+			setStatus(RECORDING_STATUS.error);
+		}
 	};
 
 	const startRecording = async () => {
-	try {
-		await	socketConnect()
-		const	recorder = await requestMediaStream();
-		await recorder?.start();
-		setStatus('recording');
-		startTimer()
-	} catch (e) {
-		console.error(e)
-	}
-};
+		try {
+			await requestMediaStream();
+			await socketEmit.connect()
+			await socketEmit.generateVideoPath()
+			setStatus(RECORDING_STATUS.recording);
+			startTimer()
+		} catch (e) {
+			console.log('Socket Connect:' + e)
+			setStatus(RECORDING_STATUS.error);
+		}
+	};
 
 	const pauseRecording = () => {
-		if (!mediaRecorder) throw Error('No media stream!');
 		mediaRecorder?.pause();
-
-		setStatus('paused');
+		setStatus(RECORDING_STATUS.paused);
 		stopTimer()
 	};
 
 	const resumeRecording = () => {
-		if (!mediaRecorder) throw Error('No media stream!');
 		mediaRecorder?.resume();
-
 		setStatus('recording');
 		startTimer()
 	};
 
 	const resetRecording = () => {
-		setError(null);
 		setMediaRecorder(null);
-		setStatus('idle');
-		setChunks([])
+		setStatus(RECORDING_STATUS.idle);
 		resetTimer()
-		socketReset()
+		socketEmit.reset()
 	};
 
 
 	return {
 		timeRecording: time,
-		error,
 		pauseRecording,
 		resetRecording,
 		resumeRecording,
 		startRecording,
 		status,
-		chunks,
 		stopRecording,
 	};
 };

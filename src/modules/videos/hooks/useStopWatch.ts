@@ -13,7 +13,7 @@ const formatMs = (milliseconds: number) => {
 	minutes = minutes % 60;
 	seconds = seconds % 60;
 	const ms = Math.floor((milliseconds % 1000) / 10);
-	let str = `${padStart(minutes)}:${padStart(seconds)}.${padStart(ms)}`;
+	let str = `${padStart(minutes)}:${padStart(seconds)}`;
 
 	if (hours > 0) {
 		str = `${padStart(hours)}:${str}`;
