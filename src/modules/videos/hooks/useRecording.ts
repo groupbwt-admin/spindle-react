@@ -84,7 +84,6 @@ export const useRecording = ({options, audio = true,}: {
 	const startRecording = async () => {
 		try {
 			await requestMediaStream();
-			await socketEmit.connect()
 			await socketEmit.generateVideoPath()
 			setStatus(RECORDING_STATUS.recording);
 			startTimer()

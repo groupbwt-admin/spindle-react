@@ -21,7 +21,7 @@ export const useStopWatch = () => {
 		if (startTime > 0) {
 			interval.current = setInterval(() => {
 				setTime(() => Date.now() - startTime + timeWhenLastStopped);
-			}, 1);
+			}, 200);
 		} else {
 			if (interval.current) {
 				clearInterval(interval.current);
