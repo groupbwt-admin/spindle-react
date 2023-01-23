@@ -29,7 +29,6 @@ export const HomePage = () => {
 	const handleChange = (event: React.SyntheticEvent, newValue: number) => {
 		setValue(newValue);
 	};
-	const videoR: any = React.useRef(null);
 
 	const {
 		timeRecording,
@@ -40,8 +39,6 @@ export const HomePage = () => {
 		status,
 		stopRecording,
 	} = useRecording({audio: true});
-
-
 
 	return (
 		<>
