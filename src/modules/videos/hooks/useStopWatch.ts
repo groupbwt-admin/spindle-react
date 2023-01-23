@@ -1,25 +1,10 @@
 import {useState, useRef, useEffect} from "react";
+import { format , addSeconds, millisecondsToSeconds} from 'date-fns'
 
-
-const padStart = (num: number) => {
-	return num.toString().padStart(2, "0");
-};
 
 const formatMs = (milliseconds: number) => {
-	let seconds = Math.floor(milliseconds / 1000);
-	let minutes = Math.floor(seconds / 60);
-	const hours = Math.floor(minutes / 60);
-
-	minutes = minutes % 60;
-	seconds = seconds % 60;
-	const ms = Math.floor((milliseconds % 1000) / 10);
-	let str = `${padStart(minutes)}:${padStart(seconds)}`;
-
-	if (hours > 0) {
-		str = `${padStart(hours)}:${str}`;
-	}
-
-	return str;
+	const helperDate = addSeconds(new Date(0), millisecondsToSeconds(milliseconds));
+	return format(helperDate, 'mm:ss');
 };
 
 
