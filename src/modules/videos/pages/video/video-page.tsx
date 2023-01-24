@@ -14,8 +14,6 @@ export const VideoPage: React.FC = () => {
 		enabled: !!urlParams.id,
 	});
 
-	console.log(videoUrl);
-
 	if (!videoUrl.data?.url) return <></>;
 
 	return (
@@ -23,7 +21,7 @@ export const VideoPage: React.FC = () => {
 			<video
 				autoPlay
 				controls
-				src="http://spindle-api.groupbwt.com/api/videos/streaming?videoId=1ac41b94-098b-48fd-9c81-3aa53356d975&expirationDate=2023-01-13T19%3A18%3A03.697Z&signed=cf62305d6145c586a5ad18729af8ea0517ed42c29a1e12e2562fe2582989d645"
+				src={videoUrl.data.url}
 			/>
 			<VideoPlayer />
 		</>

@@ -53,6 +53,7 @@ export const useRecording = ({options, audio = true,}: {
 			mediaRecorderLocal.start(250);
 
 			mediaRecorderLocal.ondataavailable = (event) => {
+				console.log(event)
 				socketEmit.start(event.data)
 			};
 			setMediaRecorder(mediaRecorderLocal);
@@ -61,8 +62,8 @@ export const useRecording = ({options, audio = true,}: {
 			console.log(e)
 			setStatus(RECORDING_STATUS.error);
 			stopTimer()
+			resetTimer()
 		}
-
 	};
 
 	const stopRecording = async () => {
@@ -105,11 +106,15 @@ export const useRecording = ({options, audio = true,}: {
 		startTimer()
 	};
 
-	const resetRecording = () => {
-		setMediaRecorder(null);
+	const resetRecording = async () => {
 		setStatus(RECORDING_STATUS.idle);
 		resetTimer()
+		mediaRecorder?.stop();
+		mediaRecorder?.stream.getTracks().map((track) => {
+			track.stop();
+		});
 		socketEmit.reset()
+		setMediaRecorder(null);
 	};
 
 

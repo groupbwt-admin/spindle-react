@@ -35,18 +35,7 @@ export class VideoApiService implements VideoApiInterface {
 		return payload.data;
 	};
 
-	getLastVideo = async () => {
-		const payload = await this.http.get(`/videos`, {
-			params: {
-				order: 'DESC',
-				page: 1,
-				take: 1,
-				sortField: 'size',
-				limitVideo: 1
-			}
-		});
-		return payload.data.data[0];
-	};
+
 
 }
 
