@@ -49,6 +49,9 @@ const theme = createTheme({
 			lineHeight: '24px',
 			fontWeight: 700,
 		},
+		h4: {
+			fontSize: '16px',
+		},
 		caption: {
 			fontSize: '1.125rem',
 			opacity: 0.5,
@@ -130,6 +133,8 @@ const theme = createTheme({
 		},
 	},
 });
+
+console.log(theme)
 
 const queryClient = new QueryClient();
 

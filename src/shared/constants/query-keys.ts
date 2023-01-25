@@ -1,3 +1,4 @@
 export const VIDEO_QUERY_KEYS = {
-	video: 'video'
+	video: 'video',
+	my_videos: 'my_videos'
 }

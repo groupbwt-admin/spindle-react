@@ -7,6 +7,10 @@ import { ReactComponent as EmptyCheckbox } from 'shared/components/icon/collecti
 import { ReactComponent as Logout } from 'shared/components/icon/collection/logout.svg';
 import { ReactComponent as Edit } from 'shared/components/icon/collection/edit.svg';
 import {ReactComponent as Close} from 'shared/components/icon/collection/close.svg';
+import {ReactComponent as Views} from 'shared/components/icon/collection/views.svg';
+import {ReactComponent as Comments} from 'shared/components/icon/collection/comments.svg';
+import {ReactComponent as EditProfile} from 'shared/components/icon/collection/edit-profile.svg';
+import {ReactComponent as Search} from 'shared/components/icon/collection/search.svg';
 
 export const ICON_COLLECTION = {
 	arrow_left: ArrowLeft,
@@ -17,7 +21,11 @@ export const ICON_COLLECTION = {
 	empty_checkbox: EmptyCheckbox,
 	logout: Logout,
 	edit: Edit,
-	close: Close
+	close: Close,
+	views: Views,
+	comments: Comments,
+	edit_profile: EditProfile,
+	search: Search
 };
 
 type Keys = keyof typeof ICON_COLLECTION;

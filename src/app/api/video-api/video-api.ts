@@ -34,6 +34,11 @@ export class VideoApiService implements VideoApiInterface {
 
 		return payload.data;
 	};
+
+	getMyVideos = async() => {
+		const payload = await this.http.get(`/videos`);
+		return payload.data;
+	}
 }
 
 export const VideoApi = new VideoApiService(new BaseHttpServices());
