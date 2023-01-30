@@ -31,7 +31,6 @@ export class VideoApiService implements VideoApiInterface {
 
 	getVideoUrl = async ({id}: GetVideoUrlDto): Promise<IVideoSign> => {
 		const payload = await this.http.get(`/videos/${id}/sign-url`);
-
 		return payload.data;
 	};
 

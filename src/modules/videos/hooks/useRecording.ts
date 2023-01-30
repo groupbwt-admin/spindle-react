@@ -1,24 +1,17 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useStopWatch} from './useStopWatch'
-import {useSocketStream} from './useSocketStream'
+import {selectSocketConnect, selectSocketEmit, selectSocketEmitSave} from "../../../app/store/video/selects";
+import {socket, socketClose, socketOff, socketOn} from "shared/services/base-socket-service";
+import {useNavigate} from "react-router-dom";
+import {VIDEO_ROUTES} from "shared/config/routes";
+import {RECORDING_STATUS} from "shared/constants/record-statuses";
+import {SOCKET_ACTIONS} from 'shared/constants/socket-action-names';
 
 
-const RECORDING_STATUS = {
-	recording: 'recording',
-	idle: 'idle',
-	error: 'error',
-	stopped: 'stopped',
-	paused: 'paused',
-	permissionRequested: 'permission-requested'
-}
 export const useRecording = ({options, audio = true,}: {
 	options?: MediaRecorderOptions;
 	audio?: boolean;
 }) => {
-	const {
-		socketEmit,
-	} = useSocketStream()
-
 	const {
 		startTimer,
 		stopTimer,
@@ -27,7 +20,33 @@ export const useRecording = ({options, audio = true,}: {
 	} = useStopWatch()
 	const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>();
 	const [status, setStatus] = useState<string>(RECORDING_STATUS.permissionRequested);
+	const navigate = useNavigate()
+	const emitConnect = selectSocketConnect()
+	const socketEmit = selectSocketEmit()
+	const emitSave = selectSocketEmitSave()
 
+	useEffect(() => {
+		socketOn(SOCKET_ACTIONS.DISCONNECT, () => {
+			console.log('disconnected');
+		})
+		socketOn(SOCKET_ACTIONS.CONNECT, () => {
+			console.log('connect');
+		});
+		emitConnect()
+		return () => {
+			socketOff(SOCKET_ACTIONS.DISCONNECT);
+			socketOff(SOCKET_ACTIONS.CONNECT);
+			if (socket) {
+				socketClose()
+			}
+		};
+	}, [socket]);
+
+	const onCallback = (video) => {
+		if (video) {
+			navigate(VIDEO_ROUTES.VIDEO.generate(video.id))
+		}
+	}
 	const requestMediaStream = async () => {
 		try {
 			const mediaDevices = navigator.mediaDevices as any;
@@ -53,8 +72,8 @@ export const useRecording = ({options, audio = true,}: {
 			mediaRecorderLocal.start(250);
 
 			mediaRecorderLocal.ondataavailable = (event) => {
-				console.log(event)
-				socketEmit.start(event.data)
+				socketEmit({type: SOCKET_ACTIONS.START, payload: {chunk: event.data}})
+
 			};
 			setMediaRecorder(mediaRecorderLocal);
 			return mediaRecorderLocal;
@@ -63,6 +82,7 @@ export const useRecording = ({options, audio = true,}: {
 			setStatus(RECORDING_STATUS.error);
 			stopTimer()
 			resetTimer()
+
 		}
 	};
 
@@ -70,12 +90,13 @@ export const useRecording = ({options, audio = true,}: {
 		try {
 			await mediaRecorder?.stop();
 			stopTimer()
+
 			setStatus(RECORDING_STATUS.stopped);
 			mediaRecorder?.stream.getTracks().map((track) => {
 				track.stop();
 			});
 			setMediaRecorder(null);
-			await socketEmit.save()
+			await emitSave(SOCKET_ACTIONS.SAVE, onCallback)
 		} catch (e) {
 			console.log('Stop Recording: ' + e)
 			setStatus(RECORDING_STATUS.error);
@@ -85,9 +106,11 @@ export const useRecording = ({options, audio = true,}: {
 	const startRecording = async () => {
 		try {
 			await requestMediaStream();
-			await socketEmit.generateVideoPath()
+			await socketEmit({type: SOCKET_ACTIONS.GENERATE_VIDEO_PATH})
 			setStatus(RECORDING_STATUS.recording);
-			startTimer()
+			if (mediaRecorder) {
+				await startTimer()
+			}
 		} catch (e) {
 			console.log('Socket Connect:' + e)
 			setStatus(RECORDING_STATUS.error);
@@ -113,7 +136,7 @@ export const useRecording = ({options, audio = true,}: {
 		mediaRecorder?.stream.getTracks().map((track) => {
 			track.stop();
 		});
-		socketEmit.reset()
+		socketEmit({type: SOCKET_ACTIONS.RESET})
 		setMediaRecorder(null);
 	};
 
