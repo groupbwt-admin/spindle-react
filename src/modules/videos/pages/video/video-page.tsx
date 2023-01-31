@@ -22,6 +22,7 @@ export const VideoPage: React.FC = () => {
 				autoPlay
 				controls
 				src={videoUrl.data.url}
+				width={300}
 			/>
 			<VideoPlayer />
 		</>
