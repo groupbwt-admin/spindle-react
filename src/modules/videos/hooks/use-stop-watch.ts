@@ -1,5 +1,5 @@
 import {useState, useRef, useEffect} from "react";
-import { format , addSeconds, millisecondsToSeconds} from 'date-fns'
+import {format, addSeconds, millisecondsToSeconds} from 'date-fns'
 
 
 const formatMs = (milliseconds: number) => {
@@ -35,7 +35,7 @@ export const useStopWatch = () => {
 		setStartTime(Date.now());
 	};
 
-	const stopTimer = () => {
+	const pauseTimer = () => {
 		setIsRunning(false);
 		setStartTime(0);
 		setTimeWhenLastStopped(time);
@@ -47,9 +47,11 @@ export const useStopWatch = () => {
 		setTimeWhenLastStopped(0);
 		setTime(0);
 	};
+
+
 	return {
 		startTimer,
-		stopTimer,
+		pauseTimer,
 		resetTimer,
 		isRunning,
 		time: formatMs(time),
