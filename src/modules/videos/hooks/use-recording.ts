@@ -17,7 +17,6 @@ export const useRecording = () => {
 	const [status, setStatus] = useState<string>(RECORDING_STATUS.permission_requested);
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true)
 	const navigate = useNavigate()
-
 	useEffect(() => {
 		socketState.onConnectListener()
 		socketState.onDisconnectedListener(() => stopRecording())
@@ -30,30 +29,24 @@ export const useRecording = () => {
 			}
 		};
 	}, []);
-	const toggleMicrophone = (isMuted) => {
-		setIsMicrophoneOn(isMuted)
-		if (mediaRecorder) {
-			mediaRecorder.stream.getAudioTracks()[0].enabled = isMuted
-		}
+	const toggleMicrophone = () => {
+		setIsMicrophoneOn((prevValue) => {
+			const newValue = !prevValue;
+			if (mediaRecorder) {
+				mediaRecorder.stream.getAudioTracks()[0].enabled = newValue
+			}
+			return newValue
+		})
 	}
 
 	const onNavigateToVideoPage = (video) => {
 		if (video) {
-			console.log(video)
 			navigate(VIDEO_ROUTES.VIDEO.generate(video.id))
 		}
 	}
 	const stopRecording = async () => {
 		try {
-			console.log('stopp')
 			await mediaRecorder?.stop();
-			pauseTimer()
-			setStatus(RECORDING_STATUS.stopped);
-			mediaRecorder?.stream.getTracks().map((track) => {
-				track.stop();
-			});
-			setMediaRecorder(null);
-			await socketState.save(SOCKET_ACTIONS.save, onNavigateToVideoPage)
 		} catch (e) {
 			console.log('Stop Recording: ' + e)
 			setStatus(RECORDING_STATUS.error);
@@ -63,7 +56,6 @@ export const useRecording = () => {
 		try {
 			const mediaDevices = navigator.mediaDevices as any;
 			const displayMedia = await mediaDevices.getDisplayMedia();
-
 			const userMedia = await mediaDevices.getUserMedia({
 				audio: {
 					echoCancellation: true,
@@ -85,13 +77,18 @@ export const useRecording = () => {
 				stopRecording();
 			}
 			stream.getAudioTracks()[0].enabled = isMicrophoneOn
-
 			const mediaRecorderLocal = new MediaRecorder(stream);
+			mediaRecorderLocal.onstop = () => {
+				pauseTimer()
+				setStatus(RECORDING_STATUS.stopped);
+				mediaRecorder?.stream.getTracks().map((track) => {
+					track.stop();
+				});
+				setMediaRecorder(null);
+				socketState.save(SOCKET_ACTIONS.save, onNavigateToVideoPage)
+			}
 			mediaRecorderLocal.start(250);
-
 			mediaRecorderLocal.ondataavailable = (event) => {
-				// mediaRecorderLocal.stream.getAudioTracks()[0].enabled = false
-
 				socketState.emit({type: SOCKET_ACTIONS.start, payload: {chunk: event.data}})
 			};
 			setMediaRecorder(mediaRecorderLocal);
@@ -142,7 +139,6 @@ export const useRecording = () => {
 		socketState.emit({type: SOCKET_ACTIONS.reset})
 		setMediaRecorder(null);
 	};
-
 
 	return {
 		models: {timeRecording: time, recordStatus: status, isMicrophoneOn},

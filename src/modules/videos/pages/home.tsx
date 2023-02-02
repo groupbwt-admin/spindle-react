@@ -61,7 +61,7 @@ export const HomePage = () => {
 					<button onClick={pauseRecording}>Pause Recording</button>
 					<button onClick={resumeRecording}>Resume Recording</button>
 					<button onClick={resetRecording}>Reset Recording</button>
-					<button onClick={() => toggleMicrophone(!isMicrophoneOn)}>toggleMicrophone
+					<button onClick={toggleMicrophone}>toggleMicrophone
 						+ {isMicrophoneOn ? 'true' : 'false'}</button>
 				</div>
 			</ContentContainer>

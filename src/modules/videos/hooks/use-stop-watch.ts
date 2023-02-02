@@ -1,4 +1,4 @@
-import {useState, useRef, useEffect} from "react";
+import {useState, useRef, useEffect, useMemo} from "react";
 import {format, addSeconds, millisecondsToSeconds} from 'date-fns'
 
 
@@ -15,6 +15,8 @@ export const useStopWatch = () => {
 	const [timeWhenLastStopped, setTimeWhenLastStopped] = useState<number>(0);
 
 	const interval = useRef<ReturnType<typeof setInterval>>();
+
+	const currentTime = useMemo(() => formatMs(time), [time]);
 
 
 	useEffect(() => {
@@ -54,7 +56,7 @@ export const useStopWatch = () => {
 		pauseTimer,
 		resetTimer,
 		isRunning,
-		time: formatMs(time),
+		time: currentTime,
 
 	};
 };

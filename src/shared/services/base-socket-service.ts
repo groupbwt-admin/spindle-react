@@ -1,16 +1,9 @@
 import socketIOClient, {Socket} from "socket.io-client";
-import {SERVER_BASE_IP} from 'shared/config/variables';
+import {RECORD_SOCKET_PATH} from 'shared/config/variables';
 import {LocalStorageService} from "./local-storage-service";
 
-
 class _SocketService {
-	get socket(): Socket {
-		return this._socket;
-	}
-	set socket(value: Socket) {
-		this._socket = value;
-	}
-	private _socket: Socket = socketIOClient(SERVER_BASE_IP!, {
+	private _socket: Socket = socketIOClient(RECORD_SOCKET_PATH!, {
 		transportOptions: {
 			polling: {
 				extraHeaders: {
@@ -20,6 +13,13 @@ class _SocketService {
 		},
 		autoConnect: false,
 	})
+	get socket(): Socket {
+		return this._socket;
+	}
+
+	set socket(value: Socket) {
+		this._socket = value;
+	}
 
 	emit(type: string, payload?: object | void) {
 		this.socket.emit(type, payload && payload)

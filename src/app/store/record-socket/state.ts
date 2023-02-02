@@ -40,13 +40,11 @@ export const socketState = proxy<ISocket>(
 		},
 		onConnectListener() {
 			SocketService.on(SOCKET_ACTIONS.connect, () => {
-				console.log('connect');
 				this.isConnect = true
 			});
 		},
 		onDisconnectedListener(stopRecording) {
 			SocketService.on(SOCKET_ACTIONS.disconnect, () => {
-				console.log('disconnected');
 				this.isConnect = false
 				stopRecording()
 				SocketService.socket.close()
