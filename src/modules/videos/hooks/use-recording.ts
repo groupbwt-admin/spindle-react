@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useStopWatch} from './use-stop-watch'
 import {useNavigate} from "react-router-dom";
 import {VIDEO_ROUTES} from "shared/config/routes";
@@ -38,6 +38,12 @@ export const useRecording = () => {
 			return newValue
 		})
 	}
+	const wait = () => new Promise<void>((resolve) => {
+		const myInterval = setInterval(() => console.log('1'), 1000)
+		setTimeout(() => {
+			resolve(clearInterval(myInterval));
+		}, 3000);
+	});
 
 	const onNavigateToVideoPage = (video) => {
 		if (video) {
@@ -54,7 +60,7 @@ export const useRecording = () => {
 	};
 	const requestMediaStream = async () => {
 		try {
-			const mediaDevices = navigator.mediaDevices as any;
+			const mediaDevices = navigator.mediaDevices;
 			const displayMedia = await mediaDevices.getDisplayMedia();
 			const userMedia = await mediaDevices.getUserMedia({
 				audio: {
@@ -66,10 +72,8 @@ export const useRecording = () => {
 			const tracks = [...displayMedia.getTracks(), ...userMedia.getTracks()];
 			if (tracks.length) {
 				setStatus(RECORDING_STATUS.idle)
-				startTimer()
 			}
 			const stream: MediaStream = new MediaStream(tracks);
-
 			stream.getVideoTracks()[0].onended = (e) => {
 				stream.getTracks().map((track) => {
 					track.stop();
@@ -78,6 +82,12 @@ export const useRecording = () => {
 			}
 			stream.getAudioTracks()[0].enabled = isMicrophoneOn
 			const mediaRecorderLocal = new MediaRecorder(stream);
+
+			mediaRecorderLocal.onstart = () => {
+				socketState.emit({type: SOCKET_ACTIONS.generate_video_path})
+				setStatus(RECORDING_STATUS.recording);
+				startTimer()
+			}
 			mediaRecorderLocal.onstop = () => {
 				pauseTimer()
 				setStatus(RECORDING_STATUS.stopped);
@@ -87,12 +97,14 @@ export const useRecording = () => {
 				setMediaRecorder(null);
 				socketState.save(SOCKET_ACTIONS.save, onNavigateToVideoPage)
 			}
-			mediaRecorderLocal.start(250);
 			mediaRecorderLocal.ondataavailable = (event) => {
 				socketState.emit({type: SOCKET_ACTIONS.start, payload: {chunk: event.data}})
 			};
-			setMediaRecorder(mediaRecorderLocal);
-			return mediaRecorderLocal;
+			return wait().then(() => {
+				mediaRecorderLocal.start(250);
+				setMediaRecorder(mediaRecorderLocal);
+				return mediaRecorderLocal;
+			})
 		} catch (e) {
 			console.log(e)
 			setStatus(RECORDING_STATUS.error);
@@ -106,11 +118,6 @@ export const useRecording = () => {
 	const startRecording = async () => {
 		try {
 			await requestMediaStream();
-			await socketState.emit({type: SOCKET_ACTIONS.generate_video_path})
-			setStatus(RECORDING_STATUS.recording);
-			if (mediaRecorder) {
-				await startTimer()
-			}
 		} catch (e) {
 			console.log('Socket Connect:' + e)
 			setStatus(RECORDING_STATUS.error);

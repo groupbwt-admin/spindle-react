@@ -30,6 +30,10 @@ export const useStopWatch = () => {
 				interval.current = undefined;
 			}
 		}
+		return () => {
+			clearInterval(interval.current)
+			interval.current = undefined;
+		}
 	}, [startTime]);
 
 	const startTimer = () => {
