@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {useStopWatch} from './use-stop-watch'
 import {useNavigate} from "react-router-dom";
 import {VIDEO_ROUTES} from "shared/config/routes";
@@ -16,6 +16,10 @@ export const useRecording = () => {
 	const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>();
 	const [status, setStatus] = useState<string>(RECORDING_STATUS.permission_requested);
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true)
+	const [counterBeforeStart, setCounterBeforeStart] = useState(3);
+
+	const isCancel = useRef(false);
+
 	const navigate = useNavigate()
 	useEffect(() => {
 		socketState.onConnectListener()
@@ -39,11 +43,12 @@ export const useRecording = () => {
 		})
 	}
 	const wait = () => new Promise<void>((resolve) => {
-		const myInterval = setInterval(() => console.log('1'), 1000)
+		const myInterval = setInterval(() => setCounterBeforeStart(prev => prev - 1), 1000)
 		setTimeout(() => {
 			resolve(clearInterval(myInterval));
 		}, 3000);
 	});
+
 
 	const onNavigateToVideoPage = (video) => {
 		if (video) {
@@ -89,7 +94,7 @@ export const useRecording = () => {
 				startTimer()
 			}
 			mediaRecorderLocal.onstop = () => {
-				pauseTimer()
+				resetTimer()
 				setStatus(RECORDING_STATUS.stopped);
 				mediaRecorder?.stream.getTracks().map((track) => {
 					track.stop();
@@ -101,22 +106,25 @@ export const useRecording = () => {
 				socketState.emit({type: SOCKET_ACTIONS.start, payload: {chunk: event.data}})
 			};
 			return wait().then(() => {
-				mediaRecorderLocal.start(250);
-				setMediaRecorder(mediaRecorderLocal);
-				return mediaRecorderLocal;
+				if (!isCancel.current) {
+					mediaRecorderLocal.start(250);
+					setMediaRecorder(mediaRecorderLocal);
+					return mediaRecorderLocal;
+				}
 			})
 		} catch (e) {
 			console.log(e)
 			setStatus(RECORDING_STATUS.error);
 			pauseTimer()
 			resetTimer()
-
 		}
 	};
 
 
 	const startRecording = async () => {
 		try {
+			isCancel.current = false
+			setCounterBeforeStart(3)
 			await requestMediaStream();
 		} catch (e) {
 			console.log('Socket Connect:' + e)
@@ -131,25 +139,31 @@ export const useRecording = () => {
 	};
 
 	const resumeRecording = () => {
+		setStatus(RECORDING_STATUS.recording);
 		mediaRecorder?.resume();
-		setStatus('recording');
 		startTimer()
 	};
 
 	const resetRecording = async () => {
-		setStatus(RECORDING_STATUS.idle);
 		resetTimer()
 		mediaRecorder?.stop();
 		mediaRecorder?.stream.getTracks().map((track) => {
 			track.stop();
 		});
 		socketState.emit({type: SOCKET_ACTIONS.reset})
+		setStatus(RECORDING_STATUS.permission_requested);
 		setMediaRecorder(null);
 	};
 
+	const prevCancelStream = () => {
+		isCancel.current = true
+		setStatus(RECORDING_STATUS.permission_requested);
+	}
+
 	return {
-		models: {timeRecording: time, recordStatus: status, isMicrophoneOn},
+		models: {timeRecording: time, recordStatus: status, isMicrophoneOn, counterBeforeStart, isCancel},
 		command: {
+			prevCancelStream,
 			toggleMicrophone,
 			pauseRecording,
 			resetRecording,
