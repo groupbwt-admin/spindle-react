@@ -7,7 +7,7 @@ import {
 } from 'app/store/auth/selects';
 import { MainLayout } from 'shared/layout/main-layout';
 import { userState } from 'app/store/user/state';
-import { selectIsLoadingUserData } from 'app/store/user/selects';
+import { selectUserData} from 'app/store/user/selects';
 import { useLocation } from 'react-router-dom';
 import { AUTH_ROUTES } from 'shared/config/routes';
 
@@ -22,7 +22,7 @@ const SpinnerContainer = styled('div')`
 export const AppLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const location = useLocation();
 	const isUserAuth = selectIsLoggedIn();
-	const isLoadingUserData = selectIsLoadingUserData();
+	const user = selectUserData();
 	const isAuthLayout = location.pathname.startsWith(AUTH_ROUTES.ROOT.path);
 
 	useEffect(() => {
@@ -31,7 +31,7 @@ export const AppLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
 		}
 	}, [isUserAuth]);
 
-	if (isLoadingUserData) {
+	if (!user) {
 		return (
 			<SpinnerContainer>
 				<CircularProgress />

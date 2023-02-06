@@ -1,16 +1,17 @@
+import * as React from 'react';
+import { useId, useRef } from 'react';
+import { css } from '@mui/material/styles';
+import clsx from 'clsx';
+import styled from '@emotion/styled/macro';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { InputAdornment, InputBase } from '@mui/material';
-import styled from '@emotion/styled/macro';
-import { css } from '@mui/material/styles';
-import * as React from 'react';
-import { useId, useRef } from 'react';
 import { InputProps } from 'shared/components/input/input';
-import clsx from 'clsx';
 
 const StyledInputAdornment = styled(InputAdornment)`
 	position: absolute;
 	left: 20px;
+	top: 50%;
 	transition: opacity 0.3s ease;
 
 	svg {
@@ -23,14 +24,18 @@ const StyledInputAdornment = styled(InputAdornment)`
 const StyledClearInputAdornment = styled(InputAdornment)`
 	position: absolute;
 	right: 20px;
-	top: 35%;
+	top: 36%;
 	display: none;
 	cursor: pointer;
 `;
 
 const AppInput = styled(InputBase)(
 	({ theme }) => css`
+		display: flex;
+		position: relative;
+
 		input {
+			max-width: 100%;
 			background-color: #ffffff;
 			border: 1px solid #eeeff1;
 			border-radius: 10px;
@@ -65,12 +70,15 @@ const AppInput = styled(InputBase)(
 				opacity: 0;
 			}
 
-			${StyledClearInputAdornment} {
-				display: block;
-			}
-
 			input {
 				padding-left: 12px;
+			}
+		}
+
+		&.hasValue {
+
+			${StyledClearInputAdornment} {
+				display: block;
 			}
 		}
 	`,
@@ -88,7 +96,7 @@ export const SearchInput: React.ForwardRefRenderFunction<
 	const id = useId();
 	const inputEl = useRef<HTMLInputElement | null>(null);
 
-	const clearHandler = () => {
+	const clearHandler = (e) => {
 		onClear();
 		inputEl.current && inputEl.current.focus();
 	};
@@ -110,6 +118,7 @@ export const SearchInput: React.ForwardRefRenderFunction<
 					<Icon icon={ICON_COLLECTION.close} />
 				</StyledClearInputAdornment>
 			}
+			slots={{root: 'label'}}
 		/>
 	);
 };
