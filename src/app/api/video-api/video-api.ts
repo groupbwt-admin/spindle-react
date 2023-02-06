@@ -7,6 +7,33 @@ export interface SaveVideoDto {
 	tags?: string[];
 }
 
+export interface VideoListResponseDto {
+	data: IVideo[];
+	meta: {
+		page: number;
+		hasPreviousPage: boolean;
+		hasNextPage: boolean;
+		itemCount: number;
+		pageCount: number;
+		take: number;
+		search: string;
+	};
+}
+
+export interface VideoListParamsDto {
+	order?: 'ASC' | 'DESC';
+	page?: number;
+	take?: number;
+	sortField?: string;
+	search?: string;
+	signal?: AbortSignal;
+	criteriaTags?: string[];
+}
+
+interface UserVideoListParamsDto extends VideoListParamsDto{
+	userId?: string;
+}
+
 export interface GetVideoUrlDto {
 	id: IVideo['id'];
 }
@@ -34,10 +61,15 @@ export class VideoApiService implements VideoApiInterface {
 		return payload.data;
 	};
 
-	getMyVideos = async() => {
-		const payload = await this.http.get(`/videos`);
+	getVideos = async ({signal, ...params}: VideoListParamsDto): Promise<VideoListResponseDto> => {
+		const payload = await this.http.get(`/videos`, { params: params, signal });
 		return payload.data;
-	}
+	};
+
+	getVideosByUserId = async ({signal, userId, ...params}: UserVideoListParamsDto): Promise<VideoListResponseDto> => {
+		const payload = await this.http.get(`/videos/users/${userId}`, { params: params, signal });
+		return payload.data;
+	};
 }
 
 export const VideoApi = new VideoApiService(new BaseHttpServices());
