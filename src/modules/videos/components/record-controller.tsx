@@ -1,5 +1,12 @@
 import React from 'react';
 import styled from "@emotion/styled/macro";
+import {Icon} from "../../../shared/components/icon/icon";
+import {ICON_COLLECTION} from "../../../shared/components/icon/icon-list";
+import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
+import {StopWatch} from "./stop-watch";
+import {socketState} from "app/store/record-socket/state";
+import {selectStatus} from "../../../app/store/record-socket/selects";
+import {Controller} from "./controller";
 
 interface IRecordControllerCommand {
 	toggleMicrophone: () => void
@@ -10,8 +17,6 @@ interface IRecordControllerCommand {
 }
 
 interface IRecordControllerModels {
-	timeRecording: string
-	recordStatus: string
 	isMicrophoneOn: boolean
 }
 
@@ -20,43 +25,27 @@ interface IRecordController {
 	models: IRecordControllerModels
 }
 
-const Controller = styled.div`
-	position: fixed;
-	top: 40%;
-	left: 150px;
-	display: flex;
-	flex-direction: column;
 
-`;
+export const RecordController = () => {
+	// const status = selectStatus()
+	const ControllerWrapper = styled.div`
+		position: fixed;
+		top: 40%;
+		left: 150px;
+			//display: ${(socketState.recordStatus === RECORDING_STATUS.recording || socketState.recordStatus === RECORDING_STATUS.paused) ? "flex" : "none"};
+		display: flex;
+		flex-direction: column;
+		padding: 24px 18px;
+		background: #000000;
+		border-radius: 50px;
+		width: 78px;
+	`;
 
-const ButtonController = styled.button`
-	background: transparent;
-
-`;
-
-export const RecordController: React.FC<IRecordController> = ({command, models}) => {
-	const {
-		toggleMicrophone,
-		pauseRecording,
-		resetRecording,
-		resumeRecording,
-		stopRecording
-	} = command
-	const {
-		timeRecording, recordStatus, isMicrophoneOn,
-
-	} = models
 	return (
-		<Controller>
-			<p>Status: {recordStatus}</p>
-			<p>Time: {timeRecording}</p>
-			<button onClick={stopRecording}>Stop Recording</button>
-			<button onClick={pauseRecording}>Pause Recording</button>
-			<button onClick={resumeRecording}>Resume Recording</button>
-			<button onClick={resetRecording}>Reset Recording</button>
-			<button onClick={toggleMicrophone}>toggleMicrophone
-				+ {isMicrophoneOn ? 'true' : 'false'}</button>
-		</Controller>
+		<ControllerWrapper>
+			<Controller/>
+			<StopWatch/>
+		</ControllerWrapper>
 	);
 }
 

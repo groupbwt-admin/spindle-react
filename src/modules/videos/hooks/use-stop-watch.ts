@@ -54,7 +54,6 @@ export const useStopWatch = () => {
 		setTime(0);
 	};
 
-
 	return {
 		startTimer,
 		pauseTimer,

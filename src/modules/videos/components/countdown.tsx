@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
-import {Button} from "../../shared/components/button/button";
+import {Button} from "shared/components/button/button";
+import {selectCounterBeforeStart, selectStatus} from "../../../app/store/record-socket/selects";
+import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
+import {EventBus, RECORDING_EVENTS} from "../../../shared/utils/event-bus";
 
 const CountWrapper = styled.div`
 	position: fixed;
@@ -12,7 +15,6 @@ const CountWrapper = styled.div`
 	align-items: center;
 	justify-content: center;
 	background: rgba(0, 0, 0, 0.52);
-	//opacity: 0.5;
 `;
 const CountValue = styled.p`
 	color: #fff;
@@ -27,17 +29,17 @@ const CancelButton = styled(Button)`
 	max-width: 190px;
 	color: #ffffff;
 `;
-
-interface ICountdownProps {
-	count: number
-	resetRecording: () => void
+const prev_stop = () => {
+	EventBus.emit(RECORDING_EVENTS.prev_stop)
 }
-
-export const Countdown: React.FC<ICountdownProps> = ({count, resetRecording}) => {
+export const Countdown = () => {
+	const status = selectStatus()
+	const count = selectCounterBeforeStart()
+	if (status !== RECORDING_STATUS.idle) return null
 	return (
 		<CountWrapper>
 			<CountValue>{count}</CountValue>
-			<CancelButton label="Cancel Recording" onClick={resetRecording}/>
+			<CancelButton label="Cancel Recording" onClick={prev_stop}/>
 		</CountWrapper>
 	);
 }

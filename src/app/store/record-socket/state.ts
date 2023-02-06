@@ -1,7 +1,7 @@
 import {devtools,} from 'valtio/utils'
 import {proxy} from 'valtio';
 import {SocketService} from "../../../shared/services/base-socket-service";
-import {SOCKET_ACTIONS} from "../../../shared/constants/record-statuses";
+import {RECORDING_STATUS, SOCKET_ACTIONS} from "../../../shared/constants/record-statuses";
 
 interface ISocket {
 	isLoading: boolean
@@ -14,6 +14,12 @@ interface ISocket {
 	onDisconnectedListener: (stopRecording: () => void) => void,
 	unfollowListener: (type: string) => void,
 	close: () => void,
+	setStatus: (status: string) => void,
+	setCounterBeforeStart: (counter: number) => void,
+	recordStatus: string,
+	counterBeforeStart: number,
+	mediaRecorder: MediaRecorder | null,
+	setMediaRecorder: (media: MediaRecorder | null) => void
 }
 
 interface IEmitProps {
@@ -27,11 +33,20 @@ export const socketState = proxy<ISocket>(
 		isLoading: true,
 		error: '',
 		isConnect: false,
+		recordStatus: RECORDING_STATUS.permission_requested,
+		counterBeforeStart: 3,
+		mediaRecorder: null,
+		setMediaRecorder(media) {
+			this.mediaRecorder = media
+		},
 		emit(data: IEmitProps) {
-			SocketService.emit(data.type, data.payload)
+			// SocketService.emit(data.type, data.payload)
+			console.log(data)
+
 		},
 		save(type, fn) {
-			SocketService.save(type, fn)
+			console.log(type)
+			// SocketService.save(type, fn)
 		},
 		connect() {
 			if (!SocketService.socket.connected) {
@@ -59,8 +74,14 @@ export const socketState = proxy<ISocket>(
 		close() {
 			SocketService.socket.close()
 			this.isConnect = false
-		}
+		},
 
+		setCounterBeforeStart(counter) {
+			this.counterBeforeStart = counter
+		},
+		setStatus(status) {
+			this.recordStatus = status
+		},
 	},
 )
 
