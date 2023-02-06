@@ -55,7 +55,7 @@ export function useProfile() {
 	}, [meta.page]);
 
 	useEffectAfterMount(() => {
-		searchVideos(() => ({ search: meta.search }));
+		searchVideos(() => ({ search: meta.search, page: 1 }));
 	}, [meta.search]);
 
 	const getFindVideosParams = (params) => {
