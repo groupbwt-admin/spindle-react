@@ -1,11 +1,8 @@
 import React from 'react';
 import styled from "@emotion/styled/macro";
-import {Icon} from "../../../shared/components/icon/icon";
-import {ICON_COLLECTION} from "../../../shared/components/icon/icon-list";
 import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
 import {StopWatch} from "./stop-watch";
 import {socketState} from "app/store/record-socket/state";
-import {selectStatus} from "../../../app/store/record-socket/selects";
 import {Controller} from "./controller";
 
 interface IRecordControllerCommand {

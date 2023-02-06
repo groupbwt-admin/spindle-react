@@ -1,7 +1,6 @@
 import React, {memo, useCallback, useEffect} from 'react';
 import styled from "@emotion/styled/macro";
 import {useStopWatch} from "../hooks/use-stop-watch";
-import {socketState} from "app/store/record-socket/state";
 import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
 import {selectStatus} from "../../../app/store/record-socket/selects";
 

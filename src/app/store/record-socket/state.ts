@@ -18,8 +18,7 @@ interface ISocket {
 	setCounterBeforeStart: (counter: number) => void,
 	recordStatus: string,
 	counterBeforeStart: number,
-	mediaRecorder: MediaRecorder | null,
-	setMediaRecorder: (media: MediaRecorder | null) => void
+
 }
 
 interface IEmitProps {
@@ -35,10 +34,7 @@ export const socketState = proxy<ISocket>(
 		isConnect: false,
 		recordStatus: RECORDING_STATUS.permission_requested,
 		counterBeforeStart: 3,
-		mediaRecorder: null,
-		setMediaRecorder(media) {
-			this.mediaRecorder = media
-		},
+
 		emit(data: IEmitProps) {
 			// SocketService.emit(data.type, data.payload)
 			console.log(data)

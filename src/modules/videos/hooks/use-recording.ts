@@ -60,14 +60,6 @@ export const useRecording = () => {
 			stream.getAudioTracks()[0].enabled = isMicrophoneOn
 			const mediaRecorderLocal = new MediaRecorder(stream);
 
-			mediaRecorderLocal.onstop = () => {
-				// console.log('stop')
-				// socketState.setStatus(RECORDING_STATUS.stopped);
-				// socketState.save(SOCKET_ACTIONS.save, onNavigateToVideoPage)
-				// setMediaRecorder(null);
-
-			}
-
 			mediaRecorderLocal.onstart = () => {
 				socketState.emit({type: SOCKET_ACTIONS.generate_video_path})
 			}
