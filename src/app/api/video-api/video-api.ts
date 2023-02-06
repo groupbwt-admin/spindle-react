@@ -1,5 +1,5 @@
-import { BaseHttpServices } from 'shared/services/base-http-services';
-import { IVideo, IVideoSign } from 'shared/types/video';
+import {BaseHttpServices} from 'shared/services/base-http-services';
+import {IVideo, IVideoSign} from 'shared/types/video';
 
 export interface SaveVideoDto {
 	socketId: string;
@@ -29,11 +29,13 @@ export class VideoApiService implements VideoApiInterface {
 		return payload.data;
 	};
 
-	getVideoUrl = async ({ id }: GetVideoUrlDto): Promise<IVideoSign> => {
+	getVideoUrl = async ({id}: GetVideoUrlDto): Promise<IVideoSign> => {
 		const payload = await this.http.get(`/videos/${id}/sign-url`);
-
 		return payload.data;
 	};
+
+
+
 }
 
 export const VideoApi = new VideoApiService(new BaseHttpServices());
