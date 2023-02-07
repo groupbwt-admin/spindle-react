@@ -17,7 +17,8 @@ import { useNavigate } from 'react-router-dom';
 import { VIDEO_ROUTES } from 'shared/config/routes';
 import { ActionMenu } from 'shared/components/video-card/action-menu';
 import { Checkbox } from 'shared/components/checkbox/checkbox';
-import {css} from "@mui/material/styles";
+import { css } from '@mui/material/styles';
+import PreviewPlaceholder from 'shared/assets/images/no-preview-placeholder.png';
 
 const StyledCheckbox = styled(Checkbox)`
 	position: absolute;
@@ -29,7 +30,8 @@ const StyledCheckbox = styled(Checkbox)`
 	z-index: 2;
 	display: none;
 
-	label, .MuiCheckbox-root {
+	label,
+	.MuiCheckbox-root {
 		margin-right: 0;
 	}
 `;
@@ -84,7 +86,7 @@ const StyledCaption = styled(Typography)`
 
 const StyledCardActions = styled(CardActions)`
 	padding: 16px;
-`
+`;
 
 const StyledTitle = styled(Typography)`
 	margin-top: 4px;
@@ -133,20 +135,27 @@ interface VideoCardProps {
 	onChecked: (IVideo) => void;
 }
 
-export const VideoCard: React.FC<VideoCardProps> = ({ checked, isSelectMode, video, onChecked }) => {
+export const VideoCard: React.FC<VideoCardProps> = ({
+	checked,
+	isSelectMode,
+	video,
+	onChecked,
+}) => {
 	const navigate = useNavigate();
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		onChecked({video, checked: event.target.checked});
+		onChecked({ video, checked: event.target.checked });
 	};
 
 	const handleClick = () => {
-		if(!isSelectMode) {
-			navigate(VIDEO_ROUTES.VIDEO.generate(video.id))
+		if (!isSelectMode) {
+			navigate(VIDEO_ROUTES.VIDEO.generate(video.id));
 		} else {
-			onChecked({video, checked: !checked})
+			onChecked({ video, checked: !checked });
 		}
-	}
+	};
+
+	const handleCheckboxClick = (e) => e.stopPropagation();
 
 	return (
 		<StyledCard onClick={handleClick} isSelectMode={isSelectMode}>
@@ -157,7 +166,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({ checked, isSelectMode, vid
 						src={
 							video.gif
 								? getUserAvatarURL(video.gif)
-								: 'https://virtualfoodpantry.net/images/noimage.png'
+								: PreviewPlaceholder
 						}
 					/>
 				</CardMedia>
@@ -170,7 +179,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({ checked, isSelectMode, vid
 						src={
 							video.user.avatar
 								? getUserAvatarURL(video.user.avatar)
-								: video.user.avatar
+								: undefined
 						}
 					/>
 					<StyledCaption variant="subtitle2">
@@ -188,7 +197,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({ checked, isSelectMode, vid
 				<StyledCheckbox
 					checked={checked}
 					onChange={handleChange}
-					onClick={(e) => e.stopPropagation()}
+					onClick={handleCheckboxClick}
 				/>
 				<StyledActionMenu />
 			</CardActionArea>

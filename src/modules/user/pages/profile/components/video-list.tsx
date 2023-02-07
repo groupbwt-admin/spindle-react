@@ -57,7 +57,7 @@ const BtnContainer = styled.div`
 
 interface VideoListProps {
 	list: IVideo[];
-	selectedVideos: IVideo[];
+	selectedVideos: object | null;
 	isVideoLoading?: boolean;
 	hasNextPage?: boolean;
 	isSelectMode: boolean;
@@ -74,15 +74,14 @@ export const VideoList: React.FC<VideoListProps> = ({
 	list,
 	onChecked,
 }) => {
-	const nextHandler = () => {
-		loadNextPage();
-	};
+	const isCardChecked = (cardId) =>
+		!!(selectedVideos && selectedVideos[cardId]);
 
 	return (
 		<>
 			<VideoContainer
 				dataLength={list.length}
-				next={nextHandler}
+				next={loadNextPage}
 				hasMore={hasNextPage || false}
 				loader={<LoadingMessage>Loading...</LoadingMessage>}
 				scrollableTarget={document.querySelector(' main') as ReactNode}
@@ -96,7 +95,7 @@ export const VideoList: React.FC<VideoListProps> = ({
 					<VideoCard
 						key={item.id}
 						video={item}
-						checked={!!selectedVideos.filter(video => video.id === item.id).length}
+						checked={isCardChecked(item.id)}
 						onChecked={onChecked}
 						isSelectMode={isSelectMode}
 					/>
@@ -105,9 +104,9 @@ export const VideoList: React.FC<VideoListProps> = ({
 			{hasNextPage && !isVideoLoading && (
 				<BtnContainer>
 					<LoadMoreBtn
-						label={'Load more'}
+						label="Load more"
 						color="secondary"
-						onClick={nextHandler}
+						onClick={loadNextPage}
 					/>
 				</BtnContainer>
 			)}

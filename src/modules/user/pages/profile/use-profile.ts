@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
 import { useFilterRequest } from 'shared/hooks/use-filter-request';
 import { useEffectAfterMount } from 'shared/hooks/use-effect-after-mount';
@@ -27,9 +27,9 @@ export function useProfile() {
 		data: videosData,
 		refetchData: refetchVideos,
 		searchData: searchVideos,
-		isInitialLoading: isInitialLoading,
+		isInitialLoading,
 		isRefetching: isRefetchingVideos,
-		isSearching: isSearching,
+		isSearching,
 	} = useFilterRequest<
 		VideoListResponseDto,
 		VideoListParamsDto,
@@ -48,7 +48,7 @@ export function useProfile() {
 			return VideoApi.getVideosByUserId(getFindVideosParams(params));
 		},
 	});
-	const [selectedVideos, setSelectedVideos] = useState<IVideo[]>([]);
+	const [selectedVideos, setSelectedVideos] = useState<object | null>(null);
 
 	useEffectAfterMount(() => {
 		refetchVideos();
@@ -74,53 +74,61 @@ export function useProfile() {
 		});
 	};
 
-	const searchHandler = (e) => {
+	const handleSearch = (e) => {
 		setMeta((prevVal) => {
-			return { ...prevVal, search: e.target.value };
+			return { ...prevVal, search: e.target.value, page: 1 };
 		});
 	};
 
-	const clearSearchHandler = () => {
+	const handleClearSearch = () => {
 		setMeta((prevVal) => {
-			return { ...prevVal, search: '' };
+			return { ...prevVal, search: '', page: 1 };
 		});
 	};
 
-	const checkVideoHandler = (video: { video: IVideo; checked: boolean }) => {
+	const handleCheckVideo = (video: { video: IVideo; checked: boolean }) => {
 		setSelectedVideos((prevVal) => {
+			const updatedList = prevVal || {};
 			if (video.checked) {
-				return [...prevVal, video.video];
+				updatedList[video.video.id] = video.video;
 			} else {
-				return prevVal.filter((item) => item.id !== video.video.id);
+				delete updatedList[video.video.id];
 			}
+			return updatedList;
 		});
 	};
 
-	const cancelSelectionHandler = () => {
-		setSelectedVideos(prevVal => [])
-	}
+	const handleCancelSelection = () => {
+		setSelectedVideos([]);
+	};
+
+	const selectedCount = useMemo(
+		() => (selectedVideos ? Object.keys(selectedVideos).length : 0),
+		[selectedVideos],
+	);
 
 	return {
 		models: {
 			modal,
-			meta: videosData?.meta,
+			user,
 			videos: videosData?.data ?? [],
-			isVideoLoading: isRefetchingVideos,
+			meta: videosData?.meta,
+			searchQuery: meta.search,
+			selectedCount,
+			selectedVideos,
 			isInitialLoading,
 			isSearching,
-			searchQuery: meta.search,
-			user,
-			selectedVideos,
-			isSelectMode: !!selectedVideos.length,
-			isListEmpty: videosData?.meta?.itemCount === 0
+			isVideoLoading: isRefetchingVideos,
+			isSelectMode: !!selectedVideos,
+			isListEmpty: videosData?.meta?.itemCount === 0,
 		},
 		commands: {
 			handleOpen,
 			loadNextPage,
-			searchHandler,
-			clearSearchHandler,
-			checkVideoHandler,
-			cancelSelectionHandler
+			handleSearch,
+			handleClearSearch,
+			handleCheckVideo,
+			handleCancelSelection,
 		},
 	};
 }

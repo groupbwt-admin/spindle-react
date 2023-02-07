@@ -1,5 +1,6 @@
 import { BaseHttpServices } from 'shared/services/base-http-services';
 import { IVideo, IVideoSign } from 'shared/types/video';
+import { RequestSortType } from 'shared/constants/request-sort-type';
 
 export interface SaveVideoDto {
 	socketId: string;
@@ -21,7 +22,7 @@ export interface VideoListResponseDto {
 }
 
 export interface VideoListParamsDto {
-	order?: 'ASC' | 'DESC';
+	order?: RequestSortType.ASC | RequestSortType.DESC;
 	page?: number;
 	take?: number;
 	sortField?: string;
@@ -30,7 +31,7 @@ export interface VideoListParamsDto {
 	criteriaTags?: string[];
 }
 
-interface UserVideoListParamsDto extends VideoListParamsDto{
+interface UserVideoListParamsDto extends VideoListParamsDto {
 	userId?: string;
 }
 
@@ -56,18 +57,28 @@ export class VideoApiService implements VideoApiInterface {
 		return payload.data;
 	};
 
-	getVideoUrl = async ({id}: GetVideoUrlDto): Promise<IVideoSign> => {
+	getVideoUrl = async ({ id }: GetVideoUrlDto): Promise<IVideoSign> => {
 		const payload = await this.http.get(`/videos/${id}/sign-url`);
 		return payload.data;
 	};
 
-	getVideos = async ({signal, ...params}: VideoListParamsDto): Promise<VideoListResponseDto> => {
+	getVideos = async ({
+		signal,
+		...params
+	}: VideoListParamsDto): Promise<VideoListResponseDto> => {
 		const payload = await this.http.get(`/videos`, { params: params, signal });
 		return payload.data;
 	};
 
-	getVideosByUserId = async ({signal, userId, ...params}: UserVideoListParamsDto): Promise<VideoListResponseDto> => {
-		const payload = await this.http.get(`/videos/users/${userId}`, { params: params, signal });
+	getVideosByUserId = async ({
+		signal,
+		userId,
+		...params
+	}: UserVideoListParamsDto): Promise<VideoListResponseDto> => {
+		const payload = await this.http.get(`/videos/users/${userId}`, {
+			params: params,
+			signal,
+		});
 		return payload.data;
 	};
 }

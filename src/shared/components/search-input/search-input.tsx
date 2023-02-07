@@ -96,7 +96,7 @@ export const SearchInput: React.ForwardRefRenderFunction<
 	const id = useId();
 	const inputEl = useRef<HTMLInputElement | null>(null);
 
-	const clearHandler = (e) => {
+	const handleClear = (e) => {
 		onClear();
 		inputEl.current && inputEl.current.focus();
 	};
@@ -114,7 +114,7 @@ export const SearchInput: React.ForwardRefRenderFunction<
 				</StyledInputAdornment>
 			}
 			endAdornment={
-				<StyledClearInputAdornment position="end" onClick={clearHandler}>
+				<StyledClearInputAdornment position="end" onClick={handleClear}>
 					<Icon icon={ICON_COLLECTION.close} />
 				</StyledClearInputAdornment>
 			}
