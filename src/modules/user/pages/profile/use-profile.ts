@@ -48,7 +48,9 @@ export function useProfile() {
 			return VideoApi.getVideosByUserId(getFindVideosParams(params));
 		},
 	});
-	const [selectedVideos, setSelectedVideos] = useState<object | null>(null);
+	const [selectedVideos, setSelectedVideos] = useState<
+		Record<IVideo['id'], IVideo>
+	>({});
 
 	useEffectAfterMount(() => {
 		refetchVideos();
@@ -88,7 +90,7 @@ export function useProfile() {
 
 	const handleCheckVideo = (video: { video: IVideo; checked: boolean }) => {
 		setSelectedVideos((prevVal) => {
-			const updatedList = prevVal || {};
+			const updatedList = { ...prevVal } || {};
 			if (video.checked) {
 				updatedList[video.video.id] = video.video;
 			} else {
@@ -99,11 +101,11 @@ export function useProfile() {
 	};
 
 	const handleCancelSelection = () => {
-		setSelectedVideos([]);
+		setSelectedVideos({});
 	};
 
-	const selectedCount = useMemo(
-		() => (selectedVideos ? Object.keys(selectedVideos).length : 0),
+	const selectedVideosCount = useMemo(
+		() => Object.keys(selectedVideos).length,
 		[selectedVideos],
 	);
 
@@ -114,12 +116,12 @@ export function useProfile() {
 			videos: videosData?.data ?? [],
 			meta: videosData?.meta,
 			searchQuery: meta.search,
-			selectedCount,
+			selectedVideosCount,
 			selectedVideos,
 			isInitialLoading,
 			isSearching,
 			isVideoLoading: isRefetchingVideos,
-			isSelectMode: !!selectedVideos,
+			isSelectMode: !!selectedVideosCount,
 			isListEmpty: videosData?.meta?.itemCount === 0,
 		},
 		commands: {

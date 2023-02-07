@@ -64,7 +64,6 @@ const StyledCard = styled(Card)<{ isSelectMode: boolean }>`
 				display: block;
 			}
 		`}
-
 	&:hover, &:focus {
 		${StyledCheckbox} {
 			display: block;
@@ -159,15 +158,11 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 
 	return (
 		<StyledCard onClick={handleClick} isSelectMode={isSelectMode}>
-			<CardActionArea>
+			<CardActionArea component="div">
 				<CardMedia sx={{ height: 172, position: 'relative' }}>
 					<StyledPreview
 						loading="lazy"
-						src={
-							video.gif
-								? getUserAvatarURL(video.gif)
-								: PreviewPlaceholder
-						}
+						src={video.gif ? getUserAvatarURL(video.gif) : PreviewPlaceholder}
 					/>
 				</CardMedia>
 				<CardContent>

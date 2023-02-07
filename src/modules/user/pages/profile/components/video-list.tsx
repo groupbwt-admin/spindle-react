@@ -57,7 +57,7 @@ const BtnContainer = styled.div`
 
 interface VideoListProps {
 	list: IVideo[];
-	selectedVideos: object | null;
+	selectedVideos: Record<IVideo['id'], IVideo>;
 	isVideoLoading?: boolean;
 	hasNextPage?: boolean;
 	isSelectMode: boolean;
@@ -74,8 +74,9 @@ export const VideoList: React.FC<VideoListProps> = ({
 	list,
 	onChecked,
 }) => {
-	const isCardChecked = (cardId) =>
-		!!(selectedVideos && selectedVideos[cardId]);
+	const isCardChecked = (cardId) => {
+		return !!selectedVideos[cardId];
+	};
 
 	return (
 		<>

@@ -111,7 +111,7 @@ export const ProfilePage = () => {
 			{models.modal}
 			{models.isSelectMode && (
 				<StyledActionPanel
-					selectedCount={models.selectedCount}
+					selectedCount={models.selectedVideosCount}
 					cancelSelection={commands.handleCancelSelection}
 				/>
 			)}
