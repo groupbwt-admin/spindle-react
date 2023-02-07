@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useCallback, useEffect,  useRef, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {VIDEO_ROUTES} from "shared/config/routes";
 import {RECORDING_STATUS, SOCKET_ACTIONS} from "shared/constants/record-statuses";
@@ -8,12 +8,11 @@ import {selectStatus} from "../../../app/store/record-socket/selects";
 import {EventBus, RECORDING_EVENTS} from "../../../shared/utils/event-bus";
 
 export const useRecording = () => {
-	const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>();
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(false)
+	const mediaRecorder = useRef<MediaRecorder | null>(null);
+	const isCancel = useRef(false);
 	const status = selectStatus()
 	const navigate = useNavigate()
-	const isCancel = useRef(false);
-
 	useEffect(() => {
 		socketState.onConnectListener()
 		socketState.onDisconnectedListener(() => stopRecording())
@@ -69,15 +68,18 @@ export const useRecording = () => {
 				console.log(event)
 			};
 
-
 			return wait().then(async () => {
 				if (!isCancel.current) {
 					mediaRecorderLocal.start(250);
 					console.log(mediaRecorderLocal)
-					await setMediaRecorder(mediaRecorderLocal);
+					mediaRecorder.current = mediaRecorderLocal
 					socketState.setStatus(RECORDING_STATUS.recording);
-
+					socketState.setIsShowController(true)
 					return mediaRecorderLocal;
+				}else{
+					mediaRecorderLocal.stream.getTracks().map((track) => {
+						track.stop();
+					});
 				}
 			})
 		} catch (e) {
@@ -91,7 +93,6 @@ export const useRecording = () => {
 		async () => {
 			try {
 				isCancel.current = false
-
 				socketState.setCounterBeforeStart(3)
 				await requestMediaStream()
 			} catch (e) {
@@ -103,15 +104,19 @@ export const useRecording = () => {
 	);
 
 
-	const toggleMicrophone = () => {
-		setIsMicrophoneOn((prevValue) => {
-			const newValue = !prevValue;
-			if (mediaRecorder) {
-				mediaRecorder.stream.getAudioTracks()[0].enabled = newValue
-			}
-			return newValue
-		})
-	}
+	const toggleMicrophone = useCallback(
+		() => {
+			setIsMicrophoneOn((prevValue) => {
+				const newValue = !prevValue;
+				if (mediaRecorder.current) {
+					mediaRecorder.current.stream.getAudioTracks()[0].enabled = newValue
+				}
+				return newValue
+			})
+		},
+		[],
+	);
+
 	const wait = () => new Promise<void>((resolve) => {
 		const myInterval = setInterval(() => socketState.setCounterBeforeStart(socketState.counterBeforeStart - 1), 1000)
 		setTimeout(() => {
@@ -131,39 +136,57 @@ export const useRecording = () => {
 			navigate(VIDEO_ROUTES.VIDEO.generate(video.id))
 		}
 	}
-	const stopRecording = async () => {
-		try {
-			mediaRecorder?.stop();
-			mediaRecorder?.stream.getTracks().map((track) => {
+	const stopRecording = useCallback(
+		async () => {
+			try {
+				mediaRecorder.current?.stop();
+				mediaRecorder.current?.stream.getTracks().map((track) => {
+					track.stop();
+				});
+				socketState.setStatus(RECORDING_STATUS.stopped);
+				socketState.save(SOCKET_ACTIONS.save, onNavigateToVideoPage)
+				socketState.setIsShowController(false)
+				mediaRecorder.current = null
+			} catch (e) {
+				console.log('Stop Recording: ' + e)
+				socketState.setStatus(RECORDING_STATUS.error);
+			}
+		},
+		[],
+	);
+
+
+	const pauseRecording = useCallback(
+		() => {
+			socketState.setStatus(RECORDING_STATUS.paused);
+			mediaRecorder.current?.pause();
+		},
+		[],
+	);
+
+
+	const resumeRecording = useCallback(
+		() => {
+			socketState.setStatus(RECORDING_STATUS.recording);
+			mediaRecorder.current?.resume();
+		},
+		[],
+	);
+
+
+	const resetRecording = useCallback(
+		() => {
+			mediaRecorder.current?.stop();
+			mediaRecorder.current?.stream.getTracks().map((track) => {
 				track.stop();
 			});
-			console.log('stop')
-			socketState.setStatus(RECORDING_STATUS.stopped);
-			socketState.save(SOCKET_ACTIONS.save, onNavigateToVideoPage)
-			setMediaRecorder(null);
-		} catch (e) {
-			console.log('Stop Recording: ' + e)
-			socketState.setStatus(RECORDING_STATUS.error);
-		}
-	}
-
-
-	const pauseRecording = () => {
-		socketState.setStatus(RECORDING_STATUS.paused);
-		mediaRecorder?.pause();
-	};
-
-	const resumeRecording = () => {
-		socketState.setStatus(RECORDING_STATUS.recording);
-		mediaRecorder?.resume();
-	}
-
-
-	const resetRecording = () => {
-		socketState.emit({type: SOCKET_ACTIONS.reset})
-		setMediaRecorder(null);
-		socketState.setStatus(RECORDING_STATUS.permission_requested)
-	}
+			socketState.emit({type: SOCKET_ACTIONS.reset})
+			mediaRecorder.current = null
+			socketState.setStatus(RECORDING_STATUS.permission_requested)
+			socketState.setIsShowController(false)
+		},
+		[],
+	);
 
 
 	return {

@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect,} from 'react';
 import styled from "@emotion/styled/macro";
 import {Icon} from "shared/components/icon/icon";
 import {ICON_COLLECTION} from "shared/components/icon/icon-list";
@@ -6,6 +6,7 @@ import {RECORDING_STATUS} from "shared/constants/record-statuses";
 import {selectStatus} from "../../../app/store/record-socket/selects";
 import {useRecording} from "../hooks/use-recording";
 import {EventBus, RECORDING_EVENTS} from "../../../shared/utils/event-bus";
+
 
 const ControllerButton = styled.button`
 	background: transparent;
@@ -19,43 +20,49 @@ const ControllerButton = styled.button`
 	}
 `;
 const ControllerComponent = () => {
+	const status = selectStatus()
 	const {
 		models,
-		command
+		command: {
+			startRecording,
+			stopRecording,
+			resumeRecording,
+			pauseRecording,
+			resetRecording,
+			toggleMicrophone,
+		}
 	} = useRecording();
-	const status = selectStatus()
 
-	const startRecording = useCallback(
+	const onStartRecording = useCallback(
 		() => {
-			command.startRecording()
+			startRecording()
 		},
 		[],
 	);
 	useEffect(() => {
-		EventBus.on(RECORDING_EVENTS.start, startRecording);
+		EventBus.on(RECORDING_EVENTS.start, onStartRecording);
 		return () => {
-			EventBus.off(RECORDING_EVENTS.start, startRecording);
+			EventBus.off(RECORDING_EVENTS.start, onStartRecording);
 		};
 	}, []);
-
 	return (
 		<>
-			<ControllerButton onClick={command.stopRecording}><Icon icon={ICON_COLLECTION.stop}/></ControllerButton>
+			<ControllerButton onClick={stopRecording}><Icon icon={ICON_COLLECTION.stop}/></ControllerButton>
 			{
 				status == RECORDING_STATUS.paused ?
 					<ControllerButton
-						onClick={command.resumeRecording}>
+						onClick={resumeRecording}>
 						<Icon
 							icon={ICON_COLLECTION.resume}/>
 					</ControllerButton> :
 					<ControllerButton
-						onClick={command.pauseRecording}>
+						onClick={pauseRecording}>
 						<Icon
 							icon={ICON_COLLECTION.pause}/>
 					</ControllerButton>
 			}
-			<ControllerButton onClick={command.resetRecording}><Icon icon={ICON_COLLECTION.reset}/></ControllerButton>
-			<ControllerButton onClick={command.toggleMicrophone}>
+			<ControllerButton onClick={resetRecording}><Icon icon={ICON_COLLECTION.reset}/></ControllerButton>
+			<ControllerButton onClick={toggleMicrophone}>
 				{models.isMicrophoneOn ?
 					<Icon icon={ICON_COLLECTION.microphone}/> :
 					<Icon icon={ICON_COLLECTION.microphone_off}/>
@@ -63,6 +70,7 @@ const ControllerComponent = () => {
 			</ControllerButton>
 		</>
 	);
-};
-export const Controller = memo(ControllerComponent)
+}
+
+export const Controller = React.memo(ControllerComponent)
 

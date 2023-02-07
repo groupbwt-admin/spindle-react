@@ -18,6 +18,8 @@ interface ISocket {
 	setCounterBeforeStart: (counter: number) => void,
 	recordStatus: string,
 	counterBeforeStart: number,
+	isShowController: boolean
+	setIsShowController: (isShow: boolean) => void,
 
 }
 
@@ -34,11 +36,13 @@ export const socketState = proxy<ISocket>(
 		isConnect: false,
 		recordStatus: RECORDING_STATUS.permission_requested,
 		counterBeforeStart: 3,
-
+		isShowController: false,
+		setIsShowController(isShow) {
+			this.isShowController = isShow
+		},
 		emit(data: IEmitProps) {
 			// SocketService.emit(data.type, data.payload)
 			console.log(data)
-
 		},
 		save(type, fn) {
 			console.log(type)
@@ -80,5 +84,6 @@ export const socketState = proxy<ISocket>(
 		},
 	},
 )
+
 
 devtools(socketState, {name: 'socketState', enabled: true});

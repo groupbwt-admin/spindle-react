@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect} from 'react';
+import React, {memo, useMemo} from 'react';
 import styled from "@emotion/styled/macro";
 import {useStopWatch} from "../hooks/use-stop-watch";
 import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
@@ -21,8 +21,7 @@ export const StopWatchComponent = () => {
 		time
 	} = useStopWatch()
 	const status = selectStatus()
-
-	const watchStatus = useCallback(
+	const watchStatus = useMemo(
 		() => {
 			status === RECORDING_STATUS.recording && startTimer()
 			status === RECORDING_STATUS.stopped && pauseTimer()
@@ -33,13 +32,6 @@ export const StopWatchComponent = () => {
 		},
 		[status],
 	);
-
-
-	useEffect(() => {
-		watchStatus()
-
-	}, [status]);
-
 
 	return (
 		<ControllerStopWatch>{time}</ControllerStopWatch>

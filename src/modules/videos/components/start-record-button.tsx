@@ -29,7 +29,8 @@ const StartRecordButtonComponent = () => {
 				<RecordButton
 					label="Start Recording"
 					startIcon={<IconRecord/>}
-					onClick={onStartRecording}/> : null
+					onClick={onStartRecording}/>
+				: null
 		}</>
 
 	);

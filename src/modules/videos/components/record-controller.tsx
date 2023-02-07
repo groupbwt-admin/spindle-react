@@ -1,48 +1,33 @@
-import React from 'react';
-import styled from "@emotion/styled/macro";
-import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
+import React, {useMemo} from 'react';
+import styled from "@emotion/styled";
 import {StopWatch} from "./stop-watch";
-import {socketState} from "app/store/record-socket/state";
 import {Controller} from "./controller";
+import {selectIsShowController, selectStatus} from "../../../app/store/record-socket/selects";
+import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
 
-interface IRecordControllerCommand {
-	toggleMicrophone: () => void
-	pauseRecording: () => void
-	resetRecording: () => void
-	resumeRecording: () => void
-	stopRecording: () => void
-}
+const ControllerWrapper = styled.div`
+	position: fixed;
+	top: 40%;
+	left: 150px;
+	display: flex;
+	flex-direction: column;
+	padding: 24px 18px;
+	background: #000000;
+	border-radius: 50px;
+	width: 78px;
+`;
 
-interface IRecordControllerModels {
-	isMicrophoneOn: boolean
-}
-
-interface IRecordController {
-	command: IRecordControllerCommand
-	models: IRecordControllerModels
-}
-
-
-export const RecordController = () => {
-	// const status = selectStatus()
-	const ControllerWrapper = styled.div`
-		position: fixed;
-		top: 40%;
-		left: 150px;
-			//display: ${(socketState.recordStatus === RECORDING_STATUS.recording || socketState.recordStatus === RECORDING_STATUS.paused) ? "flex" : "none"};
-		display: flex;
-		flex-direction: column;
-		padding: 24px 18px;
-		background: #000000;
-		border-radius: 50px;
-		width: 78px;
-	`;
+const RecordControllerComponent = () => {
+	const isShowController = selectIsShowController()
 
 	return (
-		<ControllerWrapper>
+		<ControllerWrapper style={{display: !isShowController ? 'none' : 'flex'}}>
 			<Controller/>
 			<StopWatch/>
 		</ControllerWrapper>
 	);
 }
+
+
+export const RecordController = React.memo(RecordControllerComponent)
 

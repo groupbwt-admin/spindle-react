@@ -18,11 +18,12 @@ const Main = styled('main')`
 
 
 export const MainLayout: React.FC<React.PropsWithChildren> = ({children}) => {
+
 	return (
 		<MainLayoutContainer disableGutters maxWidth={false}>
 			<Countdown/>
 			<StartRecordButton/>
-			<RecordController/>
+			<RecordController />
 			<AppMenu/>
 			<Main>
 				{children}
