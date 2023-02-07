@@ -4,7 +4,7 @@ import { IconButton as ExternalIconButton } from '@mui/material';
 interface IconButtonProps {
 	className?: string;
 	disabled?: boolean;
-	onClick?: () => void;
+	onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const IconButton: React.FC<React.PropsWithChildren<IconButtonProps>> = ({

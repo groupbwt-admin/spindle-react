@@ -3,6 +3,7 @@ import { RouteObject } from 'react-router-dom';
 import { VIDEO_ROUTES } from 'shared/config/routes';
 import loadable from '@loadable/component';
 import { AuthGuard } from 'app/guards/auth-guard';
+import { ProfilePage } from 'modules/user/pages/profile/profile';
 
 const VideoPage = loadable(
 	() => import('modules/videos/pages/video/video-page'),
@@ -25,6 +26,14 @@ export const videoRoutes: RouteObject[] = [
 		element: (
 			<AuthGuard>
 				<HomePage />
+			</AuthGuard>
+		),
+	},
+	{
+		path: VIDEO_ROUTES.PROFILE.path,
+		element: (
+			<AuthGuard>
+				<ProfilePage />
 			</AuthGuard>
 		),
 	},

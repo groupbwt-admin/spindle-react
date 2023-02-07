@@ -25,14 +25,15 @@ export interface CheckboxProps {
 	label?: React.ReactNode | string;
 	tabIndex?: InputHTMLAttributes<HTMLInputElement>['tabIndex'];
 	onChange?: InputHTMLAttributes<HTMLInputElement>['onChange'];
+	onClick?: InputHTMLAttributes<HTMLLabelElement>['onClick'];
 }
 
 const RootCheckbox: React.ForwardRefRenderFunction<
 	HTMLInputElement,
 	CheckboxProps
-> = ({ checked, label, className, ...props }, ref) => {
+> = ({ checked, label, className, onClick, ...props }, ref) => {
 	return (
-		<div className={className}>
+		<label className={className} onClick={onClick}>
 			<FormControlLabel
 				value="start"
 				control={
@@ -45,10 +46,10 @@ const RootCheckbox: React.ForwardRefRenderFunction<
 						{...props}
 					/>
 				}
-				label={label}
+				label={label || false}
 				labelPlacement="end"
 			/>
-		</div>
+		</label>
 	);
 };
 

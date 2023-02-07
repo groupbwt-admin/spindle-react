@@ -38,4 +38,7 @@ export const VIDEO_ROUTES = {
 		path: '/videos/:id',
 		generate: (id: string) => generatePath('/videos/:id', { id }),
 	},
+	PROFILE: {
+		path: '/profile',
+	},
 };
