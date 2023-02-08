@@ -5,11 +5,11 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import jwtDecode from 'jwt-decode';
-import { LocalStorageService } from './shared/services/local-storage-service';
+import { LocalStorageService } from 'shared/services/local-storage-service';
 import reportWebVitals from './reportWebVitals';
-import { authState } from './app/store/auth/state';
+import { authState } from 'app/store/auth/state';
 import App from './app/app';
-import { IToken } from './shared/types/token';
+import { IToken } from 'shared/types/token';
 
 const theme = createTheme({
 	palette: {
@@ -43,6 +43,11 @@ const theme = createTheme({
 			lineHeight: '52px',
 			fontWeight: 700,
 			color: '#231D2C',
+		},
+		h2: {
+			fontSize: '24px',
+			lineHeight: '39px',
+			fontWeight: 600,
 		},
 		h3: {
 			fontSize: '18px',
@@ -83,8 +88,7 @@ const theme = createTheme({
 				sizeSmall: {
 					padding: '8px 16px',
 					fontSize: '12px',
-					lineHeight: '18px'
-
+					lineHeight: '18px',
 				},
 				root: {
 					disabled: {
@@ -134,7 +138,7 @@ const theme = createTheme({
 	},
 });
 
-console.log(theme)
+console.log(theme);
 
 const queryClient = new QueryClient();
 

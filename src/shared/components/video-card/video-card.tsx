@@ -19,6 +19,7 @@ import { ActionMenu } from 'shared/components/video-card/action-menu';
 import { Checkbox } from 'shared/components/checkbox/checkbox';
 import { css } from '@mui/material/styles';
 import PreviewPlaceholder from 'shared/assets/images/no-preview-placeholder.png';
+import { format } from 'date-fns';
 
 const StyledCheckbox = styled(Checkbox)`
 	position: absolute;
@@ -28,6 +29,7 @@ const StyledCheckbox = styled(Checkbox)`
 	background-color: ${({ theme }) => theme.palette.common.white};
 	border-radius: 10px;
 	z-index: 2;
+	align-self: flex-start;
 	display: none;
 
 	label,
@@ -56,17 +58,20 @@ const StyledCard = styled(Card)<{ isSelectMode: boolean }>`
 	background-color: ${({ theme }) => theme.palette.common.white};
 	box-shadow: none;
 	height: 100%;
+	transition: box-shadow 0.3s ease;
 
 	${({ isSelectMode }) =>
 		isSelectMode &&
 		css`
 			${StyledCheckbox} {
-				display: block;
+				display: flex;
 			}
 		`}
-	&:hover, &:focus {
+	&:hover {
+		box-shadow: 0 0 0 1px ${({ theme }) => theme.palette.primary.main};
+
 		${StyledCheckbox} {
-			display: block;
+			display: flex;
 		}
 
 		${StyledActionMenu} {
@@ -75,7 +80,7 @@ const StyledCard = styled(Card)<{ isSelectMode: boolean }>`
 	}
 
 	.MuiCardActionArea-root:hover .MuiCardActionArea-focusHighlight {
-		opacity: 0.2;
+		opacity: 0;
 	}
 `;
 
@@ -158,7 +163,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 
 	return (
 		<StyledCard onClick={handleClick} isSelectMode={isSelectMode}>
-			<CardActionArea component="div">
+			<CardActionArea component="div" sx={{ height: '100%' }}>
 				<CardMedia sx={{ height: 172, position: 'relative' }}>
 					<StyledPreview
 						loading="lazy"
@@ -166,7 +171,9 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 					/>
 				</CardMedia>
 				<CardContent>
-					<StyledCaption variant="subtitle2">{video.createdAt}</StyledCaption>
+					<StyledCaption variant="subtitle2">
+						{format(new Date(video.createdAt), 'MMMM d, yyyy')}
+					</StyledCaption>
 					<StyledTitle variant="h4">{video.title}</StyledTitle>
 				</CardContent>
 				<StyledCardActions>

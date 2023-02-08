@@ -16,6 +16,10 @@ import { ReactComponent as CopyLink } from 'shared/components/icon/collection/co
 import { ReactComponent as Delete } from 'shared/components/icon/collection/delete.svg';
 import { ReactComponent as Download } from 'shared/components/icon/collection/download.svg';
 import { ReactComponent as Settings } from 'shared/components/icon/collection/settings.svg';
+import { ReactComponent as Filter } from 'shared/components/icon/collection/filter.svg';
+import { ReactComponent as DefaultSort } from 'shared/components/icon/collection/default-sort.svg';
+import { ReactComponent as SortArrowUp } from 'shared/components/icon/collection/sort-up-arrow.svg';
+import { ReactComponent as SortArrowDown } from 'shared/components/icon/collection/sort-down-arrow.svg';
 
 export const ICON_COLLECTION = {
 	arrow_left: ArrowLeft,
@@ -35,7 +39,11 @@ export const ICON_COLLECTION = {
 	copy_link: CopyLink,
 	delete: Delete,
 	download: Download,
-	settings: Settings
+	settings: Settings,
+	filter: Filter,
+	default_sort: DefaultSort,
+	sort_arrow_up: SortArrowUp,
+	sort_arrow_down: SortArrowDown,
 };
 
 type Keys = keyof typeof ICON_COLLECTION;

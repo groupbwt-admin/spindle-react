@@ -6,6 +6,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { Button } from 'shared/components/button/button';
 
 const VideoContainer = styled(InfiniteScroll)`
+	width: 100%;
 	display: grid;
 	grid-template-columns: repeat(5, minmax(0px, 1fr));
 	grid-auto-columns: 306px;
