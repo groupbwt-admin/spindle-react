@@ -33,23 +33,23 @@ const RootCheckbox: React.ForwardRefRenderFunction<
 	CheckboxProps
 > = ({ checked, label, className, onClick, ...props }, ref) => {
 	return (
-		<label className={className} onClick={onClick}>
-			<FormControlLabel
-				value="start"
-				control={
-					<StyledCheckbox
-						icon={<Icon icon={ICON_COLLECTION.empty_checkbox} />}
-						checked={checked}
-						inputProps={{ 'aria-label': 'controlled' }}
-						size="small"
-						inputRef={ref}
-						{...props}
-					/>
-				}
-				label={label || false}
-				labelPlacement="end"
-			/>
-		</label>
+		<FormControlLabel
+			value="start"
+			control={
+				<StyledCheckbox
+					icon={<Icon icon={ICON_COLLECTION.empty_checkbox} />}
+					checked={checked}
+					inputProps={{ 'aria-label': 'controlled' }}
+					size="small"
+					inputRef={ref}
+					{...props}
+				/>
+			}
+			label={label || false}
+			labelPlacement="end"
+			className={className}
+			onClick={onClick}
+		/>
 	);
 };
 

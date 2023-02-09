@@ -11,6 +11,8 @@ import { VideoListSkeleton } from 'shared/components/video-list-skeleton/video-l
 import { ActionPanel } from 'modules/user/pages/profile/components/action-panel';
 import { FetchLinearLoader } from 'shared/components/fetch-linear-loader/fetch-linear-loader';
 import { EmptyVideoList } from 'shared/components/empty-video-llist/empty-video-list';
+import { Filter } from 'shared/components/filter/filter';
+import { SortDropdown } from 'shared/components/sort-dropdown/sort-dropdown';
 
 const ProfileContainer = styled.div`
 	display: flex;
@@ -24,8 +26,11 @@ const VideoContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
 	flex-grow: 1;
+
+	.infinite-scroll-component__outerdiv {
+		width: 100%;
+	}
 `;
 
 const ProfileAvatar = styled(Avatar)`
@@ -92,6 +97,18 @@ export const ProfilePage = () => {
 					onChange={commands.handleSearch}
 					onClear={commands.handleClearSearch}
 				/>
+				<SortDropdown
+					sortOptions={models.filterOptions}
+					value={models.filterOptions.sortField}
+					options={models.SORT_OPTIONS}
+					onChangeSortField={commands.handleChangeSortField}
+				/>
+				{models.tags && (
+					<Filter
+						tags={models.tags}
+						initialFilterOptions={models.filterOptions}
+					/>
+				)}
 			</FiltersPanel>
 			<VideoContainer>
 				{!!models.videos.length && (

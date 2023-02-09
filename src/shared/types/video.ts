@@ -1,9 +1,9 @@
-import {IUser} from "shared/types/user";
+import { IUser } from 'shared/types/user';
 
 export interface IVideo {
 	id: string;
 	createdAt: string;
-	gif : string;
+	gif: string;
 	isComments: boolean;
 	tags: string[];
 	title: string;
@@ -15,4 +15,9 @@ export interface IVideo {
 export interface IVideoSign {
 	expirationDate: string;
 	url: string;
+}
+
+export interface ITag {
+	id: string;
+	tag: string;
 }

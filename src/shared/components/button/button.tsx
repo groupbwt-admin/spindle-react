@@ -1,6 +1,6 @@
 import * as React from 'react';
-import styled from "@emotion/styled/macro";
 import { ButtonHTMLAttributes, forwardRef } from 'react';
+import styled from '@emotion/styled/macro';
 import ExternalButton, {
 	ButtonProps as ExternalButtonProps,
 } from '@mui/material/Button';
@@ -13,7 +13,9 @@ const StyledButton = styled(ExternalButton)`
 	text-transform: none;
 
 	&.MuiButton-outlinedSecondary {
-		color: ${({theme}) => theme.palette.text.primary};
+		color: ${({ theme }) => theme.palette.text.primary};
+		border: 1px solid ${({ theme }) => theme.palette.secondary.main};
+		font-weight: 400;
 	}
 `;
 
@@ -46,6 +48,7 @@ export interface ButtonProps {
 	variant?: ExternalButtonProps['variant'];
 	to?: LinkProps['to'];
 	startIcon?: ExternalButtonProps['startIcon'];
+	endIcon?: ExternalButtonProps['endIcon'];
 	color?: ExternalButtonProps['color'];
 	size?: ExternalButtonProps['size'];
 	sx?: ExternalButtonProps['sx'];
@@ -66,8 +69,9 @@ const ButtonRoot: React.ForwardRefRenderFunction<
 		variant,
 		type,
 		startIcon,
+		endIcon,
 		color = 'primary',
-		size = "medium",
+		size = 'medium',
 		to,
 		isLoading,
 		disabled,
@@ -88,6 +92,7 @@ const ButtonRoot: React.ForwardRefRenderFunction<
 			variant={variant || 'contained'}
 			disableElevation
 			startIcon={startIcon}
+			endIcon={endIcon}
 			color={color}
 			size={size}
 			disabled={disabled}

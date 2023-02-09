@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
 import { useFilterRequest } from 'shared/hooks/use-filter-request';
 import { useEffectAfterMount } from 'shared/hooks/use-effect-after-mount';
@@ -9,6 +9,29 @@ import {
 	VideoListResponseDto,
 } from 'app/api/video-api/video-api';
 import { selectUserData } from 'app/store/user/selects';
+import { useQuery } from 'react-query';
+import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
+import { RequestSortType } from 'shared/constants/request-sort-type';
+import { SortOption } from 'shared/components/sort-dropdown/sort-dropdown';
+
+const SORT_OPTIONS: SortOption[] = [
+	{
+		value: 'created_at',
+		label: 'Creation date',
+	},
+	{
+		value: 'title',
+		label: 'Name',
+	},
+];
+
+export interface IFilterOptions {
+	criteriaTags?: string[];
+	dateFrom?: string | null;
+	dateTo?: string | null;
+	order: RequestSortType.ASC | RequestSortType.DESC;
+	sortField: 'created_at' | 'title';
+}
 
 export function useProfile() {
 	const { modal, handleOpen } = useEditProfileUser();
@@ -21,12 +44,21 @@ export function useProfile() {
 		take: 30,
 		search: '',
 	});
+	const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
+		criteriaTags: [],
+		dateFrom: null,
+		dateTo: null,
+		order: RequestSortType.ASC,
+		sortField: 'created_at',
+	});
 	const user = selectUserData();
 
 	const {
 		data: videosData,
 		refetchData: refetchVideos,
 		searchData: searchVideos,
+		fetchData: fetchVideos,
+		updateState,
 		isInitialLoading,
 		isRefetching: isRefetchingVideos,
 		isSearching,
@@ -35,12 +67,7 @@ export function useProfile() {
 		VideoListParamsDto,
 		VideoListParamsDto
 	>({
-		onUpdateState: (prevState, result) => {
-			return {
-				data: prevState?.data.concat(result.data) ?? result.data,
-				meta: result.meta,
-			};
-		},
+		manualTriggering: true,
 		request: (params) => {
 			return VideoApi.getVideosByUserId(getFindVideosParams(params));
 		},
@@ -52,13 +79,36 @@ export function useProfile() {
 		Record<IVideo['id'], IVideo>
 	>({});
 
+	useEffect(() => {
+		fetchVideos().then((data) => {
+			updateState((prevState) => {
+				return {
+					data: prevState?.data.concat(data.data) ?? data.data,
+					meta: data.meta,
+				};
+			});
+		});
+	}, []);
+
 	useEffectAfterMount(() => {
-		refetchVideos();
-	}, [meta.page]);
+		refetchVideos().then((data) => {
+			updateState(() => {
+				return {
+					data: data.data,
+					meta: data.meta,
+				};
+			});
+		});
+	}, [filterOptions]);
 
 	useEffectAfterMount(() => {
 		searchVideos(() => ({ search: meta.search, page: 1 }));
 	}, [meta.search]);
+
+	const tags = useQuery({
+		queryKey: [VIDEO_QUERY_KEYS.tags],
+		queryFn: () => VideoApi.getVideoTags(),
+	});
 
 	const getFindVideosParams = (params) => {
 		return {
@@ -66,14 +116,30 @@ export function useProfile() {
 			take: meta.take,
 			page: meta.page,
 			search: meta.search,
+			...filterOptions,
 			...params,
 		};
 	};
 
 	const loadNextPage = () => {
+		const newPage = meta.page + 1;
+
 		setMeta((prevVal) => {
-			return { ...prevVal, page: prevVal.page + 1 };
+			return { ...prevVal, page: newPage };
 		});
+
+		setTimeout(
+			() =>
+				refetchVideos({ page: newPage }).then((data) => {
+					updateState((prevState) => {
+						return {
+							data: prevState?.data.concat(data.data) ?? data.data,
+							meta: data.meta,
+						};
+					});
+				}),
+			0,
+		);
 	};
 
 	const handleSearch = (e) => {
@@ -109,12 +175,44 @@ export function useProfile() {
 		[selectedVideos],
 	);
 
+	const handleChangeFilterOption = (item, optionName) => {
+		setFilterOptions((prevVal) => {
+			const updatedFilters = { ...prevVal };
+			if (Array.isArray(updatedFilters[optionName])) {
+				updatedFilters[optionName].push(item);
+			} else if (updatedFilters[optionName]) {
+				updatedFilters[optionName] = item;
+			}
+			return updatedFilters;
+		});
+	};
+
+	const handleChangeSortField = (sortFieldType) => {
+		setMeta((prevState) => ({ ...prevState, page: 1 }));
+		setFilterOptions((prevVal) => {
+			if (prevVal.sortField === sortFieldType) {
+				const newOrder =
+					prevVal.order === RequestSortType.ASC
+						? RequestSortType.DESC
+						: RequestSortType.ASC;
+				return { ...prevVal, order: newOrder };
+			}
+			return {
+				...prevVal,
+				sortField: sortFieldType,
+				order: RequestSortType.ASC,
+			};
+		});
+	};
+
 	return {
 		models: {
 			modal,
 			user,
 			videos: videosData?.data ?? [],
 			meta: videosData?.meta,
+			tags: tags.data,
+			filterOptions,
 			searchQuery: meta.search,
 			selectedVideosCount,
 			selectedVideos,
@@ -123,6 +221,7 @@ export function useProfile() {
 			isVideoLoading: isRefetchingVideos,
 			isSelectMode: !!selectedVideosCount,
 			isListEmpty: videosData?.meta?.itemCount === 0,
+			SORT_OPTIONS,
 		},
 		commands: {
 			handleOpen,
@@ -131,6 +230,8 @@ export function useProfile() {
 			handleClearSearch,
 			handleCheckVideo,
 			handleCancelSelection,
+			handleChangeFilterOption,
+			handleChangeSortField,
 		},
 	};
 }

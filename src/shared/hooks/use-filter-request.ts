@@ -7,13 +7,10 @@ export type UseFilterRequestRequestParams<P = object> = P & {
 
 interface UseFilterRequestParams<R, P = object, F = object> {
 	enabled?: boolean;
-	request: (
-		params: UseFilterRequestRequestParams<P>,
-	) => Promise<R>;
+	request: (params: UseFilterRequestRequestParams<P>) => Promise<R>;
 	searchRequest?: (params: F) => Promise<R>;
 	manualTriggering?: boolean;
 	searchFuncDependencies?: Array<any>;
-	onUpdateState?: (prevState: R | undefined, result: R) => R | undefined
 }
 
 export function useFilterRequest<R, P = object, F = object>({
@@ -22,7 +19,6 @@ export function useFilterRequest<R, P = object, F = object>({
 	searchRequest,
 	manualTriggering,
 	searchFuncDependencies = [],
-	onUpdateState
 }: UseFilterRequestParams<R, P, F>) {
 	const [isRefetching, setIsRefetching] = useState(false);
 	const [isInitialLoading, setIsInitialLoading] = useState(false);
@@ -36,7 +32,7 @@ export function useFilterRequest<R, P = object, F = object>({
 
 		(async () => {
 			const result = await getData();
-			setData(onUpdateState ? (prevState) => onUpdateState(prevState, result) : result);
+			setData(result);
 		})();
 	}, [enabled]);
 
@@ -69,13 +65,12 @@ export function useFilterRequest<R, P = object, F = object>({
 
 			const result = await getData(params);
 
-
 			!config?.silently && setIsRefetching(false);
-			setData(onUpdateState ? (prevState) => onUpdateState(prevState, result) : result);
 
 			return result;
 		} catch (e) {
 			!config?.silently && setIsRefetching(false);
+			return Promise.reject(e);
 		}
 	}
 
@@ -107,10 +102,11 @@ export function useFilterRequest<R, P = object, F = object>({
 		return response;
 	}
 
-	const fetchData = async (params?: object) => {
-		const result = await getData(params);
-		setData(onUpdateState ? (prevState) => onUpdateState(prevState, result) : result);
+	const fetchData = (params?: object) => {
+		return getData(params);
 	};
+
+	const updateState = setData;
 
 	return {
 		data,
@@ -121,5 +117,6 @@ export function useFilterRequest<R, P = object, F = object>({
 		searchData: searchMemoized,
 		fetchData,
 		refetchData,
+		updateState,
 	};
 }
