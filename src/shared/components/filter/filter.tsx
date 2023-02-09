@@ -11,7 +11,7 @@ import { Checkbox } from 'shared/components/checkbox/checkbox';
 import { IconButton } from 'shared/components/button/icon-button';
 import { ITag } from 'shared/types/video';
 import { IFilterOptions } from 'modules/user/pages/profile/use-profile';
-import { Calendar } from 'shared/components/calendar/calendar';
+import { DatePicker } from 'shared/components/calendar/date-picker';
 import { RequestSortType } from 'shared/constants/request-sort-type';
 
 const DrawerContent = styled.div`
@@ -161,7 +161,7 @@ export const Filter: React.FC<FilterProps> = ({
 					<SectionContainer>
 						<Typography variant="h3">Date</Typography>
 						<DateContainer>
-							<Calendar
+							<DatePicker
 								label="From"
 								maxDate={filterOptions.dateTo}
 								value={filterOptions.dateFrom}
@@ -169,7 +169,7 @@ export const Filter: React.FC<FilterProps> = ({
 									handleChangeDateOption(newVal, 'dateFrom')
 								}
 							/>
-							<Calendar
+							<DatePicker
 								label="To"
 								minDate={filterOptions.dateFrom}
 								value={filterOptions.dateTo}

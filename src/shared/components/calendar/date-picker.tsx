@@ -1,5 +1,8 @@
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import {
+	DatePicker as ExternalDatePicker,
+	LocalizationProvider,
+} from '@mui/x-date-pickers';
 import { TextField } from '@mui/material';
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
@@ -29,7 +32,7 @@ interface CalendarProps {
 	minDate?: Dayjs | null;
 }
 
-export const Calendar: React.FC<CalendarProps> = ({
+export const DatePicker: React.FC<CalendarProps> = ({
 	maxDate,
 	minDate,
 	label,
@@ -38,7 +41,7 @@ export const Calendar: React.FC<CalendarProps> = ({
 }) => {
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs}>
-			<DatePicker
+			<ExternalDatePicker
 				value={value}
 				maxDate={maxDate}
 				minDate={minDate}

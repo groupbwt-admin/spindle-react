@@ -198,7 +198,6 @@ export function useProfile() {
 	};
 
 	const handleApplyFilters = (filterOptions) => {
-		console.log('apply');
 		setMeta((prevState) => ({ ...prevState, page: 1 }));
 		setFilterOptions(filterOptions);
 	};
