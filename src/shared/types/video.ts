@@ -17,7 +17,7 @@ export interface IVideoSign {
 	url: string;
 }
 
-export interface Tag {
+export interface ITag {
 	id: string;
 	tag: string;
 }

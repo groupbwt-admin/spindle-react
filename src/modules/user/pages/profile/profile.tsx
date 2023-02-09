@@ -101,13 +101,12 @@ export const ProfilePage = () => {
 					sortOptions={models.filterOptions}
 					value={models.filterOptions.sortField}
 					options={models.SORT_OPTIONS}
-					handleChangeSortField={commands.handleChangeSortField}
+					onChangeSortField={commands.handleChangeSortField}
 				/>
 				{models.tags && (
 					<Filter
 						tags={models.tags}
 						initialFilterOptions={models.filterOptions}
-						handleChangeFilterOption={commands.handleChangeFilterOption}
 					/>
 				)}
 			</FiltersPanel>

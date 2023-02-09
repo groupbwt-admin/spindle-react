@@ -12,7 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Dayjs } from 'dayjs';
 import { Checkbox } from 'shared/components/checkbox/checkbox';
 import { IconButton } from 'shared/components/button/icon-button';
-import { Tag } from 'shared/types/video';
+import { ITag } from 'shared/types/video';
 import { IFilterOptions } from 'modules/user/pages/profile/use-profile';
 
 const DrawerContent = styled.div`
@@ -67,9 +67,8 @@ const StyledButtonIcon = styled(Icon)`
 `;
 
 interface FilterProps {
-	tags: Tag[];
+	tags: ITag[];
 	initialFilterOptions: IFilterOptions;
-	handleChangeFilterOption?: (item: string, type: string) => void;
 }
 
 export const Filter: React.FC<FilterProps> = ({
