@@ -107,7 +107,6 @@ export const ProfilePage = () => {
 					<Filter
 						tags={models.tags}
 						initialFilterOptions={models.filterOptions}
-						handleChangeFilterOption={commands.handleChangeFilterOption}
 						onApplyFilters={commands.handleApplyFilters}
 					/>
 				)}

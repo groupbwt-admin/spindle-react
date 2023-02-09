@@ -89,7 +89,6 @@ const DEFAULT_FILTER_OPTIONS: IFilterOptions = {
 interface FilterProps {
 	tags: ITag[];
 	initialFilterOptions: IFilterOptions;
-	handleChangeFilterOption?: (item: string, type: string) => void;
 	onApplyFilters: (filterOptions: IFilterOptions) => void;
 }
 

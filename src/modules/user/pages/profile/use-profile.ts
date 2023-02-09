@@ -179,18 +179,6 @@ export function useProfile() {
 		[selectedVideos],
 	);
 
-	const handleChangeFilterOption = (item, optionName) => {
-		setFilterOptions((prevVal) => {
-			const updatedFilters = { ...prevVal };
-			if (Array.isArray(updatedFilters[optionName])) {
-				updatedFilters[optionName].push(item);
-			} else if (updatedFilters[optionName]) {
-				updatedFilters[optionName] = item;
-			}
-			return updatedFilters;
-		});
-	};
-
 	const handleChangeSortField = (sortFieldType) => {
 		setMeta((prevState) => ({ ...prevState, page: 1 }));
 		setFilterOptions((prevVal) => {
@@ -240,7 +228,6 @@ export function useProfile() {
 			handleClearSearch,
 			handleCheckVideo,
 			handleCancelSelection,
-			handleChangeFilterOption,
 			handleChangeSortField,
 			handleApplyFilters,
 		},
