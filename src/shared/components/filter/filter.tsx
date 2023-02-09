@@ -4,16 +4,15 @@ import update from 'immutability-helper';
 import { Button } from 'shared/components/button/button';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
-import { Divider, Drawer, TextField } from '@mui/material';
+import { Divider, Drawer } from '@mui/material';
 import { Typography } from 'shared/components/typography/typography';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import styled from '@emotion/styled/macro';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Dayjs } from 'dayjs';
 import { Checkbox } from 'shared/components/checkbox/checkbox';
 import { IconButton } from 'shared/components/button/icon-button';
 import { Tag } from 'shared/types/video';
 import { IFilterOptions } from 'modules/user/pages/profile/use-profile';
+import { Calendar } from 'shared/components/calendar/calendar';
+import { RequestSortType } from 'shared/constants/request-sort-type';
 
 const DrawerContent = styled.div`
 	width: 348px;
@@ -27,14 +26,23 @@ const DrawerContent = styled.div`
 const DateContainer = styled.div`
 	display: flex;
 	column-gap: 12px;
-	padding-top: 12px;
+	padding-top: 18px;
 `;
 
 const HeaderContainer = styled.div`
-	padding-bottom: 40px;
+	padding-bottom: 16px;
 	display: flex;
+	flex-wrap: wrap;
 	align-items: flex-start;
 	justify-content: space-between;
+
+	div {
+		width: 100%;
+	}
+`;
+
+const StyledClearButton = styled(Button)`
+	padding: 4px 2px;
 `;
 
 const SectionContainer = styled.div`
@@ -50,6 +58,10 @@ const ActionContainer = styled.div`
 const StyledCheckbox = styled(Checkbox)`
 	display: block;
 	padding: 4px 0;
+
+	span {
+		text-transform: capitalize;
+	}
 `;
 
 const StyledButton = styled(Button)`
@@ -66,18 +78,27 @@ const StyledButtonIcon = styled(Icon)`
 	height: 18px;
 `;
 
+const DEFAULT_FILTER_OPTIONS: IFilterOptions = {
+	criteriaTags: [],
+	dateFrom: null,
+	dateTo: null,
+	order: RequestSortType.ASC,
+	sortField: 'created_at',
+};
+
 interface FilterProps {
 	tags: Tag[];
 	initialFilterOptions: IFilterOptions;
 	handleChangeFilterOption?: (item: string, type: string) => void;
+	onApplyFilters: (filterOptions: IFilterOptions) => void;
 }
 
 export const Filter: React.FC<FilterProps> = ({
 	initialFilterOptions,
 	tags,
+	onApplyFilters,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [from, setFrom] = useState<Dayjs | null>(null);
 	const [filterOptions, setFilterOptions] =
 		useState<IFilterOptions>(initialFilterOptions);
 
@@ -92,6 +113,21 @@ export const Filter: React.FC<FilterProps> = ({
 				});
 			}
 		});
+	};
+
+	const handleChangeDateOption = (newVal, optionName) => {
+		setFilterOptions((prevVal) => {
+			return { ...prevVal, [optionName]: newVal };
+		});
+	};
+
+	const handleClearFilterOptions = () => {
+		setFilterOptions(DEFAULT_FILTER_OPTIONS);
+	};
+
+	const handleSubmit = () => {
+		onApplyFilters(filterOptions);
+		toggleDrawer();
 	};
 
 	const toggleDrawer = () => {
@@ -113,29 +149,35 @@ export const Filter: React.FC<FilterProps> = ({
 						<IconButton onClick={toggleDrawer}>
 							<Icon icon={ICON_COLLECTION.close} />
 						</IconButton>
+						<div>
+							<StyledClearButton
+								label="Clear all"
+								size="small"
+								variant="text"
+								onClick={handleClearFilterOptions}
+							/>
+						</div>
 					</HeaderContainer>
 					<Divider />
 					<SectionContainer>
 						<Typography variant="h3">Date</Typography>
 						<DateContainer>
-							<LocalizationProvider dateAdapter={AdapterDayjs}>
-								<DatePicker
-									label="From"
-									value={from}
-									onChange={(newValue) => {
-										setFrom(newValue);
-									}}
-									renderInput={(params) => <TextField {...params} />}
-								/>
-								<DatePicker
-									label="To"
-									value={from}
-									onChange={(newValue) => {
-										setFrom(newValue);
-									}}
-									renderInput={(params) => <TextField {...params} />}
-								/>
-							</LocalizationProvider>
+							<Calendar
+								label="From"
+								maxDate={filterOptions.dateTo}
+								value={filterOptions.dateFrom}
+								handleChange={(newVal) =>
+									handleChangeDateOption(newVal, 'dateFrom')
+								}
+							/>
+							<Calendar
+								label="To"
+								minDate={filterOptions.dateFrom}
+								value={filterOptions.dateTo}
+								handleChange={(newVal) =>
+									handleChangeDateOption(newVal, 'dateTo')
+								}
+							/>
 						</DateContainer>
 					</SectionContainer>
 					<SectionContainer>
@@ -160,8 +202,9 @@ export const Filter: React.FC<FilterProps> = ({
 							variant="outlined"
 							label="Cancel"
 							fullWidth
+							onClick={toggleDrawer}
 						/>
-						<Button label="Apply Filter" fullWidth />
+						<Button label="Apply Filter" fullWidth onClick={handleSubmit} />
 					</ActionContainer>
 				</DrawerContent>
 			</Drawer>

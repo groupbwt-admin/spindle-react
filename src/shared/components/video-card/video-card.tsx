@@ -17,9 +17,9 @@ import { useNavigate } from 'react-router-dom';
 import { VIDEO_ROUTES } from 'shared/config/routes';
 import { ActionMenu } from 'shared/components/video-card/action-menu';
 import { Checkbox } from 'shared/components/checkbox/checkbox';
-import { css } from '@mui/material/styles';
 import PreviewPlaceholder from 'shared/assets/images/no-preview-placeholder.png';
 import { format } from 'date-fns';
+import clsx from 'clsx';
 
 const StyledCheckbox = styled(Checkbox)`
 	position: absolute;
@@ -52,7 +52,7 @@ const StyledActionMenu = styled(ActionMenu)`
 	}
 `;
 
-const StyledCard = styled(Card)<{ isSelectMode: boolean }>`
+const StyledCard = styled(Card)`
 	position: relative;
 	border-radius: 15px;
 	background-color: ${({ theme }) => theme.palette.common.white};
@@ -60,22 +60,21 @@ const StyledCard = styled(Card)<{ isSelectMode: boolean }>`
 	height: 100%;
 	transition: box-shadow 0.3s ease;
 
-	${({ isSelectMode }) =>
-		isSelectMode &&
-		css`
-			${StyledCheckbox} {
-				display: flex;
-			}
-		`}
-	&:hover {
-		box-shadow: 0 0 0 1px ${({ theme }) => theme.palette.primary.main};
-
+	&.isSelectMode {
 		${StyledCheckbox} {
 			display: flex;
 		}
 
-		${StyledActionMenu} {
-			opacity: 1;
+		&:hover {
+			box-shadow: 0 0 0 1px ${({ theme }) => theme.palette.primary.main};
+
+			${StyledCheckbox} {
+				display: flex;
+			}
+
+			${StyledActionMenu} {
+				opacity: 1;
+			}
 		}
 	}
 
@@ -135,6 +134,7 @@ const StyledBadgeIcon = styled(Icon)`
 interface VideoCardProps {
 	video: IVideo;
 	isSelectMode: boolean;
+	className?: string;
 	checked: boolean;
 	onChecked: (IVideo) => void;
 }
@@ -143,6 +143,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 	checked,
 	isSelectMode,
 	video,
+	className,
 	onChecked,
 }) => {
 	const navigate = useNavigate();
@@ -162,7 +163,10 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 	const handleCheckboxClick = (e) => e.stopPropagation();
 
 	return (
-		<StyledCard onClick={handleClick} isSelectMode={isSelectMode}>
+		<StyledCard
+			onClick={handleClick}
+			className={clsx(className, isSelectMode && 'isSelectMode')}
+		>
 			<CardActionArea component="div" sx={{ height: '100%' }}>
 				<CardMedia sx={{ height: 172, position: 'relative' }}>
 					<StyledPreview
