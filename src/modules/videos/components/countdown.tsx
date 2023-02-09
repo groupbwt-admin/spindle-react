@@ -29,18 +29,22 @@ const CancelButton = styled(Button)`
 	max-width: 190px;
 	color: #ffffff;
 `;
-const prev_stop = () => {
-	EventBus.emit(RECORDING_EVENTS.prev_stop)
+// const prev_stop = () => {
+// 	EventBus.emit(RECORDING_EVENTS.prev_stop)
+// }
+interface ICountdown {
+	count: number,
+	onCancel: () => void
 }
-export const Countdown = () => {
-	const status = selectStatus()
-	const count = selectCounterBeforeStart()
-	if (status !== RECORDING_STATUS.idle) return null
+
+export const CountdownComponent: React.FC<ICountdown> = ({count, onCancel}) => {
+	// if (status !== RECORDING_STATUS.idle) return null
 	return (
 		<CountWrapper>
 			<CountValue>{count}</CountValue>
-			<CancelButton label="Cancel Recording" onClick={prev_stop}/>
+			<CancelButton label="Cancel Recording" onClick={onCancel}/>
 		</CountWrapper>
 	);
 }
 
+export const Countdown = React.memo(CountdownComponent)

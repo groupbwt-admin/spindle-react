@@ -1,4 +1,4 @@
-import {useCallback, useEffect,  useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {VIDEO_ROUTES} from "shared/config/routes";
 import {RECORDING_STATUS, SOCKET_ACTIONS} from "shared/constants/record-statuses";
@@ -9,6 +9,8 @@ import {EventBus, RECORDING_EVENTS} from "../../../shared/utils/event-bus";
 
 export const useRecording = () => {
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(false)
+	const [counterBeforeStart, setCounterBeforeStart] = useState(3)
+
 	const mediaRecorder = useRef<MediaRecorder | null>(null);
 	const isCancel = useRef(false);
 	const status = selectStatus()
@@ -25,6 +27,7 @@ export const useRecording = () => {
 			}
 		};
 	}, []);
+
 	useEffect(() => {
 		EventBus.on(RECORDING_EVENTS.prev_stop, () => prevCancelStream());
 		return () => {
@@ -65,7 +68,7 @@ export const useRecording = () => {
 
 			mediaRecorderLocal.ondataavailable = (event) => {
 				socketState.emit({type: SOCKET_ACTIONS.start, payload: {chunk: event.data}})
-				console.log(event)
+				console.log(event.data.size)
 			};
 
 			return wait().then(async () => {
@@ -76,7 +79,7 @@ export const useRecording = () => {
 					socketState.setStatus(RECORDING_STATUS.recording);
 					socketState.setIsShowController(true)
 					return mediaRecorderLocal;
-				}else{
+				} else {
 					mediaRecorderLocal.stream.getTracks().map((track) => {
 						track.stop();
 					});
@@ -93,7 +96,7 @@ export const useRecording = () => {
 		async () => {
 			try {
 				isCancel.current = false
-				socketState.setCounterBeforeStart(3)
+				setCounterBeforeStart(3)
 				await requestMediaStream()
 			} catch (e) {
 				console.log('Socket Connect:' + e)
@@ -118,7 +121,7 @@ export const useRecording = () => {
 	);
 
 	const wait = () => new Promise<void>((resolve) => {
-		const myInterval = setInterval(() => socketState.setCounterBeforeStart(socketState.counterBeforeStart - 1), 1000)
+		const myInterval = setInterval(() => setCounterBeforeStart(counterBeforeStart - 1), 1000)
 		setTimeout(() => {
 			resolve(clearInterval(myInterval));
 		}, 3000);
@@ -190,7 +193,7 @@ export const useRecording = () => {
 
 
 	return {
-		models: {isMicrophoneOn, isCancel},
+		models: {isMicrophoneOn, isCancel, counterBeforeStart},
 		command: {
 			prevCancelStream,
 			toggleMicrophone,

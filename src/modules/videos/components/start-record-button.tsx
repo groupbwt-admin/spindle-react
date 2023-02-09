@@ -15,23 +15,19 @@ const RecordButton = styled(Button)`
 	top: 24px;
 	right: 32px;
 `;
-const StartRecordButtonComponent = () => {
-	const status = selectStatus()
 
-	const onStartRecording = () => {
-		EventBus.emit(RECORDING_EVENTS.start)
-	}
+interface IStartRecordButton {
+	isShow: boolean,
+	onStartRecording: () => void
+}
 
-
+const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({isShow, onStartRecording}) => {
+	if (!isShow) return null
 	return (
-		<>{
-			status === RECORDING_STATUS.permission_requested || status === RECORDING_STATUS.stopped ?
-				<RecordButton
-					label="Start Recording"
-					startIcon={<IconRecord/>}
-					onClick={onStartRecording}/>
-				: null
-		}</>
+		<RecordButton
+			label="Start Recording"
+			startIcon={<IconRecord/>}
+			onClick={onStartRecording}/>
 
 	);
 };

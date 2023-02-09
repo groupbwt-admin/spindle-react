@@ -3,6 +3,8 @@ import {Typography} from 'shared/components/typography/typography';
 import styled from '@emotion/styled/macro';
 import {TabsList} from 'shared/components/tabs/tabs-list';
 import {Tab} from 'shared/components/tabs/tab';
+import {StartRecordButton} from "../components/start-record-button";
+import {useRecordContext} from "../hooks/use-record-context";
 
 
 const HeaderContainer = styled.div`
@@ -23,11 +25,14 @@ export const HomePage = () => {
 		setValue(newValue);
 	};
 
+	const {isShowButton, startRecording} = useRecordContext()
 
 	return (
 		<>
 			<HeaderContainer>
 				<Title variant="h1">My videos</Title>
+				<StartRecordButton isShow={isShowButton} onStartRecording={startRecording}/>
+
 			</HeaderContainer>
 			<ContentContainer>
 				<TabsList value={value} handleChange={handleChange}>
