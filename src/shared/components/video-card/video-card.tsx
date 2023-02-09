@@ -52,6 +52,27 @@ const StyledActionMenu = styled(ActionMenu)`
 	}
 `;
 
+const StyledPreview = styled.img`
+	position: absolute;
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	right: 0;
+	left: 0;
+`;
+
+const StyledGifPreview = styled.img`
+	position: absolute;
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	right: 0;
+	left: 0;
+	display: none;
+`;
+
 const StyledCard = styled(Card)`
 	position: relative;
 	border-radius: 15px;
@@ -64,17 +85,25 @@ const StyledCard = styled(Card)`
 		${StyledCheckbox} {
 			display: flex;
 		}
+	}
 
-		&:hover {
-			box-shadow: 0 0 0 1px ${({ theme }) => theme.palette.primary.main};
+	&:hover {
+		box-shadow: 0 0 0 1px ${({ theme }) => theme.palette.primary.main};
 
-			${StyledCheckbox} {
-				display: flex;
-			}
+		${StyledCheckbox} {
+			display: flex;
+		}
 
-			${StyledActionMenu} {
-				opacity: 1;
-			}
+		${StyledActionMenu} {
+			opacity: 1;
+		}
+
+		${StyledPreview} {
+			display: none;
+		}
+
+		${StyledGifPreview} {
+			display: block;
 		}
 	}
 
@@ -115,16 +144,6 @@ const StyledComments = styled.div`
 	display: flex;
 	align-items: center;
 	margin-left: 13px !important;
-`;
-
-const StyledPreview = styled.img`
-	position: absolute;
-	object-fit: cover;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	right: 0;
-	left: 0;
 `;
 
 const StyledBadgeIcon = styled(Icon)`
@@ -170,6 +189,12 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 			<CardActionArea component="div" sx={{ height: '100%' }}>
 				<CardMedia sx={{ height: 172, position: 'relative' }}>
 					<StyledPreview
+						loading="lazy"
+						src={
+							video.image ? getUserAvatarURL(video.image) : PreviewPlaceholder
+						}
+					/>
+					<StyledGifPreview
 						loading="lazy"
 						src={video.gif ? getUserAvatarURL(video.gif) : PreviewPlaceholder}
 					/>
