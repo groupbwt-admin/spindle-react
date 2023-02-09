@@ -17,9 +17,9 @@ import { useNavigate } from 'react-router-dom';
 import { VIDEO_ROUTES } from 'shared/config/routes';
 import { ActionMenu } from 'shared/components/video-card/action-menu';
 import { Checkbox } from 'shared/components/checkbox/checkbox';
-import { css } from '@mui/material/styles';
 import PreviewPlaceholder from 'shared/assets/images/no-preview-placeholder.png';
 import { format } from 'date-fns';
+import clsx from 'clsx';
 
 const StyledCheckbox = styled(Checkbox)`
 	position: absolute;
@@ -52,7 +52,28 @@ const StyledActionMenu = styled(ActionMenu)`
 	}
 `;
 
-const StyledCard = styled(Card)<{ isSelectMode: boolean }>`
+const StyledPreview = styled.img`
+	position: absolute;
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	right: 0;
+	left: 0;
+`;
+
+const StyledGifPreview = styled.img`
+	position: absolute;
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	right: 0;
+	left: 0;
+	display: none;
+`;
+
+const StyledCard = styled(Card)`
 	position: relative;
 	border-radius: 15px;
 	background-color: ${({ theme }) => theme.palette.common.white};
@@ -60,13 +81,12 @@ const StyledCard = styled(Card)<{ isSelectMode: boolean }>`
 	height: 100%;
 	transition: box-shadow 0.3s ease;
 
-	${({ isSelectMode }) =>
-		isSelectMode &&
-		css`
-			${StyledCheckbox} {
-				display: flex;
-			}
-		`}
+	&.isSelectMode {
+		${StyledCheckbox} {
+			display: flex;
+		}
+	}
+
 	&:hover {
 		box-shadow: 0 0 0 1px ${({ theme }) => theme.palette.primary.main};
 
@@ -76,6 +96,14 @@ const StyledCard = styled(Card)<{ isSelectMode: boolean }>`
 
 		${StyledActionMenu} {
 			opacity: 1;
+		}
+
+		${StyledPreview} {
+			display: none;
+		}
+
+		${StyledGifPreview} {
+			display: block;
 		}
 	}
 
@@ -118,16 +146,6 @@ const StyledComments = styled.div`
 	margin-left: 13px !important;
 `;
 
-const StyledPreview = styled.img`
-	position: absolute;
-	object-fit: cover;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	right: 0;
-	left: 0;
-`;
-
 const StyledBadgeIcon = styled(Icon)`
 	margin-left: 5px;
 `;
@@ -135,6 +153,7 @@ const StyledBadgeIcon = styled(Icon)`
 interface VideoCardProps {
 	video: IVideo;
 	isSelectMode: boolean;
+	className?: string;
 	checked: boolean;
 	onChecked: (IVideo) => void;
 }
@@ -143,6 +162,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 	checked,
 	isSelectMode,
 	video,
+	className,
 	onChecked,
 }) => {
 	const navigate = useNavigate();
@@ -162,10 +182,19 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 	const handleCheckboxClick = (e) => e.stopPropagation();
 
 	return (
-		<StyledCard onClick={handleClick} isSelectMode={isSelectMode}>
+		<StyledCard
+			onClick={handleClick}
+			className={clsx(className, isSelectMode && 'isSelectMode')}
+		>
 			<CardActionArea component="div" sx={{ height: '100%' }}>
 				<CardMedia sx={{ height: 172, position: 'relative' }}>
 					<StyledPreview
+						loading="lazy"
+						src={
+							video.image ? getUserAvatarURL(video.image) : PreviewPlaceholder
+						}
+					/>
+					<StyledGifPreview
 						loading="lazy"
 						src={video.gif ? getUserAvatarURL(video.gif) : PreviewPlaceholder}
 					/>

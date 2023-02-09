@@ -20,6 +20,7 @@ import { ReactComponent as Filter } from 'shared/components/icon/collection/filt
 import { ReactComponent as DefaultSort } from 'shared/components/icon/collection/default-sort.svg';
 import { ReactComponent as SortArrowUp } from 'shared/components/icon/collection/sort-up-arrow.svg';
 import { ReactComponent as SortArrowDown } from 'shared/components/icon/collection/sort-down-arrow.svg';
+import { ReactComponent as Calendar } from 'shared/components/icon/collection/сalendar.svg';
 
 export const ICON_COLLECTION = {
 	arrow_left: ArrowLeft,
@@ -44,6 +45,7 @@ export const ICON_COLLECTION = {
 	default_sort: DefaultSort,
 	sort_arrow_up: SortArrowUp,
 	sort_arrow_down: SortArrowDown,
+	calendar: Calendar,
 };
 
 type Keys = keyof typeof ICON_COLLECTION;

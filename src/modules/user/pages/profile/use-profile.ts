@@ -13,6 +13,7 @@ import { useQuery } from 'react-query';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { RequestSortType } from 'shared/constants/request-sort-type';
 import { SortOption } from 'shared/components/sort-dropdown/sort-dropdown';
+import { Dayjs } from 'dayjs';
 
 const SORT_OPTIONS: SortOption[] = [
 	{
@@ -27,8 +28,8 @@ const SORT_OPTIONS: SortOption[] = [
 
 export interface IFilterOptions {
 	criteriaTags?: string[];
-	dateFrom?: string | null;
-	dateTo?: string | null;
+	dateFrom: Dayjs | null;
+	dateTo: Dayjs | null;
 	order: RequestSortType.ASC | RequestSortType.DESC;
 	sortField: 'created_at' | 'title';
 }
@@ -48,7 +49,7 @@ export function useProfile() {
 		criteriaTags: [],
 		dateFrom: null,
 		dateTo: null,
-		order: RequestSortType.ASC,
+		order: RequestSortType.DESC,
 		sortField: 'created_at',
 	});
 	const user = selectUserData();
@@ -117,6 +118,9 @@ export function useProfile() {
 			page: meta.page,
 			search: meta.search,
 			...filterOptions,
+			dateFrom:
+				filterOptions.dateFrom && filterOptions.dateFrom.format('YYYY-MM-DD'),
+			dateTo: filterOptions.dateTo && filterOptions.dateTo.format('YYYY-MM-DD'),
 			...params,
 		};
 	};
@@ -175,18 +179,6 @@ export function useProfile() {
 		[selectedVideos],
 	);
 
-	const handleChangeFilterOption = (item, optionName) => {
-		setFilterOptions((prevVal) => {
-			const updatedFilters = { ...prevVal };
-			if (Array.isArray(updatedFilters[optionName])) {
-				updatedFilters[optionName].push(item);
-			} else if (updatedFilters[optionName]) {
-				updatedFilters[optionName] = item;
-			}
-			return updatedFilters;
-		});
-	};
-
 	const handleChangeSortField = (sortFieldType) => {
 		setMeta((prevState) => ({ ...prevState, page: 1 }));
 		setFilterOptions((prevVal) => {
@@ -203,6 +195,11 @@ export function useProfile() {
 				order: RequestSortType.ASC,
 			};
 		});
+	};
+
+	const handleApplyFilters = (filterOptions) => {
+		setMeta((prevState) => ({ ...prevState, page: 1 }));
+		setFilterOptions(filterOptions);
 	};
 
 	return {
@@ -230,8 +227,8 @@ export function useProfile() {
 			handleClearSearch,
 			handleCheckVideo,
 			handleCancelSelection,
-			handleChangeFilterOption,
 			handleChangeSortField,
+			handleApplyFilters,
 		},
 	};
 }

@@ -4,6 +4,7 @@ export interface IVideo {
 	id: string;
 	createdAt: string;
 	gif: string;
+	image: string;
 	isComments: boolean;
 	tags: string[];
 	title: string;
