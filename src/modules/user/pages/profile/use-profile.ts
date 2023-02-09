@@ -42,7 +42,7 @@ export function useProfile() {
 		hasNextPage: false,
 		itemCount: 1,
 		pageCount: 1,
-		take: 12,
+		take: 30,
 		search: '',
 	});
 	const [filterOptions, setFilterOptions] = useState<IFilterOptions>({

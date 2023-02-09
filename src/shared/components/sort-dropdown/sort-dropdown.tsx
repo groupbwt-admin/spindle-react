@@ -50,14 +50,14 @@ interface SortDropdownProps {
 	options: SortOption[];
 	value: SortOption['value'];
 	sortOptions: IFilterOptions;
-	handleChangeSortField: (sortField: string) => void;
+	onChangeSortField: (sortField: string) => void;
 }
 
 export const SortDropdown: React.FC<SortDropdownProps> = ({
 	sortOptions,
 	options,
 	value,
-	handleChangeSortField,
+	onChangeSortField,
 }) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -68,8 +68,8 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
 		setAnchorEl(null);
 	};
 
-	const onChangeSortField = (sortField) => {
-		handleChangeSortField(sortField);
+	const handleChangeSortField = (sortField) => {
+		onChangeSortField(sortField);
 		handleClose();
 	};
 
@@ -117,7 +117,7 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
 					<StyledMenuItem
 						key={option.value}
 						selected={option.value === value}
-						onClick={() => onChangeSortField(option.value)}
+						onClick={() => handleChangeSortField(option.value)}
 					>
 						<span>{option.label}</span>
 						<StyledMenuIcon

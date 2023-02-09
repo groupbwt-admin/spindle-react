@@ -1,5 +1,5 @@
 import { BaseHttpServices } from 'shared/services/base-http-services';
-import { IVideo, IVideoSign, Tag } from 'shared/types/video';
+import { ITag, IVideo, IVideoSign } from 'shared/types/video';
 import { RequestSortType } from 'shared/constants/request-sort-type';
 
 export interface SaveVideoDto {
@@ -82,7 +82,7 @@ export class VideoApiService implements VideoApiInterface {
 		return payload.data;
 	};
 
-	getVideoTags = async (): Promise<Tag[]> => {
+	getVideoTags = async (): Promise<ITag[]> => {
 		const payload = await this.http.get(`/tags`, { params: { take: 50 } });
 		return payload.data.data;
 	};

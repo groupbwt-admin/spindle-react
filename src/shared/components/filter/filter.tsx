@@ -9,7 +9,7 @@ import { Typography } from 'shared/components/typography/typography';
 import styled from '@emotion/styled/macro';
 import { Checkbox } from 'shared/components/checkbox/checkbox';
 import { IconButton } from 'shared/components/button/icon-button';
-import { Tag } from 'shared/types/video';
+import { ITag } from 'shared/types/video';
 import { IFilterOptions } from 'modules/user/pages/profile/use-profile';
 import { Calendar } from 'shared/components/calendar/calendar';
 import { RequestSortType } from 'shared/constants/request-sort-type';
@@ -87,7 +87,7 @@ const DEFAULT_FILTER_OPTIONS: IFilterOptions = {
 };
 
 interface FilterProps {
-	tags: Tag[];
+	tags: ITag[];
 	initialFilterOptions: IFilterOptions;
 	handleChangeFilterOption?: (item: string, type: string) => void;
 	onApplyFilters: (filterOptions: IFilterOptions) => void;
