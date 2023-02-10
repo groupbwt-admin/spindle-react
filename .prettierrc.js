@@ -7,4 +7,16 @@ module.exports = {
 	endOfLine: 'lf',
 	bracketSpacing: true,
 	arrowParens: 'always',
+	importOrder: [
+		'^react(.*)',
+		'<THIRD_PARTY_MODULES>',
+		'^@mui/(.*)',
+		'^app/api/(.*)$',
+		'^app/store/(.*)$',
+		'^shared/(.*)$',
+		'^shared/components/(.*)$',
+		'^./(.*)',
+		'^../(.*)',
+	],
+	importOrderSeparation: true,
 };
