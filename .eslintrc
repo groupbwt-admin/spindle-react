@@ -2,6 +2,11 @@
 	"settings": {
 		"react": {
 			"version": "18.2"
+		},
+		"import/resolver": {
+			"typescript": {
+				"project": "./tsconfig.json"
+			}
 		}
 	},
 	"env": {
