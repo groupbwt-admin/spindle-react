@@ -32,7 +32,7 @@
 		"sourceType": "module",
 		"project": "./tsconfig.json"
 	},
-	"plugins": ["react", "@typescript-eslint", "simple-import-sort"],
+	"plugins": ["react", "@typescript-eslint", "simple-import-sort", "import"],
 	"rules": {
 		"simple-import-sort/imports": [
 			"error",
