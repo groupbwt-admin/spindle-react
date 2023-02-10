@@ -5,11 +5,12 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import jwtDecode from 'jwt-decode';
+import { isPast } from 'date-fns';
 import { LocalStorageService } from 'shared/services/local-storage-service';
 import reportWebVitals from './reportWebVitals';
 import { authState } from 'app/store/auth/state';
-import App from './app/app';
 import { IToken } from 'shared/types/token';
+import App from './app/app';
 
 const theme = createTheme({
 	palette: {
@@ -147,9 +148,7 @@ const queryClient = new QueryClient();
 
 	if (savedToken) {
 		const decodedJwtToken: IToken = jwtDecode(LocalStorageService.get('token'));
-
-		const currentTime = Date.now() / 1000;
-		const isExpired = decodedJwtToken.exp <= currentTime;
+		const isExpired = isPast(decodedJwtToken.exp);
 
 		if (!isExpired) {
 			authState.setUser(savedToken);
