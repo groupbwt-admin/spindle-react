@@ -148,7 +148,7 @@ const queryClient = new QueryClient();
 
 	if (savedToken) {
 		const decodedJwtToken: IToken = jwtDecode(LocalStorageService.get('token'));
-		const isExpired = isPast(decodedJwtToken.exp);
+		const isExpired = isPast(decodedJwtToken.exp * 1000);
 
 		if (!isExpired) {
 			authState.setUser(savedToken);
