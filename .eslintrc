@@ -4,8 +4,16 @@
 			"version": "18.2"
 		},
 		"import/resolver": {
-			"typescript": {
-				"project": "./tsconfig.json"
+			"node": {
+				"paths": [
+					"src"
+				],
+				"extensions": [
+					".js",
+					".ts",
+					".d.ts",
+					".tsx"
+				]
 			}
 		}
 	},
