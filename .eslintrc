@@ -2,12 +2,6 @@
 	"settings": {
 		"react": {
 			"version": "18.2"
-		},
-		"import/resolver": {
-			"node": {
-				"paths": ["src"],
-				"extensions": [".js", ".ts", ".d.ts", ".tsx"]
-			}
 		}
 	},
 	"env": {
