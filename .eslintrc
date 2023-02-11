@@ -38,24 +38,8 @@
 		"sourceType": "module",
 		"project": "./tsconfig.json"
 	},
-	"plugins": ["react", "@typescript-eslint", "simple-import-sort", "import"],
+	"plugins": ["react", "@typescript-eslint"],
 	"rules": {
-		"simple-import-sort/imports": [
-			"error",
-			{
-				"groups": [
-					["^react(.*)"],
-					["<THIRD_PARTY_MODULES>"],
-					["^@mui/(.*)"],
-					["^app/api/(.*)$"],
-					["^app/store/(.*)$"],
-					["^shared/(.*)$"],
-					["^shared/components/(.*)$"],
-					["^./(.*)"],
-					["^../(.*)"]
-				]
-			}
-		],
 		"no-param-reassign": 0,
 		"no-mixed-spaces-and-tabs": 0,
 		"react-hooks/exhaustive-deps": 0,
