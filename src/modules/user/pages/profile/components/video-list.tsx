@@ -1,11 +1,10 @@
 import React, { ReactNode } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-
 import styled from '@emotion/styled/macro';
+import { IVideo } from 'shared/types/video';
 
 import { Button } from 'shared/components/button/button';
 import { VideoCard } from 'shared/components/video-card/video-card';
-import { IVideo } from 'shared/types/video';
 
 const VideoContainer = styled(InfiniteScroll)`
 	width: 100%;

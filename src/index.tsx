@@ -3,16 +3,14 @@ import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter } from 'react-router-dom';
-
 import { isPast } from 'date-fns';
 import jwtDecode from 'jwt-decode';
+import { LocalStorageService } from 'shared/services/local-storage-service';
+import { IToken } from 'shared/types/token';
 
 import { createTheme, ThemeProvider } from '@mui/material';
 
 import { authState } from 'app/store/auth/state';
-
-import { LocalStorageService } from 'shared/services/local-storage-service';
-import { IToken } from 'shared/types/token';
 
 import App from './app/app';
 import reportWebVitals from './reportWebVitals';

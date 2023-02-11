@@ -1,11 +1,11 @@
 import { useMutation } from 'react-query';
-
 import { AxiosError } from 'axios';
 import { AuthLink } from 'modules/auth/components/link';
 import {
 	RegisterForm,
 	RegisterFormData,
 } from 'modules/auth/pages/register/components/register-form';
+import { AUTH_ROUTES } from 'shared/config/routes';
 
 import { styled } from '@mui/material/styles';
 
@@ -14,7 +14,6 @@ import { AuthApi, RegisterDataDto } from 'app/api/auth-api/auth-api';
 import { authState } from 'app/store/auth/state';
 
 import { Typography } from 'shared/components/typography/typography';
-import { AUTH_ROUTES } from 'shared/config/routes';
 
 const Title = styled(Typography)`
 	margin-bottom: 40px;

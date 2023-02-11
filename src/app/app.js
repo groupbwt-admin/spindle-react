@@ -1,7 +1,8 @@
-import './app.scss';
+import { AppLayout } from '../shared/layout/app-layout';
+
 import { AppRoutes } from './routes';
 
-import { AppLayout } from '../shared/layout/app-layout';
+import './app.scss';
 
 function App() {
 	return (

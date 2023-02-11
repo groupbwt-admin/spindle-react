@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
 import { AxiosError } from 'axios';
 import { BackButton } from 'modules/auth/components/back-button';
 import { NewPasswordForm } from 'modules/auth/pages/new-password/components/new-password-form';
+import { AUTH_ROUTES } from 'shared/config/routes';
 
 import { styled } from '@mui/material/styles';
 
@@ -13,7 +13,6 @@ import { AuthApi, ResetPasswordDto } from 'app/api/auth-api/auth-api';
 import { authState } from 'app/store/auth/state';
 
 import { Typography } from 'shared/components/typography/typography';
-import { AUTH_ROUTES } from 'shared/config/routes';
 
 const Container = styled('div')`
 	display: flex;

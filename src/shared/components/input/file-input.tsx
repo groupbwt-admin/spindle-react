@@ -1,10 +1,9 @@
 import { forwardRef, InputHTMLAttributes, useRef } from 'react';
 import * as React from 'react';
+import mergeRefs from 'shared/utils/merge-refs';
 
 import { Box, Button } from '@mui/material';
 import { css, styled } from '@mui/material/styles';
-
-import mergeRefs from 'shared/utils/merge-refs';
 
 export interface FileInputProps {
 	name?: InputHTMLAttributes<HTMLInputElement>['name'];

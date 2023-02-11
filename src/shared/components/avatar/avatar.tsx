@@ -1,5 +1,4 @@
 import React from 'react';
-
 import styled from '@emotion/styled/macro';
 
 import { Avatar as MuiAvatar } from '@mui/material';

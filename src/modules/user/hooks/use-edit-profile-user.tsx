@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useMutation } from 'react-query';
-
 import { EditUserForm } from 'modules/user/components/edit-user-form';
 
 import { UserApi } from 'app/api/user-api/user-api';

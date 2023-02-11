@@ -1,9 +1,8 @@
 import * as React from 'react';
+import { AppMenu } from 'shared/layout/components/app-menu';
 
 import { Container } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-import { AppMenu } from 'shared/layout/components/app-menu';
 
 const MainLayoutContainer = styled(Container)`
 	display: flex;

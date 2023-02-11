@@ -1,5 +1,4 @@
 import Axios from 'axios';
-
 import { API_BASE_URL } from 'shared/config/variables';
 import { LocalStorageService } from 'shared/services/local-storage-service';
 

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-
 import styled from '@emotion/styled/macro';
+import { ReactComponent as Logo } from 'shared/assets/images/logo-reverse.svg';
+import { UserMenu } from 'shared/layout/components/user-menu';
 
 import { css } from '@mui/material/styles';
 
-import { ReactComponent as Logo } from 'shared/assets/images/logo-reverse.svg';
 import { ReactComponent as IconNotification } from 'shared/components/icon/collection/notification.svg';
 import { ReactComponent as IconProfile } from 'shared/components/icon/collection/profile.svg';
 import { ReactComponent as IconSearch } from 'shared/components/icon/collection/search.svg';
@@ -13,7 +13,6 @@ import { ReactComponent as IconSettings } from 'shared/components/icon/collectio
 import { ReactComponent as IconVideos } from 'shared/components/icon/collection/video.svg';
 import { Icon } from 'shared/components/icon/icon';
 import { Typography } from 'shared/components/typography/typography';
-import { UserMenu } from 'shared/layout/components/user-menu';
 
 const StyledLinkTitle = styled(Typography)`
 	white-space: nowrap;

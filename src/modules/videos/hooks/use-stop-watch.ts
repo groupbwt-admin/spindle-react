@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
-
-import { format, addSeconds, millisecondsToSeconds } from 'date-fns';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { addSeconds, format, millisecondsToSeconds } from 'date-fns';
 
 const formatMs = (milliseconds: number) => {
 	const helperDate = addSeconds(

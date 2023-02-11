@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
-
 import { Dayjs } from 'dayjs';
 import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
+import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
+import { RequestSortType } from 'shared/constants/request-sort-type';
+import { useEffectAfterMount } from 'shared/hooks/use-effect-after-mount';
+import { useFilterRequest } from 'shared/hooks/use-filter-request';
+import { IVideo } from 'shared/types/video';
 
 import {
 	VideoApi,
@@ -13,11 +17,6 @@ import {
 import { selectUserData } from 'app/store/user/selects';
 
 import { SortOption } from 'shared/components/sort-dropdown/sort-dropdown';
-import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
-import { RequestSortType } from 'shared/constants/request-sort-type';
-import { useEffectAfterMount } from 'shared/hooks/use-effect-after-mount';
-import { useFilterRequest } from 'shared/hooks/use-filter-request';
-import { IVideo } from 'shared/types/video';
 
 const SORT_OPTIONS: SortOption[] = [
 	{

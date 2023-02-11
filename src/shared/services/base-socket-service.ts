@@ -1,6 +1,5 @@
-import socketIOClient, { Socket } from 'socket.io-client';
-
 import { RECORD_SOCKET_PATH } from 'shared/config/variables';
+import socketIOClient, { Socket } from 'socket.io-client';
 
 import { LocalStorageService } from './local-storage-service';
 

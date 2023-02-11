@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-
 import { yupResolver } from '@hookform/resolvers/yup';
+import {
+	validatePassword,
+	ValidationPasswordErrors,
+} from 'shared/utils/validation-password';
 import * as yup from 'yup';
 
 import { Box } from '@mui/material';
@@ -10,10 +13,6 @@ import { styled } from '@mui/material/styles';
 
 import { Button } from 'shared/components/button/button';
 import { PasswordInput } from 'shared/components/input/password-input';
-import {
-	validatePassword,
-	ValidationPasswordErrors,
-} from 'shared/utils/validation-password';
 
 const StyledInput = styled(PasswordInput)`
 	margin-top: 47px;

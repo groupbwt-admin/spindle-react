@@ -1,16 +1,14 @@
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-
 import { SetUpProfileForm } from 'modules/auth/pages/set-up-profile/components/set-up-profile-form';
+import { VIDEO_ROUTES } from 'shared/config/routes';
+import { useLogout } from 'shared/hooks/use-logout';
 
 import { styled } from '@mui/material/styles';
 
 import { UserApi } from 'app/api/user-api/user-api';
 
 import { userState } from 'app/store/user/state';
-
-import { VIDEO_ROUTES } from 'shared/config/routes';
-import { useLogout } from 'shared/hooks/use-logout';
 
 const ProfileContainer = styled('div')`
 	display: flex;

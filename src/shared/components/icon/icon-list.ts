@@ -1,6 +1,6 @@
 import { ReactComponent as ActionMenu } from 'shared/components/icon/collection/action-menu.svg';
-import { ReactComponent as ArrowLeftOutlined } from 'shared/components/icon/collection/arrow-left-outlined.svg';
 import { ReactComponent as ArrowLeft } from 'shared/components/icon/collection/arrow-left.svg';
+import { ReactComponent as ArrowLeftOutlined } from 'shared/components/icon/collection/arrow-left-outlined.svg';
 import { ReactComponent as ArrowRightOutlined } from 'shared/components/icon/collection/arrow-right-outlined.svg';
 import { ReactComponent as ChevronDown } from 'shared/components/icon/collection/chevron-down.svg';
 import { ReactComponent as Close } from 'shared/components/icon/collection/close.svg';
@@ -9,8 +9,8 @@ import { ReactComponent as CopyLink } from 'shared/components/icon/collection/co
 import { ReactComponent as DefaultSort } from 'shared/components/icon/collection/default-sort.svg';
 import { ReactComponent as Delete } from 'shared/components/icon/collection/delete.svg';
 import { ReactComponent as Download } from 'shared/components/icon/collection/download.svg';
-import { ReactComponent as EditProfile } from 'shared/components/icon/collection/edit-profile.svg';
 import { ReactComponent as Edit } from 'shared/components/icon/collection/edit.svg';
+import { ReactComponent as EditProfile } from 'shared/components/icon/collection/edit-profile.svg';
 import { ReactComponent as EmptyCheckbox } from 'shared/components/icon/collection/empty-checkbox.svg';
 import { ReactComponent as Filter } from 'shared/components/icon/collection/filter.svg';
 import { ReactComponent as Logout } from 'shared/components/icon/collection/logout.svg';

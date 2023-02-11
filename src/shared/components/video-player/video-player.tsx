@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-
 import { Player } from '@clappr/core';
 import HlsjsPlayback from '@clappr/hlsjs-playback';
 import {

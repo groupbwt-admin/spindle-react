@@ -1,4 +1,5 @@
 import { useMutation } from 'react-query';
+import { useLogout } from 'shared/hooks/use-logout';
 
 import { styled } from '@mui/material/styles';
 
@@ -6,10 +7,9 @@ import { AuthApi } from 'app/api/auth-api/auth-api';
 
 import { selectUserData } from 'app/store/user/selects';
 
-import { ButtonList } from 'shared/components/button-list/button-list';
 import { Button } from 'shared/components/button/button';
+import { ButtonList } from 'shared/components/button-list/button-list';
 import { Typography } from 'shared/components/typography/typography';
-import { useLogout } from 'shared/hooks/use-logout';
 
 const Title = styled(Typography)`
 	margin-top: 20px;

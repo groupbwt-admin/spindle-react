@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
@@ -8,8 +7,8 @@ import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import { AvatarUploader } from 'shared/components/avatar-uploader/avatar-uploader';
-import { ButtonList } from 'shared/components/button-list/button-list';
 import { Button } from 'shared/components/button/button';
+import { ButtonList } from 'shared/components/button-list/button-list';
 import {
 	DropzoneErrors,
 	FileInvalidDropzone,

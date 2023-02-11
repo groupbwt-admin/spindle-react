@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
-
 import styled from '@emotion/styled/macro';
 import update from 'immutability-helper';
 import { IFilterOptions } from 'modules/user/pages/profile/use-profile';
+import { RequestSortType } from 'shared/constants/request-sort-type';
+import { ITag } from 'shared/types/video';
 
 import { Divider, Drawer } from '@mui/material';
 
@@ -14,8 +15,6 @@ import { Checkbox } from 'shared/components/checkbox/checkbox';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { Typography } from 'shared/components/typography/typography';
-import { RequestSortType } from 'shared/constants/request-sort-type';
-import { ITag } from 'shared/types/video';
 
 const DrawerContent = styled.div`
 	width: 348px;

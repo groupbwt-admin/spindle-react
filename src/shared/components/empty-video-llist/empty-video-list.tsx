@@ -1,8 +1,7 @@
 import * as React from 'react';
-
 import styled from '@emotion/styled/macro';
-
 import image from 'shared/assets/images/empty-state.svg';
+
 import { Button } from 'shared/components/button/button';
 import { ReactComponent as IconRecord } from 'shared/components/icon/collection/record.svg';
 import { Typography } from 'shared/components/typography/typography';

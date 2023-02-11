@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-
 import styled from '@emotion/styled/macro';
 import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
+import { APP_ROLE_NAMES } from 'shared/constants/roles';
+import { useLogout } from 'shared/hooks/use-logout';
 
 import { Menu, MenuItem } from '@mui/material';
 import { css } from '@mui/material/styles';
@@ -12,8 +13,6 @@ import { Avatar } from 'shared/components/avatar/avatar';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { Typography } from 'shared/components/typography/typography';
-import { APP_ROLE_NAMES } from 'shared/constants/roles';
-import { useLogout } from 'shared/hooks/use-logout';
 
 const UserInfo = styled.div`
 	max-width: calc(100% - 92px);

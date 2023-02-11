@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { FormState, useForm } from 'react-hook-form';
-
 import styled from '@emotion/styled/macro';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { IUser } from 'shared/types/user';
 import * as yup from 'yup';
 
 import { Box } from '@mui/material';
@@ -13,7 +13,6 @@ import {
 	FileInvalidDropzone,
 } from 'shared/components/input/file-input';
 import { Input } from 'shared/components/input/input';
-import { IUser } from 'shared/types/user';
 
 const FormGroup = styled.div`
 	display: flex;

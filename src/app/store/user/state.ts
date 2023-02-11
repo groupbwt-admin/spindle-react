@@ -1,10 +1,9 @@
+import { IUser, IUserExtended } from 'shared/types/user';
+import { getUserAvatarURL } from 'shared/utils/get-file-url';
 import { proxy } from 'valtio';
 import { devtools } from 'valtio/utils';
 
 import { UserApi } from 'app/api/user-api/user-api';
-
-import { IUser, IUserExtended } from 'shared/types/user';
-import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
 interface IUserState {
 	userData: IUser | null;

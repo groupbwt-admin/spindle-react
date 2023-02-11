@@ -1,5 +1,4 @@
 import { AxiosError, AxiosResponse } from 'axios';
-
 import { BaseHttpServices } from 'shared/services/base-http-services';
 import { IUser } from 'shared/types/user';
 

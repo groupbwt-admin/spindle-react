@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useMutation } from 'react-query';
-
 import { AxiosError } from 'axios';
 import { BackButton } from 'modules/auth/components/back-button';
 import { ForgotPasswordForm } from 'modules/auth/pages/forgot-password/components/forgot-password-form';

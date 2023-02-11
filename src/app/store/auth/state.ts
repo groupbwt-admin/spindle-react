@@ -1,9 +1,8 @@
 import jwtDecode from 'jwt-decode';
-import { proxy } from 'valtio';
-import { devtools } from 'valtio/utils';
-
 import { LocalStorageService } from 'shared/services/local-storage-service';
 import { IToken } from 'shared/types/token';
+import { proxy } from 'valtio';
+import { devtools } from 'valtio/utils';
 
 interface IAuthState {
 	user: IToken | null;

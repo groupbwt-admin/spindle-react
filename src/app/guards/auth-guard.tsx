@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-
 import { withEmailVerification } from 'app/guards/with-email-verification';
 import { withSetupProfile } from 'app/guards/with-setup-profile';
+import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 
 import { selectIsLoggedIn } from 'app/store/auth/selects';
-
-import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

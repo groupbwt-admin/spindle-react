@@ -1,9 +1,7 @@
 import React from 'react';
 import { RouteObject } from 'react-router-dom';
-
 import loadable from '@loadable/component';
 import { AuthGuard } from 'app/guards/auth-guard';
-
 import { AUTH_ROUTES } from 'shared/config/routes';
 
 const AuthPage = loadable(() => import('modules/auth/pages/auth'), {
