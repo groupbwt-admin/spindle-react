@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { AUTH_ROUTES } from 'shared/config/routes';
 
 import { css, styled } from '@mui/material/styles';
+
+import { AUTH_ROUTES } from 'shared/config/routes';
 
 import { Button } from 'shared/components/button/button';
 import { Icon } from 'shared/components/icon/icon';

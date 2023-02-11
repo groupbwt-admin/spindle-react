@@ -2,10 +2,11 @@ import * as React from 'react';
 import { FormState, useForm } from 'react-hook-form';
 import styled from '@emotion/styled/macro';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { IUser } from 'shared/types/user';
 import * as yup from 'yup';
 
 import { Box } from '@mui/material';
+
+import { IUser } from 'shared/types/user';
 
 import { AvatarUploader } from 'shared/components/avatar-uploader/avatar-uploader';
 import {

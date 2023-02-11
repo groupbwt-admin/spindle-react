@@ -3,10 +3,12 @@ import { useState } from 'react';
 import styled from '@emotion/styled/macro';
 import update from 'immutability-helper';
 import { IFilterOptions } from 'modules/user/pages/profile/use-profile';
-import { RequestSortType } from 'shared/constants/request-sort-type';
-import { ITag } from 'shared/types/video';
 
 import { Divider, Drawer } from '@mui/material';
+
+import { ITag } from 'shared/types/video';
+
+import { RequestSortType } from 'shared/constants/request-sort-type';
 
 import { Button } from 'shared/components/button/button';
 import { IconButton } from 'shared/components/button/icon-button';

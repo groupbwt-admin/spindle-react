@@ -3,6 +3,7 @@ import { RouteObject } from 'react-router-dom';
 import loadable from '@loadable/component';
 import { AuthGuard } from 'app/guards/auth-guard';
 import { ProfilePage } from 'modules/user/pages/profile/profile';
+
 import { VIDEO_ROUTES } from 'shared/config/routes';
 
 const VideoPage = loadable(

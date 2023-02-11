@@ -1,6 +1,4 @@
-import { forwardRef } from 'react';
-import * as React from 'react';
-import { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 
 import { InputAdornment } from '@mui/material';
 import { styled } from '@mui/material/styles';

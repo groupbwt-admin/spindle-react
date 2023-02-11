@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { AUTH_ROUTES } from 'shared/config/routes';
 import { MainLayout } from 'shared/layout/main-layout';
 
 import { CircularProgress } from '@mui/material';
@@ -13,6 +12,8 @@ import {
 	selectUserData,
 } from 'app/store/user/selects';
 import { userState } from 'app/store/user/state';
+
+import { AUTH_ROUTES } from 'shared/config/routes';
 
 const SpinnerContainer = styled('div')`
 	display: flex;

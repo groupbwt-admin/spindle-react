@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 
 import { selectIsLoggedIn } from 'app/store/auth/selects';
 import { selectUserData } from 'app/store/user/selects';
+
+import { AUTH_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 
 export const withSetupProfile = (Component) => {
 	// eslint-disable-next-line react/display-name

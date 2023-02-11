@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { socketState } from 'app/store/record-socket/state';
+
 import { VIDEO_ROUTES } from 'shared/config/routes';
 import {
 	RECORDING_STATUS,
 	SOCKET_ACTIONS,
 } from 'shared/constants/record-statuses';
-
-import { socketState } from 'app/store/record-socket/state';
 
 import { SocketService } from '../../../shared/services/base-socket-service';
 

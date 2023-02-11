@@ -1,9 +1,10 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
-import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 
 import { VideoApi } from 'app/api/video-api/video-api';
+
+import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 
 import { VideoPlayer } from 'shared/components/video-player/video-player';
 

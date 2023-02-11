@@ -4,9 +4,6 @@ import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import PreviewPlaceholder from 'shared/assets/images/no-preview-placeholder.png';
-import { VIDEO_ROUTES } from 'shared/config/routes';
-import { IVideo } from 'shared/types/video';
-import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
 import {
 	Card,
@@ -16,7 +13,12 @@ import {
 	CardMedia,
 } from '@mui/material';
 
+import { IVideo } from 'shared/types/video';
+
 import { VideoApi } from 'app/api/video-api/video-api';
+
+import { VIDEO_ROUTES } from 'shared/config/routes';
+import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
 import { Avatar } from 'shared/components/avatar/avatar';
 import { Checkbox } from 'shared/components/checkbox/checkbox';

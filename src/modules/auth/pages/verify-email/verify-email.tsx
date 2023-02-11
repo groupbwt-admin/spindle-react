@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AxiosError } from 'axios';
-import { VIDEO_ROUTES } from 'shared/config/routes';
 
 import { CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -10,6 +9,8 @@ import { styled } from '@mui/material/styles';
 import { AuthApi, VerifyEmailDataDto } from 'app/api/auth-api/auth-api';
 
 import { authState } from 'app/store/auth/state';
+
+import { VIDEO_ROUTES } from 'shared/config/routes';
 
 import { Button } from 'shared/components/button/button';
 import { Typography } from 'shared/components/typography/typography';

@@ -2,13 +2,14 @@ import { useMutation } from 'react-query';
 import { AxiosError } from 'axios/index';
 import { AuthLink } from 'modules/auth/components/link';
 import { LoginForm } from 'modules/auth/pages/login/components/login-form';
-import { AUTH_ROUTES } from 'shared/config/routes';
 
 import { styled } from '@mui/material/styles';
 
 import { AuthApi, LoginDataDto } from 'app/api/auth-api/auth-api';
 
 import { authState } from 'app/store/auth/state';
+
+import { AUTH_ROUTES } from 'shared/config/routes';
 
 import { Typography } from 'shared/components/typography/typography';
 

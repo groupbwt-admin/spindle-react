@@ -1,12 +1,13 @@
 import { useRef } from 'react';
 import * as React from 'react';
 import { useMutation } from 'react-query';
-import { GOOGLE_CLIENT_ID } from 'shared/config/variables';
-import { useGoogleLogin } from 'shared/hooks/use-google-login';
 
 import { AuthApi } from 'app/api/auth-api/auth-api';
 
 import { authState } from 'app/store/auth/state';
+
+import { GOOGLE_CLIENT_ID } from 'shared/config/variables';
+import { useGoogleLogin } from 'shared/hooks/use-google-login';
 
 import { GoogleButton } from 'shared/components/google-button/google-button';
 

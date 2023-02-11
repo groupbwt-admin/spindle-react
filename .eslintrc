@@ -46,13 +46,16 @@
 					["^react", "^@?\\w"],
 					// MUI packages.
 					["^(@mui)(/.*|$)"],
+					//Shared types packages
+					["^(shared/types)(/.*|$)"],
 					// Api packages.
 					["^(app/api)(/.*|$)"],
 					// Internal packages.
 					["^(app/store)(/.*|$)"],
+					//Rest shared packages
+					["^(shared/(constants|hooks|config|utils|services))(/.*|$)"],
 					// Components packages.
 					["^(shared/components)(/.*|$)"],
-					["^(shared)(/.*|$)"],
 					// Side effect imports.
 					["^\\u0000"],
 					// Parent imports. Put `..` last.
@@ -70,6 +73,8 @@
 		"no-mixed-spaces-and-tabs": 0,
 		"react-hooks/exhaustive-deps": 0,
 		"no-sequences": [0, "SequenceExpression"],
-		"@typescript-eslint/no-non-null-assertion": 0
+		"@typescript-eslint/no-non-null-assertion": 0,
+		"@typescript-eslint/no-empty-function": 0,
+		"no-duplicate-imports": ["error", { "includeExports": true }]
 	}
 }

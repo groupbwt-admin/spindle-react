@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { AuthLayout } from 'modules/auth/components/layout';
+
 import { AUTH_ROUTES } from 'shared/config/routes';
 
 const layoutProps = {

@@ -3,16 +3,17 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AuthLink } from 'modules/auth/components/link';
-import { AUTH_ROUTES } from 'shared/config/routes';
-import {
-	validatePassword,
-	ValidationPasswordErrors,
-} from 'shared/utils/validation-password';
 import { GoogleAuthButtonWidget } from 'shared/widgets/google-auth-button/google-auth-button';
 import * as yup from 'yup';
 
 import { Box, Divider } from '@mui/material';
 import { css, styled } from '@mui/material/styles';
+
+import { AUTH_ROUTES } from 'shared/config/routes';
+import {
+	validatePassword,
+	ValidationPasswordErrors,
+} from 'shared/utils/validation-password';
 
 import { Button } from 'shared/components/button/button';
 import { Input } from 'shared/components/input/input';

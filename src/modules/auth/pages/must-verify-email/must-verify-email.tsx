@@ -1,11 +1,12 @@
 import { useMutation } from 'react-query';
-import { useLogout } from 'shared/hooks/use-logout';
 
 import { styled } from '@mui/material/styles';
 
 import { AuthApi } from 'app/api/auth-api/auth-api';
 
 import { selectUserData } from 'app/store/user/selects';
+
+import { useLogout } from 'shared/hooks/use-logout';
 
 import { Button } from 'shared/components/button/button';
 import { ButtonList } from 'shared/components/button-list/button-list';
