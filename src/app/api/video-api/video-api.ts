@@ -1,6 +1,6 @@
+import { RequestSortType } from 'shared/constants/request-sort-type';
 import { BaseHttpServices } from 'shared/services/base-http-services';
 import { ITag, IVideo, IVideoSign } from 'shared/types/video';
-import { RequestSortType } from 'shared/constants/request-sort-type';
 
 export interface SaveVideoDto {
 	socketId: string;

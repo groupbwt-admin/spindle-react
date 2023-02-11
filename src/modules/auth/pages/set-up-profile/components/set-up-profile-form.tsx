@@ -1,14 +1,20 @@
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
+
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Button } from 'shared/components/button/button';
+
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Input } from 'shared/components/input/input';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+
 import { AvatarUploader } from 'shared/components/avatar-uploader/avatar-uploader';
 import { ButtonList } from 'shared/components/button-list/button-list';
-import {DropzoneErrors, FileInvalidDropzone} from "shared/components/input/file-input";
+import { Button } from 'shared/components/button/button';
+import {
+	DropzoneErrors,
+	FileInvalidDropzone,
+} from 'shared/components/input/file-input';
+import { Input } from 'shared/components/input/input';
 
 const StyledInput = styled(Input)`
 	margin-top: 32px;
@@ -23,7 +29,7 @@ const schema = yup
 	.object({
 		firstName: yup.string().trim().required(),
 		lastName: yup.string().trim().required(),
-		file: yup.mixed()
+		file: yup.mixed(),
 	})
 	.defined();
 
@@ -38,7 +44,7 @@ interface SetUpProfileFormProps {
 export const SetUpProfileForm: React.FC<SetUpProfileFormProps> = ({
 	isLoading,
 	onSubmit,
-	onSignOut
+	onSignOut,
 }) => {
 	const {
 		watch,

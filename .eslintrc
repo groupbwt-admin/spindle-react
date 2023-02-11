@@ -5,15 +5,8 @@
 		},
 		"import/resolver": {
 			"node": {
-				"paths": [
-					"src"
-				],
-				"extensions": [
-					".js",
-					".ts",
-					".d.ts",
-					".tsx"
-				]
+				"paths": ["src"],
+				"extensions": [".js", ".ts", ".d.ts", ".tsx"]
 			}
 		}
 	},

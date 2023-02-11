@@ -1,5 +1,5 @@
-import {authState} from "app/store/auth/state";
-import {userState} from "app/store/user/state";
+import { authState } from 'app/store/auth/state';
+import { userState } from 'app/store/user/state';
 
 export function useLogout() {
 	const logout = () => {

@@ -1,19 +1,23 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useQuery } from 'react-query';
+
+import { Dayjs } from 'dayjs';
 import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
-import { useFilterRequest } from 'shared/hooks/use-filter-request';
-import { useEffectAfterMount } from 'shared/hooks/use-effect-after-mount';
-import { IVideo } from 'shared/types/video';
+
 import {
 	VideoApi,
 	VideoListParamsDto,
 	VideoListResponseDto,
 } from 'app/api/video-api/video-api';
+
 import { selectUserData } from 'app/store/user/selects';
-import { useQuery } from 'react-query';
+
+import { SortOption } from 'shared/components/sort-dropdown/sort-dropdown';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { RequestSortType } from 'shared/constants/request-sort-type';
-import { SortOption } from 'shared/components/sort-dropdown/sort-dropdown';
-import { Dayjs } from 'dayjs';
+import { useEffectAfterMount } from 'shared/hooks/use-effect-after-mount';
+import { useFilterRequest } from 'shared/hooks/use-filter-request';
+import { IVideo } from 'shared/types/video';
 
 const SORT_OPTIONS: SortOption[] = [
 	{

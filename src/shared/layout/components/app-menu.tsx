@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { css } from '@mui/material/styles';
+
 import styled from '@emotion/styled/macro';
-import { Icon } from 'shared/components/icon/icon';
+
+import { css } from '@mui/material/styles';
+
 import { ReactComponent as Logo } from 'shared/assets/images/logo-reverse.svg';
-import { ReactComponent as IconSearch } from 'shared/components/icon/collection/search.svg';
-import { ReactComponent as IconVideos } from 'shared/components/icon/collection/video.svg';
-import { ReactComponent as IconProfile } from 'shared/components/icon/collection/profile.svg';
-import { ReactComponent as IconSettings } from 'shared/components/icon/collection/setting.svg';
 import { ReactComponent as IconNotification } from 'shared/components/icon/collection/notification.svg';
+import { ReactComponent as IconProfile } from 'shared/components/icon/collection/profile.svg';
+import { ReactComponent as IconSearch } from 'shared/components/icon/collection/search.svg';
+import { ReactComponent as IconSettings } from 'shared/components/icon/collection/setting.svg';
+import { ReactComponent as IconVideos } from 'shared/components/icon/collection/video.svg';
+import { Icon } from 'shared/components/icon/icon';
 import { Typography } from 'shared/components/typography/typography';
 import { UserMenu } from 'shared/layout/components/user-menu';
 

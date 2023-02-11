@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useRoutes } from 'react-router-dom';
+
 import { authRoutes } from 'app/routes/auth-routes';
 import { videoRoutes } from 'app/routes/video-routes';
 

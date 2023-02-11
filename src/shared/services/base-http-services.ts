@@ -1,5 +1,6 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { axios } from 'app/config/axios/axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
+
 import { ResponseError } from 'app/api/error-entity';
 
 export class BaseHttpServices {
@@ -24,7 +25,7 @@ export class BaseHttpServices {
 
 	async get<T = any, R = AxiosResponse<T>, D = any>(
 		url: string,
-		config?: AxiosRequestConfig<D>
+		config?: AxiosRequestConfig<D>,
 	): Promise<R> {
 		const response = await axios.get(url, config);
 
@@ -48,7 +49,7 @@ export class BaseHttpServices {
 	async put<T = any, R = AxiosResponse<T>, D = any>(
 		url: string,
 		data?: any,
-		config?: AxiosRequestConfig<any> | undefined
+		config?: AxiosRequestConfig<any> | undefined,
 	): Promise<R> {
 		const response = await axios.put(url, data, config);
 
@@ -59,7 +60,7 @@ export class BaseHttpServices {
 
 	async delete<T = any, R = AxiosResponse<T>, D = any>(
 		url: string,
-		config?: AxiosRequestConfig<any> | undefined
+		config?: AxiosRequestConfig<any> | undefined,
 	): Promise<R> {
 		const response = await axios.delete(url, config);
 

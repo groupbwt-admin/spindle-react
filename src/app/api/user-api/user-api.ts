@@ -27,7 +27,7 @@ export class UserApiService implements UserApiInterface {
 
 	updateProfile = async (data: UpdateProfileDto): Promise<IUser> => {
 		const profileData = new FormData();
-		for(const field in data) {
+		for (const field in data) {
 			profileData.append(field, data[field]);
 		}
 		const payload = await this.http.patch(`/users/me`, profileData);

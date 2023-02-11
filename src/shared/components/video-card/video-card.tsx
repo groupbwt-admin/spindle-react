@@ -1,3 +1,10 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import styled from '@emotion/styled/macro';
+import clsx from 'clsx';
+import { format } from 'date-fns';
+
 import {
 	Card,
 	CardActionArea,
@@ -5,22 +12,19 @@ import {
 	CardContent,
 	CardMedia,
 } from '@mui/material';
-import { Typography } from 'shared/components/typography/typography';
-import styled from '@emotion/styled/macro';
+
+import { VideoApi } from 'app/api/video-api/video-api';
+
+import PreviewPlaceholder from 'shared/assets/images/no-preview-placeholder.png';
 import { Avatar } from 'shared/components/avatar/avatar';
+import { Checkbox } from 'shared/components/checkbox/checkbox';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
-import React, { useEffect, useRef, useState } from 'react';
+import { Typography } from 'shared/components/typography/typography';
+import { ActionMenu } from 'shared/components/video-card/action-menu';
+import { VIDEO_ROUTES } from 'shared/config/routes';
 import { IVideo } from 'shared/types/video';
 import { getUserAvatarURL } from 'shared/utils/get-file-url';
-import { useNavigate } from 'react-router-dom';
-import { VIDEO_ROUTES } from 'shared/config/routes';
-import { ActionMenu } from 'shared/components/video-card/action-menu';
-import { Checkbox } from 'shared/components/checkbox/checkbox';
-import PreviewPlaceholder from 'shared/assets/images/no-preview-placeholder.png';
-import { format } from 'date-fns';
-import clsx from 'clsx';
-import { VideoApi } from 'app/api/video-api/video-api';
 
 const StyledCheckbox = styled(Checkbox)`
 	position: absolute;

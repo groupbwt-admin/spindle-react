@@ -1,8 +1,10 @@
 import React, { forwardRef, InputHTMLAttributes } from 'react';
+
 import { Checkbox as ExternalCheckbox, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
+
 import { Icon } from 'shared/components/icon/icon';
+import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 
 const StyledCheckbox = styled(ExternalCheckbox)`
 	margin-right: 12px;

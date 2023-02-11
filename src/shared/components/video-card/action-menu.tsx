@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+
 import styled from '@emotion/styled/macro';
-import { Menu, MenuItem } from '@mui/material';
-import { IconButton } from 'shared/components/button/icon-button';
-import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
-import { Icon } from 'shared/components/icon/icon';
 import clsx from 'clsx';
+
+import { Menu, MenuItem } from '@mui/material';
+
+import { IconButton } from 'shared/components/button/icon-button';
+import { Icon } from 'shared/components/icon/icon';
+import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 
 const StyledMenu = styled(Menu)`
 	.MuiMenu-paper {

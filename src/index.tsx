@@ -1,16 +1,21 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { createTheme, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import jwtDecode from 'jwt-decode';
+import { BrowserRouter } from 'react-router-dom';
+
 import { isPast } from 'date-fns';
-import { LocalStorageService } from 'shared/services/local-storage-service';
-import reportWebVitals from './reportWebVitals';
+import jwtDecode from 'jwt-decode';
+
+import { createTheme, ThemeProvider } from '@mui/material';
+
 import { authState } from 'app/store/auth/state';
+
+import { LocalStorageService } from 'shared/services/local-storage-service';
 import { IToken } from 'shared/types/token';
+
 import App from './app/app';
+import reportWebVitals from './reportWebVitals';
 
 const theme = createTheme({
 	palette: {

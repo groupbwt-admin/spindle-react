@@ -1,20 +1,23 @@
 import { useEffect } from 'react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
+
 import { yupResolver } from '@hookform/resolvers/yup';
+import { AuthLink } from 'modules/auth/components/link';
 import * as yup from 'yup';
+
 import { Box, Divider } from '@mui/material';
+import { css, styled } from '@mui/material/styles';
+
+import { Button } from 'shared/components/button/button';
 import { Input } from 'shared/components/input/input';
 import { PasswordInput } from 'shared/components/input/password-input';
-import { Button } from 'shared/components/button/button';
-import { css, styled } from '@mui/material/styles';
+import { Typography } from 'shared/components/typography/typography';
+import { AUTH_ROUTES } from 'shared/config/routes';
 import {
 	validatePassword,
 	ValidationPasswordErrors,
 } from 'shared/utils/validation-password';
-import { AuthLink } from 'modules/auth/components/link';
-import { AUTH_ROUTES } from 'shared/config/routes';
-import { Typography } from 'shared/components/typography/typography';
 import { GoogleAuthButtonWidget } from 'shared/widgets/google-auth-button/google-auth-button';
 
 const StyledInput = styled(Input)`
@@ -76,20 +79,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 	isLoading,
 	onSubmit,
 }) => {
-
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-		setError
+		setError,
 	} = useForm<LoginFormData>({
 		resolver: yupResolver(schema),
 	});
 
 	useEffect(() => {
-		setError('email', {type: 'custom', message: error})
+		setError('email', { type: 'custom', message: error });
 	}, [error]);
-
 
 	return (
 		<Box

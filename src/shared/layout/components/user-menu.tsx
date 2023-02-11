@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
+
 import styled from '@emotion/styled/macro';
+import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
+
 import { Menu, MenuItem } from '@mui/material';
 import { css } from '@mui/material/styles';
-import { useLogout } from 'shared/hooks/use-logout';
+
 import { selectUserData } from 'app/store/user/selects';
-import { APP_ROLE_NAMES } from 'shared/constants/roles';
-import { Typography } from 'shared/components/typography/typography';
+
+import { Avatar } from 'shared/components/avatar/avatar';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
-import { Avatar } from 'shared/components/avatar/avatar';
-import {useEditProfileUser} from "modules/user/hooks/use-edit-profile-user";
+import { Typography } from 'shared/components/typography/typography';
+import { APP_ROLE_NAMES } from 'shared/constants/roles';
+import { useLogout } from 'shared/hooks/use-logout';
 
 const UserInfo = styled.div`
 	max-width: calc(100% - 92px);
@@ -108,7 +112,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 	const useLogoutHook = useLogout();
 	const user = selectUserData();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const {modal, handleOpen} = useEditProfileUser()
+	const { modal, handleOpen } = useEditProfileUser();
 
 	const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -119,7 +123,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 	};
 
 	const handleEditProfile = () => {
-		handleOpen()
+		handleOpen();
 		setAnchorEl(null);
 	};
 

@@ -1,14 +1,19 @@
 import { useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+
+import { AxiosError } from 'axios';
+
 import { CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { AxiosError } from 'axios';
-import { Typography } from 'shared/components/typography/typography';
-import { Button } from 'shared/components/button/button';
+
 import { AuthApi, VerifyEmailDataDto } from 'app/api/auth-api/auth-api';
-import { VIDEO_ROUTES } from 'shared/config/routes';
+
 import { authState } from 'app/store/auth/state';
+
+import { Button } from 'shared/components/button/button';
+import { Typography } from 'shared/components/typography/typography';
+import { VIDEO_ROUTES } from 'shared/config/routes';
 
 const Title = styled(Typography)`
 	margin-top: 20px;

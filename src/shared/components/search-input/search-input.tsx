@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { useId, useRef } from 'react';
-import { css } from '@mui/material/styles';
-import clsx from 'clsx';
+
 import styled from '@emotion/styled/macro';
+import clsx from 'clsx';
+
+import { InputAdornment, InputBase } from '@mui/material';
+import { css } from '@mui/material/styles';
+
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
-import { InputAdornment, InputBase } from '@mui/material';
 import { InputProps } from 'shared/components/input/input';
 
 const StyledInputAdornment = styled(InputAdornment)`
@@ -76,7 +79,6 @@ const AppInput = styled(InputBase)(
 		}
 
 		&.hasValue {
-
 			${StyledClearInputAdornment} {
 				display: block;
 			}
@@ -118,7 +120,7 @@ export const SearchInput: React.ForwardRefRenderFunction<
 					<Icon icon={ICON_COLLECTION.close} />
 				</StyledClearInputAdornment>
 			}
-			slots={{root: 'label'}}
+			slots={{ root: 'label' }}
 		/>
 	);
 };

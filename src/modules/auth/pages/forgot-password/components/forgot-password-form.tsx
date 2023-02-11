@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+
 import { Box } from '@mui/material';
-import { Input } from 'shared/components/input/input';
+import { styled } from '@mui/material/styles';
+
 import { Button } from 'shared/components/button/button';
+import { Input } from 'shared/components/input/input';
 
 const StyledInput = styled(Input)`
 	margin-top: 47px;
@@ -36,13 +39,13 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordProps> = ({
 		register,
 		handleSubmit,
 		formState: { errors },
-		setError
+		setError,
 	} = useForm<ForgotPasswordData>({
 		resolver: yupResolver(schema),
 	});
 
 	useEffect(() => {
-		setError('email', {type: 'custom', message: error})
+		setError('email', { type: 'custom', message: error });
 	}, [error]);
 
 	return (

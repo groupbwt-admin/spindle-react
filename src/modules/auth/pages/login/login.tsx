@@ -1,12 +1,17 @@
-import { styled } from '@mui/material/styles';
-import { Typography } from 'shared/components/typography/typography';
-import { LoginForm } from 'modules/auth/pages/login/components/login-form';
-import { AuthLink } from 'modules/auth/components/link';
-import { AUTH_ROUTES } from 'shared/config/routes';
 import { useMutation } from 'react-query';
-import { AuthApi, LoginDataDto } from 'app/api/auth-api/auth-api';
-import { authState } from 'app/store/auth/state';
+
 import { AxiosError } from 'axios/index';
+import { AuthLink } from 'modules/auth/components/link';
+import { LoginForm } from 'modules/auth/pages/login/components/login-form';
+
+import { styled } from '@mui/material/styles';
+
+import { AuthApi, LoginDataDto } from 'app/api/auth-api/auth-api';
+
+import { authState } from 'app/store/auth/state';
+
+import { Typography } from 'shared/components/typography/typography';
+import { AUTH_ROUTES } from 'shared/config/routes';
 
 const Title = styled(Typography)`
 	margin-bottom: 36px;

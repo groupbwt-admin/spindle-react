@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import { CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
+
 import { selectIsLoggedIn } from 'app/store/auth/selects';
-import { MainLayout } from 'shared/layout/main-layout';
-import { userState } from 'app/store/user/state';
 import {
 	selectIsLoadingUserData,
 	selectUserData,
 } from 'app/store/user/selects';
-import { useLocation } from 'react-router-dom';
+import { userState } from 'app/store/user/state';
+
 import { AUTH_ROUTES } from 'shared/config/routes';
+import { MainLayout } from 'shared/layout/main-layout';
 
 const SpinnerContainer = styled('div')`
 	display: flex;
