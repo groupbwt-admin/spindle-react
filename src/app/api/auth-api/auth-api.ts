@@ -22,10 +22,6 @@ export interface VerifyEmailDataDto {
 	token: string;
 }
 
-export interface VerifyEmailDataDto {
-	token: string;
-}
-
 export interface ResetPasswordDto {
 	token: string;
 	password: string;
