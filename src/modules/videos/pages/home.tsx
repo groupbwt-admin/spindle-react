@@ -1,11 +1,13 @@
 import * as React from 'react';
-import {Typography} from 'shared/components/typography/typography';
 import styled from '@emotion/styled/macro';
-import {Button} from 'shared/components/button/button';
-import {ReactComponent as IconRecord} from 'shared/components/icon/collection/record.svg';
-import {TabsList} from 'shared/components/tabs/tabs-list';
-import {Tab} from 'shared/components/tabs/tab';
-import {useRecording} from '../hooks/use-recording'
+
+import { Button } from 'shared/components/button/button';
+import { ReactComponent as IconRecord } from 'shared/components/icon/collection/record.svg';
+import { Tab } from 'shared/components/tabs/tab';
+import { TabsList } from 'shared/components/tabs/tabs-list';
+import { Typography } from 'shared/components/typography/typography';
+
+import { useRecording } from '../hooks/use-recording';
 
 const HeaderContainer = styled.div`
 	display: flex;
@@ -31,13 +33,14 @@ export const HomePage = () => {
 	};
 
 	const {
-		models: {timeRecording, recordStatus, isMicrophoneOn},
+		models: { timeRecording, recordStatus, isMicrophoneOn },
 		command: {
 			toggleMicrophone,
 			pauseRecording,
 			resetRecording,
 			resumeRecording,
-			startRecording, stopRecording
+			startRecording,
+			stopRecording,
 		},
 	} = useRecording();
 
@@ -45,13 +48,13 @@ export const HomePage = () => {
 		<>
 			<HeaderContainer>
 				<Title variant="h1">My videos</Title>
-				<RecordButton label="Start Recording" startIcon={<IconRecord/>}/>
+				<RecordButton label="Start Recording" startIcon={<IconRecord />} />
 			</HeaderContainer>
 			<ContentContainer>
 				<TabsList value={value} handleChange={handleChange}>
-					<Tab label="My videos"/>
-					<Tab label="Shared videos"/>
-					<Tab label="All videos"/>
+					<Tab label="My videos" />
+					<Tab label="Shared videos" />
+					<Tab label="All videos" />
 				</TabsList>
 				<div>
 					<p>Status: {recordStatus}</p>
@@ -61,8 +64,9 @@ export const HomePage = () => {
 					<button onClick={pauseRecording}>Pause Recording</button>
 					<button onClick={resumeRecording}>Resume Recording</button>
 					<button onClick={resetRecording}>Reset Recording</button>
-					<button onClick={toggleMicrophone}>toggleMicrophone
-						+ {isMicrophoneOn ? 'true' : 'false'}</button>
+					<button onClick={toggleMicrophone}>
+						toggleMicrophone + {isMicrophoneOn ? 'true' : 'false'}
+					</button>
 				</div>
 			</ContentContainer>
 		</>

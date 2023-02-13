@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as React from 'react';
+
 import { loadScript, removeScript } from '../utils/script-helper';
 
 type GoogleRequestResponse = {

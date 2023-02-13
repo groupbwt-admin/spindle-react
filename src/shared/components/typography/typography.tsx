@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {
 	Typography as TypographyExternal,
 	TypographyProps as TypographyExternalProps,
@@ -17,7 +18,11 @@ export const Typography: React.FC<React.PropsWithChildren<TypographyProps>> = ({
 	children,
 }) => {
 	return (
-		<TypographyExternal variant={variant} component={component} className={className}>
+		<TypographyExternal
+			variant={variant}
+			component={component}
+			className={className}
+		>
 			{children}
 		</TypographyExternal>
 	);

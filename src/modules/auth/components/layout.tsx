@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import AuthBg from 'shared/assets/images/auth_bg.svg';
 import { ReactComponent as Logo } from 'shared/assets/images/logo.svg';
+
+import { styled } from '@mui/material/styles';
+
 import { AuthSlider } from './auth-slider';
 
 const AuthContainer = styled('div')`
@@ -39,19 +41,14 @@ const LogoWrapper = styled('div')`
 	top: 24px;
 `;
 
-
-export const AuthLayout: React.FC<React.PropsWithChildren> = ({
-	children
-}) => {
+export const AuthLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
 	return (
 		<AuthContainer>
 			<AuthContentLeft>
 				<LogoWrapper>
 					<Logo />
 				</LogoWrapper>
-				<ContentContainer>
-					{children}
-				</ContentContainer>
+				<ContentContainer>{children}</ContentContainer>
 			</AuthContentLeft>
 			<AuthContentRight>
 				<AuthSlider />

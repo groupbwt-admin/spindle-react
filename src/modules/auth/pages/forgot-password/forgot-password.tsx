@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import { styled } from '@mui/material/styles';
-import { Box } from '@mui/material';
 import { useMutation } from 'react-query';
-import { Typography } from 'shared/components/typography/typography';
-import { ForgotPasswordForm } from 'modules/auth/pages/forgot-password/components/forgot-password-form';
-import { BackButton } from 'modules/auth/components/back-button';
-import { AuthApi, ForgotPasswordDataDto } from 'app/api/auth-api/auth-api';
-import { Button } from 'shared/components/button/button';
 import { AxiosError } from 'axios';
+import { BackButton } from 'modules/auth/components/back-button';
+import { ForgotPasswordForm } from 'modules/auth/pages/forgot-password/components/forgot-password-form';
+
+import { Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+import { AuthApi, ForgotPasswordDataDto } from 'app/api/auth-api/auth-api';
+
+import { Button } from 'shared/components/button/button';
+import { Typography } from 'shared/components/typography/typography';
 
 const Container = styled('div')`
 	display: flex;

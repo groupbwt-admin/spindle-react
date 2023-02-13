@@ -1,4 +1,5 @@
 import styled from '@emotion/styled/macro';
+
 import { Card, CardActions, CardContent, Skeleton } from '@mui/material';
 
 const StyledCard = styled(Card)`

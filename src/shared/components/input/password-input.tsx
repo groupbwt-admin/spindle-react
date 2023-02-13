@@ -1,16 +1,16 @@
-import { forwardRef } from 'react';
-import * as React from 'react';
-import { Input, InputProps } from './input';
-import { styled } from '@mui/material/styles';
-import { useState } from 'react';
-import { Icon } from 'shared/components/icon/icon';
-import { IconButton } from 'shared/components/button/icon-button';
-import { ReactComponent as ShowPasswordIcon } from 'shared/components/icon/collection/show-password.svg';
-import { ReactComponent as HidePasswordIcon } from 'shared/components/icon/collection/hide-password.svg';
-import { InputAdornment } from '@mui/material';
+import React, { forwardRef, useState } from 'react';
 
-const StyledInput = styled(Input)`
-`;
+import { InputAdornment } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+import { IconButton } from 'shared/components/button/icon-button';
+import { ReactComponent as HidePasswordIcon } from 'shared/components/icon/collection/hide-password.svg';
+import { ReactComponent as ShowPasswordIcon } from 'shared/components/icon/collection/show-password.svg';
+import { Icon } from 'shared/components/icon/icon';
+
+import { Input, InputProps } from './input';
+
+const StyledInput = styled(Input)``;
 
 type PasswordInputProps = InputProps;
 
@@ -24,7 +24,7 @@ export const RootPasswordInput: React.ForwardRefRenderFunction<
 
 	const InputButton = (
 		<InputAdornment
-			position='end'
+			position="end"
 			sx={{ position: 'absolute', right: 7, top: 27 }}
 		>
 			<IconButton onClick={toggleShowPassword}>

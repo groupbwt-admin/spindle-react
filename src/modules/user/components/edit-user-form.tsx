@@ -1,16 +1,19 @@
 import * as React from 'react';
-import * as yup from 'yup';
-import styled from '@emotion/styled/macro';
-import { Box } from '@mui/material';
-import { Input } from 'shared/components/input/input';
 import { FormState, useForm } from 'react-hook-form';
+import styled from '@emotion/styled/macro';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { AvatarUploader } from 'shared/components/avatar-uploader/avatar-uploader';
+import * as yup from 'yup';
+
+import { Box } from '@mui/material';
+
 import { IUser } from 'shared/types/user';
+
+import { AvatarUploader } from 'shared/components/avatar-uploader/avatar-uploader';
 import {
 	DropzoneErrors,
 	FileInvalidDropzone,
 } from 'shared/components/input/file-input';
+import { Input } from 'shared/components/input/input';
 
 const FormGroup = styled.div`
 	display: flex;

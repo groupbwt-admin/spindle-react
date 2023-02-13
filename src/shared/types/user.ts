@@ -13,5 +13,5 @@ export interface IUser {
 }
 
 export interface IUserExtended extends IUser {
-	fullName: string
+	fullName: string;
 }

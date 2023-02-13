@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import Box from '@mui/material/Box';
-import { css, styled } from '@mui/material/styles';
-import MobileStepper from '@mui/material/MobileStepper';
+
 import { Avatar } from '@mui/material';
+import Box from '@mui/material/Box';
+import MobileStepper from '@mui/material/MobileStepper';
+import { css, styled } from '@mui/material/styles';
+
 import { IconButton } from 'shared/components/button/icon-button';
 import { Icon } from 'shared/components/icon/icon';
-import { Typography } from 'shared/components/typography/typography';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
+import { Typography } from 'shared/components/typography/typography';
 
 const steps = [
 	{

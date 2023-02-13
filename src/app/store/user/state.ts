@@ -1,7 +1,10 @@
 import { proxy } from 'valtio';
 import { devtools } from 'valtio/utils';
-import { UserApi } from 'app/api/user-api/user-api';
+
 import { IUser, IUserExtended } from 'shared/types/user';
+
+import { UserApi } from 'app/api/user-api/user-api';
+
 import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
 interface IUserState {

@@ -1,18 +1,22 @@
 import * as React from 'react';
 import { useState } from 'react';
+import styled from '@emotion/styled/macro';
 import update from 'immutability-helper';
+import { IFilterOptions } from 'modules/user/pages/profile/use-profile';
+
+import { Divider, Drawer } from '@mui/material';
+
+import { ITag } from 'shared/types/video';
+
+import { RequestSortType } from 'shared/constants/request-sort-type';
+
 import { Button } from 'shared/components/button/button';
+import { IconButton } from 'shared/components/button/icon-button';
+import { DatePicker } from 'shared/components/calendar/date-picker';
+import { Checkbox } from 'shared/components/checkbox/checkbox';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
-import { Divider, Drawer } from '@mui/material';
 import { Typography } from 'shared/components/typography/typography';
-import styled from '@emotion/styled/macro';
-import { Checkbox } from 'shared/components/checkbox/checkbox';
-import { IconButton } from 'shared/components/button/icon-button';
-import { ITag } from 'shared/types/video';
-import { IFilterOptions } from 'modules/user/pages/profile/use-profile';
-import { DatePicker } from 'shared/components/calendar/date-picker';
-import { RequestSortType } from 'shared/constants/request-sort-type';
 
 const DrawerContent = styled.div`
 	width: 348px;
