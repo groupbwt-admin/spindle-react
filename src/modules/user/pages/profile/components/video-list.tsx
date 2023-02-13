@@ -1,9 +1,11 @@
-import { VideoCard } from 'shared/components/video-card/video-card';
 import React, { ReactNode } from 'react';
-import { IVideo } from 'shared/types/video';
-import styled from '@emotion/styled/macro';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import styled from '@emotion/styled/macro';
+
+import { IVideo } from 'shared/types/video';
+
 import { Button } from 'shared/components/button/button';
+import { VideoCard } from 'shared/components/video-card/video-card';
 
 const VideoContainer = styled(InfiniteScroll)`
 	width: 100%;
@@ -75,7 +77,7 @@ export const VideoList: React.FC<VideoListProps> = ({
 	selectedVideos,
 	list,
 	onChecked,
-																											onDeleteVideo,
+	onDeleteVideo,
 }) => {
 	const isCardChecked = (cardId) => {
 		return !!selectedVideos[cardId];

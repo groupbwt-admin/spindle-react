@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 
+import { IVideo } from 'shared/types/video';
+
 import { VideoApi } from 'app/api/video-api/video-api';
 
 import { Modal } from 'shared/components/modal';
 import { DeleteVideoModal } from 'shared/components/video/modals/delete-video-modal';
-import { IVideo } from 'shared/types/video';
 
 export function useDeleteVideo({ onVideosDeleted }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);

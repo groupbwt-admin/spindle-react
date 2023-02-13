@@ -1,9 +1,11 @@
+import React, { useContext } from 'react';
+import styled from '@emotion/styled/macro';
+
+import { IVideo } from 'shared/types/video';
+
+import { Button } from 'shared/components/button/button';
 import { Modal, ModalContext } from 'shared/components/modal';
 import { Typography } from 'shared/components/typography/typography';
-import { Button } from 'shared/components/button/button';
-import styled from '@emotion/styled/macro';
-import React, { useContext } from 'react';
-import { IVideo } from 'shared/types/video';
 
 const ModalContent = styled.div`
 	padding: 24px;

@@ -1,11 +1,13 @@
-import styled from '@emotion/styled';
-import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import React from 'react';
-import { Icon } from 'shared/components/icon/icon';
+import styled from '@emotion/styled';
+
+import { IVideo } from 'shared/types/video';
+
 import { Button } from 'shared/components/button/button';
 import { IconButton } from 'shared/components/button/icon-button';
+import { Icon } from 'shared/components/icon/icon';
+import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { Typography } from 'shared/components/typography/typography';
-import { IVideo } from 'shared/types/video';
 
 const ActionPanelContainer = styled.div`
 	display: flex;
