@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {RecordContext} from "../context/recordContext";
+import {RecordContext} from "../context/record-context";
 import {selectIsShowController, selectStatus} from "../../../app/store/record-socket/selects";
 
 export const useRecordContext = () => {

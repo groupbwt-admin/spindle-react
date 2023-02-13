@@ -17,7 +17,7 @@ export const useRecording = () => {
 	const navigate = useNavigate()
 	useEffect(() => {
 		socketState.onConnectListener()
-		socketState.onDisconnectedListener(() => stopRecording())
+		socketState.onDisconnectedListener(() => console.log('log'))
 		socketState.connect()
 		return () => {
 			socketState.unfollowListener(SOCKET_ACTIONS.disconnect)
@@ -67,14 +67,13 @@ export const useRecording = () => {
 			}
 
 			mediaRecorderLocal.ondataavailable = (event) => {
+				console.log(event.data)
 				socketState.emit({type: SOCKET_ACTIONS.start, payload: {chunk: event.data}})
-				console.log(event.data.size)
 			};
 
-			return wait().then(async () => {
+			return wait().then(() => {
 				if (!isCancel.current) {
 					mediaRecorderLocal.start(250);
-					console.log(mediaRecorderLocal)
 					mediaRecorder.current = mediaRecorderLocal
 					socketState.setStatus(RECORDING_STATUS.recording);
 					socketState.setIsShowController(true)
@@ -134,7 +133,6 @@ export const useRecording = () => {
 
 
 	const onNavigateToVideoPage = (video) => {
-		console.log('awd')
 		if (video) {
 			navigate(VIDEO_ROUTES.VIDEO.generate(video.id))
 		}
@@ -183,10 +181,10 @@ export const useRecording = () => {
 			mediaRecorder.current?.stream.getTracks().map((track) => {
 				track.stop();
 			});
-			socketState.emit({type: SOCKET_ACTIONS.reset})
-			mediaRecorder.current = null
 			socketState.setStatus(RECORDING_STATUS.permission_requested)
 			socketState.setIsShowController(false)
+			mediaRecorder.current = null
+			socketState.emit({type: SOCKET_ACTIONS.reset})
 		},
 		[],
 	);

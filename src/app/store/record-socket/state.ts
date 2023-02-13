@@ -41,12 +41,12 @@ export const socketState = proxy<ISocket>(
 			this.isShowController = isShow
 		},
 		emit(data: IEmitProps) {
-			// SocketService.emit(data.type, data.payload)
-			console.log(data)
+			console.log(data.type)
+			SocketService.emit(data.type, data.payload)
 		},
 		save(type, fn) {
 			console.log(type)
-			// SocketService.save(type, fn)
+			SocketService.save(type, fn)
 		},
 		connect() {
 			if (!SocketService.socket.connected) {
@@ -56,6 +56,7 @@ export const socketState = proxy<ISocket>(
 		onConnectListener() {
 			SocketService.on(SOCKET_ACTIONS.connect, () => {
 				this.isConnect = true
+				console.log('connect')
 			});
 		},
 		onDisconnectedListener(stopRecording) {
@@ -66,6 +67,7 @@ export const socketState = proxy<ISocket>(
 			})
 		},
 		unfollowListener(type) {
+			console.log('off: '+type)
 			SocketService.off(type);
 			if (this.isConnect) {
 				this.isConnect = false
