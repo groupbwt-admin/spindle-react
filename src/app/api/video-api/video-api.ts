@@ -91,8 +91,8 @@ export class VideoApiService implements VideoApiInterface {
 		return await this.http.get(`/videos/${videoId}/download`);
 	};
 
-	deleteVideoById = async (videoId) => {
-		return await this.http.delete(`/videos/${videoId}`);
+	deleteVideoById = (videoId) => {
+		return this.http.delete(`/videos/${videoId}`);
 	};
 }
 

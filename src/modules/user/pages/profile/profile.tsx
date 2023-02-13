@@ -121,6 +121,7 @@ export const ProfilePage = () => {
 						isSelectMode={models.isSelectMode}
 						loadNextPage={commands.loadNextPage}
 						onChecked={commands.handleCheckVideo}
+						onDeleteVideo={commands.handleDeleteVideo}
 					/>
 				)}
 				{models.isInitialLoading && <VideoListSkeleton />}
@@ -129,10 +130,12 @@ export const ProfilePage = () => {
 			{models.modal}
 			{models.isSelectMode && (
 				<StyledActionPanel
-					selectedCount={models.selectedVideosCount}
+					selectedVideos={models.selectedVideosId}
 					cancelSelection={commands.handleCancelSelection}
+					onOpenDeleteVideoModal={commands.handleDeleteSelectedVideos}
 				/>
 			)}
+			{models.deleteVideoModal}
 		</ProfileContainer>
 	);
 };
