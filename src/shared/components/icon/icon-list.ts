@@ -49,4 +49,4 @@ export const ICON_COLLECTION = {
 };
 
 type Keys = keyof typeof ICON_COLLECTION;
-export type IconCollectionType = (typeof ICON_COLLECTION)[Keys];
+export type IconCollectionType = typeof ICON_COLLECTION[Keys];

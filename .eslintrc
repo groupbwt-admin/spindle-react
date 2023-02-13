@@ -37,7 +37,6 @@
 		"project": "./tsconfig.json"
 	},
 	"rules": {
-		"prettier/prettier": ["error"],
 		"simple-import-sort/imports": [
 			"error",
 			{
@@ -67,7 +66,6 @@
 				]
 			}
 		],
-
 		"react/react-in-jsx-scope": "off",
 		"no-param-reassign": 0,
 		"no-mixed-spaces-and-tabs": 0,
@@ -75,6 +73,11 @@
 		"no-sequences": [0, "SequenceExpression"],
 		"@typescript-eslint/no-non-null-assertion": 0,
 		"@typescript-eslint/no-empty-function": 0,
-		"no-duplicate-imports": ["error", { "includeExports": true }]
+		"no-duplicate-imports": [
+			"error",
+			{
+				"includeExports": true
+			}
+		]
 	}
 }

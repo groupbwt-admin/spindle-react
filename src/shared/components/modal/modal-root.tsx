@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import styled from '@emotion/styled/macro';
 
 import { Modal as ExternalModal } from '@mui/material';
@@ -14,7 +13,7 @@ const ModalBody = styled.div`
 	width: 100%;
 	max-width: 600px;
 	background: linear-gradient(0deg, #ffffff, #ffffff), #f3f5f7;
-	box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.15);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 	border-radius: 10px;
 `;
 

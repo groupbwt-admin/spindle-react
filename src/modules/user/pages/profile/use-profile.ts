@@ -15,6 +15,7 @@ import { selectUserData } from 'app/store/user/selects';
 
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { RequestSortType } from 'shared/constants/request-sort-type';
+import { useDeleteVideo } from 'shared/hooks/use-delete-video';
 import { useEffectAfterMount } from 'shared/hooks/use-effect-after-mount';
 import { useFilterRequest } from 'shared/hooks/use-filter-request';
 
@@ -58,6 +59,23 @@ export function useProfile() {
 		sortField: 'created_at',
 	});
 	const user = selectUserData();
+
+	const onVideosDeleted = async () => {
+		setMeta((prevState) => ({ ...prevState, page: 1 }));
+		refetchVideos({ page: 1 }).then((data) => {
+			updateState(() => {
+				return {
+					data: data.data,
+					meta: data.meta,
+				};
+			});
+		});
+		handleCancelSelection();
+	};
+
+	const { modal: deleteVideoModal, startDeleteVideos } = useDeleteVideo({
+		onVideosDeleted,
+	});
 
 	const {
 		data: videosData,
@@ -179,8 +197,8 @@ export function useProfile() {
 		setSelectedVideos({});
 	};
 
-	const selectedVideosCount = useMemo(
-		() => Object.keys(selectedVideos).length,
+	const selectedVideosArray = useMemo(
+		() => Object.values(selectedVideos),
 		[selectedVideos],
 	);
 
