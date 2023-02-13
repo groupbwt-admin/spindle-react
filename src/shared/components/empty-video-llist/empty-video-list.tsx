@@ -1,10 +1,9 @@
 import * as React from 'react';
 import styled from '@emotion/styled/macro';
-import image from 'shared/assets/images/empty-state.svg';
-
+import { Typography } from 'shared/components/typography/typography';
 import { Button } from 'shared/components/button/button';
 import { ReactComponent as IconRecord } from 'shared/components/icon/collection/record.svg';
-import { Typography } from 'shared/components/typography/typography';
+import image from 'shared/assets/images/empty-state.svg';
 
 const RecordButton = styled(Button)`
 	max-width: 190px;
@@ -21,6 +20,7 @@ const EmptyCard = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin: auto;
 `;
 
 const CardImage = styled.div`

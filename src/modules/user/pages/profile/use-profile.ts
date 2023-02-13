@@ -207,21 +207,30 @@ export function useProfile() {
 		setFilterOptions(filterOptions);
 	};
 
+	const handleDeleteVideo = (video: IVideo) => {
+		startDeleteVideos([video]);
+	};
+
+	const handleDeleteSelectedVideos = () => {
+		startDeleteVideos(selectedVideosArray);
+	};
+
 	return {
 		models: {
 			modal,
+			deleteVideoModal,
 			user,
 			videos: videosData?.data ?? [],
 			meta: videosData?.meta,
 			tags: tags.data,
 			filterOptions,
 			searchQuery: meta.search,
-			selectedVideosCount,
+			selectedVideosId: selectedVideosArray,
 			selectedVideos,
 			isInitialLoading,
 			isSearching,
 			isVideoLoading: isRefetchingVideos,
-			isSelectMode: !!selectedVideosCount,
+			isSelectMode: !!selectedVideosArray.length,
 			isListEmpty: videosData?.meta?.itemCount === 0,
 			SORT_OPTIONS,
 		},
@@ -234,6 +243,8 @@ export function useProfile() {
 			handleCancelSelection,
 			handleChangeSortField,
 			handleApplyFilters,
+			handleDeleteVideo,
+			handleDeleteSelectedVideos,
 		},
 	};
 }

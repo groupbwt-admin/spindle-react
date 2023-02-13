@@ -1,11 +1,11 @@
-import React from 'react';
 import styled from '@emotion/styled';
-
+import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
+import React from 'react';
+import { Icon } from 'shared/components/icon/icon';
 import { Button } from 'shared/components/button/button';
 import { IconButton } from 'shared/components/button/icon-button';
-import { Icon } from 'shared/components/icon/icon';
-import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { Typography } from 'shared/components/typography/typography';
+import { IVideo } from 'shared/types/video';
 
 const ActionPanelContainer = styled.div`
 	display: flex;
@@ -41,18 +41,22 @@ const StyledButton = styled(Button)`
 
 interface ActionPanelProps {
 	className?: string;
-	selectedCount: number;
+	selectedVideos: IVideo[];
 	cancelSelection: () => void;
+	onOpenDeleteVideoModal: (videos: IVideo[]) => void;
 }
 
 export const ActionPanel: React.FC<ActionPanelProps> = ({
 	className,
-	selectedCount,
+	selectedVideos,
 	cancelSelection,
+	onOpenDeleteVideoModal,
 }) => {
 	return (
 		<ActionPanelContainer className={className}>
-			<SelectedCount variant="h3">{selectedCount} video selected</SelectedCount>
+			<SelectedCount variant="h3">
+				{selectedVideos.length} video selected
+			</SelectedCount>
 			<ActionsContainer>
 				<IconButton>
 					<Icon icon={ICON_COLLECTION.copy_link} />
@@ -60,7 +64,7 @@ export const ActionPanel: React.FC<ActionPanelProps> = ({
 				<IconButton>
 					<Icon icon={ICON_COLLECTION.download} />
 				</IconButton>
-				<IconButton>
+				<IconButton onClick={() => onOpenDeleteVideoModal(selectedVideos)}>
 					<Icon icon={ICON_COLLECTION.delete} />
 				</IconButton>
 			</ActionsContainer>

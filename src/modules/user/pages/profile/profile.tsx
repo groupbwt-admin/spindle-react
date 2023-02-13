@@ -1,19 +1,18 @@
 import styled from '@emotion/styled/macro';
-import { ActionPanel } from 'modules/user/pages/profile/components/action-panel';
+import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
+import { Avatar } from 'shared/components/avatar/avatar';
+import { Typography } from 'shared/components/typography/typography';
+import { Button } from 'shared/components/button/button';
+import { Icon } from 'shared/components/icon/icon';
+import { SearchInput } from 'shared/components/search-input/search-input';
 import { VideoList } from 'modules/user/pages/profile/components/video-list';
 import { useProfile } from 'modules/user/pages/profile/use-profile';
-
-import { Avatar } from 'shared/components/avatar/avatar';
-import { Button } from 'shared/components/button/button';
-import { EmptyVideoList } from 'shared/components/empty-video-llist/empty-video-list';
-import { FetchLinearLoader } from 'shared/components/fetch-linear-loader/fetch-linear-loader';
-import { Filter } from 'shared/components/filter/filter';
-import { Icon } from 'shared/components/icon/icon';
-import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
-import { SearchInput } from 'shared/components/search-input/search-input';
-import { SortDropdown } from 'shared/components/sort-dropdown/sort-dropdown';
-import { Typography } from 'shared/components/typography/typography';
 import { VideoListSkeleton } from 'shared/components/video-list-skeleton/video-list-skeleton';
+import { ActionPanel } from 'modules/user/pages/profile/components/action-panel';
+import { FetchLinearLoader } from 'shared/components/fetch-linear-loader/fetch-linear-loader';
+import { EmptyVideoList } from 'shared/components/empty-video-llist/empty-video-list';
+import { Filter } from 'shared/components/filter/filter';
+import { SortDropdown } from 'shared/components/sort-dropdown/sort-dropdown';
 
 const ProfileContainer = styled.div`
 	display: flex;
@@ -122,6 +121,7 @@ export const ProfilePage = () => {
 						isSelectMode={models.isSelectMode}
 						loadNextPage={commands.loadNextPage}
 						onChecked={commands.handleCheckVideo}
+						onDeleteVideo={commands.handleDeleteVideo}
 					/>
 				)}
 				{models.isInitialLoading && <VideoListSkeleton />}
@@ -130,10 +130,12 @@ export const ProfilePage = () => {
 			{models.modal}
 			{models.isSelectMode && (
 				<StyledActionPanel
-					selectedCount={models.selectedVideosCount}
+					selectedVideos={models.selectedVideosId}
 					cancelSelection={commands.handleCancelSelection}
+					onOpenDeleteVideoModal={commands.handleDeleteSelectedVideos}
 				/>
 			)}
+			{models.deleteVideoModal}
 		</ProfileContainer>
 	);
 };
