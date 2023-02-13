@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 import { format } from 'date-fns';
+import download from 'downloadjs';
 import PreviewPlaceholder from 'shared/assets/images/no-preview-placeholder.png';
 
 import {
@@ -176,6 +178,11 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 }) => {
 	const navigate = useNavigate();
 	const copyLinkTimerRef = useRef<ReturnType<typeof setTimeout>>();
+	const downloadVideoMutation = useMutation(VideoApi.downloadVideoById, {
+		onSuccess: async (fileData) => {
+			download(fileData.data, video.title, fileData.headers.contentType);
+		},
+	});
 
 	const [isLinkCopied, setIsLinkCopied] = useState(false);
 
@@ -201,7 +208,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 
 	const handleDownload = (e) => {
 		e.stopPropagation();
-		VideoApi.downloadVideoById(video.id);
+		downloadVideoMutation.mutate(video.id);
 	};
 
 	const handleOpenDeleteModal = (e) => {
@@ -211,7 +218,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 
 	const handleCopyLink = async (e) => {
 		e.stopPropagation();
-		if (isLinkCopied) return;
+		if (isLinkCopied || !navigator.clipboard) return;
 
 		await navigator.clipboard.writeText(
 			VIDEO_ROUTES.VIDEO.generateExternalPath(video.id),

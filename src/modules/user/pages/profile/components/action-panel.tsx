@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
+import { Tooltip, Zoom } from '@mui/material';
+
 import { IVideo } from 'shared/types/video';
 
 import { Button } from 'shared/components/button/button';
@@ -44,15 +46,19 @@ const StyledButton = styled(Button)`
 interface ActionPanelProps {
 	className?: string;
 	selectedVideos: IVideo[];
+	isLinksCopied: boolean;
 	cancelSelection: () => void;
 	onOpenDeleteVideoModal: (videos: IVideo[]) => void;
+	onCopyLinks: () => void;
 }
 
 export const ActionPanel: React.FC<ActionPanelProps> = ({
 	className,
 	selectedVideos,
+	isLinksCopied,
 	cancelSelection,
 	onOpenDeleteVideoModal,
+	onCopyLinks,
 }) => {
 	return (
 		<ActionPanelContainer className={className}>
@@ -60,12 +66,24 @@ export const ActionPanel: React.FC<ActionPanelProps> = ({
 				{selectedVideos.length} video selected
 			</SelectedCount>
 			<ActionsContainer>
-				<IconButton>
-					<Icon icon={ICON_COLLECTION.copy_link} />
-				</IconButton>
-				<IconButton>
-					<Icon icon={ICON_COLLECTION.download} />
-				</IconButton>
+				<Tooltip
+					PopperProps={{
+						disablePortal: true,
+					}}
+					open={isLinksCopied}
+					disableFocusListener
+					disableHoverListener
+					disableTouchListener
+					title="Links have been copied"
+					TransitionComponent={Zoom}
+				>
+					<IconButton onClick={() => onCopyLinks()}>
+						<Icon icon={ICON_COLLECTION.copy_link} />
+					</IconButton>
+				</Tooltip>
+				{/*<IconButton>*/}
+				{/*	<Icon icon={ICON_COLLECTION.download} />*/}
+				{/*</IconButton>*/}
 				<IconButton onClick={() => onOpenDeleteVideoModal(selectedVideos)}>
 					<Icon icon={ICON_COLLECTION.delete} />
 				</IconButton>

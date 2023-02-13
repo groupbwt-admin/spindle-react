@@ -131,9 +131,11 @@ export const ProfilePage = () => {
 			{models.modal}
 			{models.isSelectMode && (
 				<StyledActionPanel
+					isLinksCopied={models.isLinksCopied}
 					selectedVideos={models.selectedVideosId}
 					cancelSelection={commands.handleCancelSelection}
 					onOpenDeleteVideoModal={commands.handleDeleteSelectedVideos}
+					onCopyLinks={commands.handleCopySelectedLinks}
 				/>
 			)}
 			{models.deleteVideoModal}

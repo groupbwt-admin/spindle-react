@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Dayjs } from 'dayjs';
 import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
@@ -13,6 +13,7 @@ import {
 
 import { selectUserData } from 'app/store/user/selects';
 
+import { VIDEO_ROUTES } from 'shared/config/routes';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { RequestSortType } from 'shared/constants/request-sort-type';
 import { useDeleteVideo } from 'shared/hooks/use-delete-video';
@@ -58,7 +59,15 @@ export function useProfile() {
 		order: RequestSortType.DESC,
 		sortField: 'created_at',
 	});
+	const [isLinksCopied, setIsLinksCopied] = useState(false);
+	const copyLinkTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 	const user = selectUserData();
+
+	useEffect(() => {
+		return () => {
+			clearTimeout(copyLinkTimeoutRef.current);
+		};
+	}, []);
 
 	const onVideosDeleted = async () => {
 		setMeta((prevState) => ({ ...prevState, page: 1 }));
@@ -233,6 +242,21 @@ export function useProfile() {
 		startDeleteVideos(selectedVideosArray);
 	};
 
+	const handleCopySelectedLinks = async () => {
+		if (!navigator.clipboard || isLinksCopied) return;
+
+		const linksToCopy = selectedVideosArray.reduce((acc, cur) => {
+			return cur.id
+				? acc + `${VIDEO_ROUTES.VIDEO.generateExternalPath(cur.id)}\n`
+				: acc;
+		}, '');
+		await navigator.clipboard.writeText(linksToCopy);
+		setIsLinksCopied(true);
+		copyLinkTimeoutRef.current = setTimeout(() => {
+			setIsLinksCopied(false);
+		}, 1500);
+	};
+
 	return {
 		models: {
 			modal,
@@ -250,6 +274,7 @@ export function useProfile() {
 			isVideoLoading: isRefetchingVideos,
 			isSelectMode: !!selectedVideosArray.length,
 			isListEmpty: videosData?.meta?.itemCount === 0,
+			isLinksCopied,
 			SORT_OPTIONS,
 		},
 		commands: {
@@ -263,6 +288,7 @@ export function useProfile() {
 			handleApplyFilters,
 			handleDeleteVideo,
 			handleDeleteSelectedVideos,
+			handleCopySelectedLinks,
 		},
 	};
 }

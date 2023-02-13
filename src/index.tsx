@@ -141,6 +141,15 @@ const theme = createTheme({
 				},
 			},
 		},
+		MuiTooltip: {
+			styleOverrides: {
+				tooltip: {
+					fontSize: '14px',
+					borderRadius: '10px',
+					backgroundColor: '#828CB1',
+				},
+			},
+		},
 	},
 });
 
