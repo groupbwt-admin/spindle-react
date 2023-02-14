@@ -104,13 +104,11 @@ export const ProfilePage = () => {
 					options={models.SORT_OPTIONS}
 					onChangeSortField={commands.handleChangeSortField}
 				/>
-				{models.tags && (
-					<Filter
-						tags={models.tags}
-						initialFilterOptions={models.filterOptions}
-						onApplyFilters={commands.handleApplyFilters}
-					/>
-				)}
+				<Filter
+					tags={models.tags}
+					initialFilterOptions={models.filterOptions}
+					onApplyFilters={commands.handleApplyFilters}
+				/>
 			</FiltersPanel>
 			<VideoContainer>
 				{!!models.videos.length && (
