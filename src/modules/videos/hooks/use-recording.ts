@@ -5,11 +5,10 @@ import {RECORDING_STATUS, SOCKET_ACTIONS} from "shared/constants/record-statuses
 import {socketState} from 'app/store/record-socket/state';
 import {SocketService} from "../../../shared/services/base-socket-service";
 import {selectStatus} from "../../../app/store/record-socket/selects";
-import {EventBus, RECORDING_EVENTS} from "../../../shared/utils/event-bus";
 
 export const useRecording = () => {
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(false)
-	const [counterBeforeStart, setCounterBeforeStart] = useState(3)
+	const [counterBeforeStart, setCounterBeforeStart] = useState<number>(3)
 
 	const mediaRecorder = useRef<MediaRecorder | null>(null);
 	const isCancel = useRef(false);
@@ -17,7 +16,12 @@ export const useRecording = () => {
 	const navigate = useNavigate()
 	useEffect(() => {
 		socketState.onConnectListener()
-		socketState.onDisconnectedListener(() => console.log('log'))
+		socketState.onDisconnectedListener(() => {
+				if (mediaRecorder.current) {
+					stopRecording()
+				}
+			}
+		)
 		socketState.connect()
 		return () => {
 			socketState.unfollowListener(SOCKET_ACTIONS.disconnect)
@@ -28,13 +32,12 @@ export const useRecording = () => {
 		};
 	}, []);
 
-	useEffect(() => {
-		EventBus.on(RECORDING_EVENTS.prev_stop, () => prevCancelStream());
-		return () => {
-			EventBus.off(RECORDING_EVENTS.prev_stop, () => prevCancelStream());
-		};
-	}, [status]);
-
+	const wait = () => new Promise<void>((resolve) => {
+		const myInterval = setInterval(() => setCounterBeforeStart((prevState) => prevState - 1), 1000)
+		setTimeout(() => {
+			resolve(clearInterval(myInterval))
+		}, 4000);
+	});
 
 	const requestMediaStream = async () => {
 		try {
@@ -67,7 +70,6 @@ export const useRecording = () => {
 			}
 
 			mediaRecorderLocal.ondataavailable = (event) => {
-				console.log(event.data)
 				socketState.emit({type: SOCKET_ACTIONS.start, payload: {chunk: event.data}})
 			};
 
@@ -88,7 +90,7 @@ export const useRecording = () => {
 			console.log(e)
 			socketState.setStatus(RECORDING_STATUS.error);
 		}
-	};
+	}
 
 
 	const startRecording = useCallback(
@@ -102,9 +104,8 @@ export const useRecording = () => {
 				socketState.setStatus(RECORDING_STATUS.error);
 			}
 		},
-		[],
+		[status],
 	);
-
 
 	const toggleMicrophone = useCallback(
 		() => {
@@ -119,13 +120,6 @@ export const useRecording = () => {
 		[],
 	);
 
-	const wait = () => new Promise<void>((resolve) => {
-		const myInterval = setInterval(() => setCounterBeforeStart(counterBeforeStart - 1), 1000)
-		setTimeout(() => {
-			resolve(clearInterval(myInterval));
-		}, 3000);
-	});
-
 	function prevCancelStream() {
 		isCancel.current = true
 		socketState.setStatus(RECORDING_STATUS.permission_requested);
@@ -137,9 +131,11 @@ export const useRecording = () => {
 			navigate(VIDEO_ROUTES.VIDEO.generate(video.id))
 		}
 	}
+
 	const stopRecording = useCallback(
 		async () => {
 			try {
+
 				mediaRecorder.current?.stop();
 				mediaRecorder.current?.stream.getTracks().map((track) => {
 					track.stop();
@@ -155,8 +151,18 @@ export const useRecording = () => {
 		},
 		[],
 	);
+	const resetRecording = () => {
+		mediaRecorder.current?.stop();
+		mediaRecorder.current?.stream.getTracks().map((track) => {
+			track.stop();
+		});
+		socketState.emit({type: SOCKET_ACTIONS.reset})
 
+		socketState.setStatus(RECORDING_STATUS.reset)
+		socketState.setIsShowController(false)
+		// mediaRecorder.current = null
 
+	}
 	const pauseRecording = useCallback(
 		() => {
 			socketState.setStatus(RECORDING_STATUS.paused);
@@ -170,21 +176,6 @@ export const useRecording = () => {
 		() => {
 			socketState.setStatus(RECORDING_STATUS.recording);
 			mediaRecorder.current?.resume();
-		},
-		[],
-	);
-
-
-	const resetRecording = useCallback(
-		() => {
-			mediaRecorder.current?.stop();
-			mediaRecorder.current?.stream.getTracks().map((track) => {
-				track.stop();
-			});
-			socketState.setStatus(RECORDING_STATUS.permission_requested)
-			socketState.setIsShowController(false)
-			mediaRecorder.current = null
-			socketState.emit({type: SOCKET_ACTIONS.reset})
 		},
 		[],
 	);

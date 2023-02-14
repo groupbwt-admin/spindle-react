@@ -8,7 +8,10 @@ import {WrapperRecordController} from "../components/wrapper-record-controller";
 export const useControlVideo = () => {
 	const status = selectStatus()
 	const {
-		models,
+		models: {
+			isMicrophoneOn,
+			counterBeforeStart
+		},
 		command: {
 			startRecording,
 			stopRecording,
@@ -28,12 +31,11 @@ export const useControlVideo = () => {
 													pauseRecording={pauseRecording}
 													resetRecording={resetRecording}
 													toggleMicrophone={toggleMicrophone}
-													isMuted={models.isMicrophoneOn}
+													isMuted={isMicrophoneOn}
 													isPaused={status == RECORDING_STATUS.paused}/>
 		</WrapperRecordController>
-
 	const countDownView = (status === RECORDING_STATUS.idle) ?
-		<Countdown onCancel={prevCancelStream} count={models.counterBeforeStart}/> : null
+		<Countdown onCancel={prevCancelStream} count={counterBeforeStart}/> : null
 
 	const recordWidget = <>
 		{recordControlPanel}

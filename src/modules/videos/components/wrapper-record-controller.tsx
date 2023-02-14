@@ -123,7 +123,7 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({c
 				left: x,
 				top: y,
 			}}
-			isShow={isShowController}
+			isShow={!isShowController}
 			isHorizontal={!isColumn}
 			isMouseUp={!isDown}
 		>

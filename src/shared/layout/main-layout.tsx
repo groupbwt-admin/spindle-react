@@ -15,26 +15,19 @@ const Main = styled('main')`
 	flex-grow: 1;
 	padding: 24px 32px;
 `;
-const style = {
-	height: ' 100vh',
-	width: '100vw'
-}
 
 export const MainLayout: React.FC<React.PropsWithChildren> = ({children}) => {
-
 	const {models: {recordWidget}, commands: {startRecording}} = useControlVideo()
 
 	return (
 		<RecordContext.Provider value={{isShow: true, startRecording: startRecording}}>
-			{/*<DragSelectProvider area={ refArea.current}>*/}
-				<MainLayoutContainer disableGutters maxWidth={false} id = "drag-container">
-					{recordWidget}
-					<AppMenu/>
-					<Main>
-						{children}
-					</Main>
-				</MainLayoutContainer>
-			{/*</DragSelectProvider>*/}
+			<MainLayoutContainer disableGutters maxWidth={false} id="drag-container">
+				{recordWidget}
+				<AppMenu/>
+				<Main>
+					{children}
+				</Main>
+			</MainLayoutContainer>
 		</RecordContext.Provider>
 	);
 };

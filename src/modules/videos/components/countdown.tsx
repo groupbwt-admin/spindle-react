@@ -1,9 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
 import {Button} from "shared/components/button/button";
-import {selectCounterBeforeStart, selectStatus} from "../../../app/store/record-socket/selects";
-import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
-import {EventBus, RECORDING_EVENTS} from "../../../shared/utils/event-bus";
 
 const CountWrapper = styled.div`
 	position: fixed;
@@ -29,16 +26,13 @@ const CancelButton = styled(Button)`
 	max-width: 190px;
 	color: #ffffff;
 `;
-// const prev_stop = () => {
-// 	EventBus.emit(RECORDING_EVENTS.prev_stop)
-// }
+
 interface ICountdown {
 	count: number,
 	onCancel: () => void
 }
 
 export const CountdownComponent: React.FC<ICountdown> = ({count, onCancel}) => {
-	// if (status !== RECORDING_STATUS.idle) return null
 	return (
 		<CountWrapper>
 			<CountValue>{count}</CountValue>

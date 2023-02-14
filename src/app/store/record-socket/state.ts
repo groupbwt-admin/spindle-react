@@ -15,9 +15,7 @@ interface ISocket {
 	unfollowListener: (type: string) => void,
 	close: () => void,
 	setStatus: (status: string) => void,
-	setCounterBeforeStart: (counter: number) => void,
 	recordStatus: string,
-	counterBeforeStart: number,
 	isShowController: boolean
 	setIsShowController: (isShow: boolean) => void,
 
@@ -35,17 +33,16 @@ export const socketState = proxy<ISocket>(
 		error: '',
 		isConnect: false,
 		recordStatus: RECORDING_STATUS.permission_requested,
-		counterBeforeStart: 3,
 		isShowController: false,
 		setIsShowController(isShow) {
 			this.isShowController = isShow
 		},
 		emit(data: IEmitProps) {
-			console.log(data.type)
-			SocketService.emit(data.type, data.payload)
+			if (this.recordStatus !== RECORDING_STATUS.reset) {
+				SocketService.emit(data.type, data.payload)
+			}
 		},
 		save(type, fn) {
-			console.log(type)
 			SocketService.save(type, fn)
 		},
 		connect() {
@@ -56,7 +53,6 @@ export const socketState = proxy<ISocket>(
 		onConnectListener() {
 			SocketService.on(SOCKET_ACTIONS.connect, () => {
 				this.isConnect = true
-				console.log('connect')
 			});
 		},
 		onDisconnectedListener(stopRecording) {
@@ -67,7 +63,6 @@ export const socketState = proxy<ISocket>(
 			})
 		},
 		unfollowListener(type) {
-			console.log('off: '+type)
 			SocketService.off(type);
 			if (this.isConnect) {
 				this.isConnect = false
@@ -78,9 +73,7 @@ export const socketState = proxy<ISocket>(
 			this.isConnect = false
 		},
 
-		setCounterBeforeStart(counter) {
-			this.counterBeforeStart = counter
-		},
+
 		setStatus(status) {
 			this.recordStatus = status
 		},

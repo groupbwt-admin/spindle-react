@@ -5,8 +5,8 @@ export const RECORDING_STATUS = {
 	stopped: 'stopped',
 	paused: 'paused',
 	permission_requested: 'permission_requested',
-	interrupt: 'interrupt',
-	start: 'start',
+	reset: 'reset',
+
 }
 
 export const SOCKET_ACTIONS = {

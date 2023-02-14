@@ -5,15 +5,15 @@ import styled from "@emotion/styled/macro";
 import {StopWatch} from "./stop-watch";
 
 const ControllerButton = styled.button`
-	background: transparent;
-	padding: 12px 4px;
-	border: 1px solid transparent;
-	cursor: pointer;
-	transition: all 0.1s ease-out;
+  background: transparent;
+  padding: 12px 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.1s ease-out;
 
-	&:hover {
-		border: 1px solid #fff;
-	}
+  &:hover {
+    transform: translateY(-2px);
+  }
 `;
 
 
