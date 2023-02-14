@@ -91,7 +91,7 @@ const DEFAULT_FILTER_OPTIONS: IFilterOptions = {
 };
 
 interface FilterProps {
-	tags: ITag[];
+	tags?: ITag[];
 	initialFilterOptions: IFilterOptions;
 	onApplyFilters: (filterOptions: IFilterOptions) => void;
 }
@@ -183,22 +183,24 @@ export const Filter: React.FC<FilterProps> = ({
 							/>
 						</DateContainer>
 					</SectionContainer>
-					<SectionContainer>
-						<Typography variant="h3">Tags</Typography>
-						{tags.map((tag) => (
-							<StyledCheckbox
-								label={tag.tag}
-								checked={!!filterOptions.criteriaTags?.includes(tag.id)}
-								onChange={(e) =>
-									handleChangeFilterOption(e, {
-										id: tag.id,
-										optionName: 'criteriaTags',
-									})
-								}
-								key={tag.id}
-							/>
-						))}
-					</SectionContainer>
+					{tags?.length && (
+						<SectionContainer>
+							<Typography variant="h3">Tags</Typography>
+							{tags.map((tag) => (
+								<StyledCheckbox
+									label={tag.tag}
+									checked={!!filterOptions.criteriaTags?.includes(tag.id)}
+									onChange={(e) =>
+										handleChangeFilterOption(e, {
+											id: tag.id,
+											optionName: 'criteriaTags',
+										})
+									}
+									key={tag.id}
+								/>
+							))}
+						</SectionContainer>
+					)}
 					<ActionContainer>
 						<Button
 							color="secondary"

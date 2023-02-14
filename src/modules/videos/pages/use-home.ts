@@ -120,7 +120,8 @@ export function useHome() {
 
 	const tags = useQuery({
 		queryKey: [VIDEO_QUERY_KEYS.tags],
-		queryFn: () => VideoApi.getVideoTags(),
+		queryFn: () => VideoApi.getVideoTags({ userId: user?.id }),
+		enabled: !!user,
 	});
 
 	const getFindVideosParams = (params) => {
