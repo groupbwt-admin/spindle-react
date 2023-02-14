@@ -46,9 +46,17 @@ const StyledMenuIcon = styled(Icon)`
 	margin-right: 13px;
 `;
 
-interface VideoActionMenuProps {
+export enum ActionTypes {
+	'copy' = 'copy',
+	'settings' = 'settings',
+	'download' = 'download',
+	'delete' = 'delete',
+}
+
+export interface VideoActionMenuProps {
 	className?: string;
 	isLinkCopied: boolean;
+	activeActions?: Partial<Record<ActionTypes, boolean>>;
 	onDownload: (event: React.MouseEvent<HTMLLIElement>) => void;
 	onCopyLink: (event: React.MouseEvent<HTMLLIElement>) => void;
 	onDelete: (event: React.MouseEvent<HTMLLIElement>) => void;
@@ -57,6 +65,12 @@ interface VideoActionMenuProps {
 export const ActionMenu: React.FC<VideoActionMenuProps> = ({
 	className,
 	isLinkCopied,
+	activeActions = {
+		copy: true,
+		settings: true,
+		download: true,
+		delete: true,
+	},
 	onDownload,
 	onDelete,
 	onCopyLink,
@@ -107,22 +121,33 @@ export const ActionMenu: React.FC<VideoActionMenuProps> = ({
 					},
 				}}
 			>
-				<StyledMenuItem onClick={(e) => onCopyLink(e)} selected={isLinkCopied}>
-					<StyledMenuIcon icon={ICON_COLLECTION.copy_link} />
-					<span>{isLinkCopied ? 'Copied' : 'Copy link'}</span>
-				</StyledMenuItem>
-				<StyledMenuItem>
-					<StyledMenuIcon icon={ICON_COLLECTION.settings} />
-					<span>Settings</span>
-				</StyledMenuItem>
-				<StyledMenuItem onClick={(e) => onDownload(e)}>
-					<StyledMenuIcon icon={ICON_COLLECTION.download} />
-					<span>Download</span>
-				</StyledMenuItem>
-				<StyledMenuItem onClick={(e) => onDelete(e)}>
-					<StyledMenuIcon icon={ICON_COLLECTION.delete} />
-					<span>Delete</span>
-				</StyledMenuItem>
+				{activeActions.copy && (
+					<StyledMenuItem
+						onClick={(e) => onCopyLink(e)}
+						selected={isLinkCopied}
+					>
+						<StyledMenuIcon icon={ICON_COLLECTION.copy_link} />
+						<span>{isLinkCopied ? 'Copied' : 'Copy link'}</span>
+					</StyledMenuItem>
+				)}
+				{activeActions.settings && (
+					<StyledMenuItem>
+						<StyledMenuIcon icon={ICON_COLLECTION.settings} />
+						<span>Settings</span>
+					</StyledMenuItem>
+				)}
+				{activeActions.download && (
+					<StyledMenuItem onClick={(e) => onDownload(e)}>
+						<StyledMenuIcon icon={ICON_COLLECTION.download} />
+						<span>Download</span>
+					</StyledMenuItem>
+				)}
+				{activeActions.delete && (
+					<StyledMenuItem onClick={(e) => onDelete(e)}>
+						<StyledMenuIcon icon={ICON_COLLECTION.delete} />
+						<span>Delete</span>
+					</StyledMenuItem>
+				)}
 			</StyledMenu>
 		</>
 	);
