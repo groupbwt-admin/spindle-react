@@ -13,6 +13,7 @@ import {ReactComponent as Reset} from 'shared/components/icon/collection/reset.s
 import {ReactComponent as Resume} from 'shared/components/icon/collection/resume.svg';
 import {ReactComponent as Microphone} from 'shared/components/icon/collection/microphone.svg';
 import {ReactComponent as MicrophoneOff} from 'shared/components/icon/collection/microphone-off.svg';
+import {ReactComponent as DragIndicator} from 'shared/components/icon/collection/drag-indicator.svg';
 
 export const ICON_COLLECTION = {
 	arrow_left: ArrowLeft,
@@ -30,6 +31,7 @@ export const ICON_COLLECTION = {
 	resume: Resume,
 	microphone: Microphone,
 	microphone_off: MicrophoneOff,
+	drag_indicator: DragIndicator,
 };
 
 type Keys = keyof typeof ICON_COLLECTION;

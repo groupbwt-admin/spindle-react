@@ -25,13 +25,13 @@ export const HomePage = () => {
 		setValue(newValue);
 	};
 
-	const {isShowButton, startRecording} = useRecordContext()
+	const {isRecording, startRecording} = useRecordContext()
 
 	return (
 		<>
 			<HeaderContainer>
 				<Title variant="h1">My videos</Title>
-				<StartRecordButton isShow={isShowButton} onStartRecording={startRecording}/>
+				<StartRecordButton isShow={!isRecording} onStartRecording={startRecording}/>
 
 			</HeaderContainer>
 			<ContentContainer>

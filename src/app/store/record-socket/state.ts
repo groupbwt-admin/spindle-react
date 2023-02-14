@@ -16,8 +16,8 @@ interface ISocket {
 	close: () => void,
 	setStatus: (status: string) => void,
 	recordStatus: string,
-	isShowController: boolean
-	setIsShowController: (isShow: boolean) => void,
+	isRecording: boolean
+	setIsRecording: (isShow: boolean) => void,
 
 }
 
@@ -33,9 +33,9 @@ export const socketState = proxy<ISocket>(
 		error: '',
 		isConnect: false,
 		recordStatus: RECORDING_STATUS.permission_requested,
-		isShowController: false,
-		setIsShowController(isShow) {
-			this.isShowController = isShow
+		isRecording: false,
+		setIsRecording(isShow) {
+			this.isRecording = isShow
 		},
 		emit(data: IEmitProps) {
 			if (this.recordStatus !== RECORDING_STATUS.reset) {

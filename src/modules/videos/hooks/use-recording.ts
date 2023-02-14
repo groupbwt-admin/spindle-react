@@ -75,10 +75,10 @@ export const useRecording = () => {
 
 			return wait().then(() => {
 				if (!isCancel.current) {
-					mediaRecorderLocal.start(250);
+					mediaRecorderLocal.start(1000);
 					mediaRecorder.current = mediaRecorderLocal
 					socketState.setStatus(RECORDING_STATUS.recording);
-					socketState.setIsShowController(true)
+					socketState.setIsRecording(true)
 					return mediaRecorderLocal;
 				} else {
 					mediaRecorderLocal.stream.getTracks().map((track) => {
@@ -142,7 +142,7 @@ export const useRecording = () => {
 				});
 				socketState.setStatus(RECORDING_STATUS.stopped);
 				socketState.save(SOCKET_ACTIONS.save, onNavigateToVideoPage)
-				socketState.setIsShowController(false)
+				socketState.setIsRecording(false)
 				mediaRecorder.current = null
 			} catch (e) {
 				console.log('Stop Recording: ' + e)
@@ -159,8 +159,7 @@ export const useRecording = () => {
 		socketState.emit({type: SOCKET_ACTIONS.reset})
 
 		socketState.setStatus(RECORDING_STATUS.reset)
-		socketState.setIsShowController(false)
-		// mediaRecorder.current = null
+		socketState.setIsRecording(false)
 
 	}
 	const pauseRecording = useCallback(

@@ -1,11 +1,7 @@
-import React, {memo, useCallback} from 'react';
+import React, {memo} from 'react';
 import {Button} from "../../../shared/components/button/button";
-import {selectStatus} from "../../../app/store/record-socket/selects";
-import {socketState} from "../../../app/store/record-socket/state";
 import {styled} from '@mui/material/styles';
 import {ReactComponent as IconRecord} from 'shared/components/icon/collection/record.svg';
-import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
-import {EventBus, RECORDING_EVENTS} from "../../../shared/utils/event-bus";
 
 
 const RecordButton = styled(Button)`
@@ -31,5 +27,4 @@ const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({isShow, onSta
 
 	);
 };
-
 export const StartRecordButton = memo(StartRecordButtonComponent)

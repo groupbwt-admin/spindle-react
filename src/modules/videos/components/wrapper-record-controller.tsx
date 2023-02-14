@@ -1,6 +1,5 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import styled from "@emotion/styled";
-import {selectIsShowController,} from "../../../app/store/record-socket/selects";
 import {Icon} from "../../../shared/components/icon/icon";
 import {ICON_COLLECTION} from "../../../shared/components/icon/icon-list";
 
@@ -9,7 +8,6 @@ interface IWrapperRecordController {
 }
 
 interface IControllerWrapper {
-	isShow: boolean,
 	isHorizontal: boolean,
 	isMouseUp: boolean
 }
@@ -18,7 +16,7 @@ const ControllerWrapper = styled.div<IControllerWrapper>`
 	position: fixed;
 	top: 40%;
 	left: 150px;
-	display: ${props => props.isShow ? 'flex' : 'none'};
+	display: flex;
 	flex-direction: ${props => props.isHorizontal ? 'row' : 'column'};
 	padding: ${props => props.isHorizontal ? '14px 30px 14px 24px' : '24px 18px'};
 	background: #000000;
@@ -54,7 +52,6 @@ const ControllerButton = styled.button`
 
 const body = document.querySelector('#root')
 const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({children}) => {
-	const isShowController = selectIsShowController()
 
 	const [x, setX] = useState('150px')
 	const [y, setY] = useState((window.innerHeight / 3) + 'px')
@@ -62,11 +59,6 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({c
 	const [isDown, setIsDown] = useState(false)
 	const [isColumn, setIsColumn] = useState(true);
 
-	function getFlag(e) {
-		return e
-	}
-
-	const flag = useMemo(() => getFlag(isDown), [isDown]);
 	const update = useCallback(
 		(e) => {
 			if (isDown && (e.buttons > 0)) {
@@ -75,10 +67,11 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({c
 				setControllerPosition({x: e.x - 40, y: e.y - 45})
 			}
 		},
-		[flag],
+		[isDown],
 	);
 
 	useEffect(() => {
+		console.log('effect')
 		window.addEventListener('mouseup', handelMouseUp)
 		if (isDown) {
 			window.addEventListener('mousemove', update)
@@ -109,7 +102,7 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({c
 			body?.removeEventListener('mouseleave', handelMouseUp)
 
 		};
-	}, [flag]);
+	}, [isDown]);
 
 	const handelMouseDown = (e) => {
 		setIsDown(true)
@@ -123,7 +116,6 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({c
 				left: x,
 				top: y,
 			}}
-			isShow={!isShowController}
 			isHorizontal={!isColumn}
 			isMouseUp={!isDown}
 		>
@@ -131,7 +123,7 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({c
 				onMouseDown={handelMouseDown}
 				onMouseUp={handelMouseUp}
 			><Icon
-				icon={ICON_COLLECTION.reset}/></ControllerButton>
+				icon={ICON_COLLECTION.drag_indicator}/></ControllerButton>
 			{children}
 		</ControllerWrapper>
 	);
