@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Player } from '@clappr/core';
+import HlsjsPlayback from '@clappr/hlsjs-playback';
 import {
 	ClickToPause,
 	ClosedCaptions,
@@ -12,7 +13,6 @@ import {
 	SpinnerThreeBounce,
 	Stats,
 } from '@clappr/plugins';
-import HlsjsPlayback from '@clappr/hlsjs-playback';
 
 export const VideoPlayer = () => {
 	const containerRef = React.useRef(null);

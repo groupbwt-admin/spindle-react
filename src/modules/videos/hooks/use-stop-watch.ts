@@ -1,12 +1,13 @@
-import {useState, useRef, useEffect, useMemo} from "react";
-import {format, addSeconds, millisecondsToSeconds} from 'date-fns'
-
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { addSeconds, format, millisecondsToSeconds } from 'date-fns';
 
 const formatMs = (milliseconds: number) => {
-	const helperDate = addSeconds(new Date(0), millisecondsToSeconds(milliseconds));
+	const helperDate = addSeconds(
+		new Date(0),
+		millisecondsToSeconds(milliseconds),
+	);
 	return format(helperDate, 'mm:ss');
 };
-
 
 export const useStopWatch = () => {
 	const [time, setTime] = useState(0);
@@ -17,7 +18,6 @@ export const useStopWatch = () => {
 	const interval = useRef<ReturnType<typeof setInterval>>();
 
 	const currentTime = useMemo(() => formatMs(time), [time]);
-
 
 	useEffect(() => {
 		if (startTime > 0) {
@@ -31,9 +31,9 @@ export const useStopWatch = () => {
 			}
 		}
 		return () => {
-			clearInterval(interval.current)
+			clearInterval(interval.current);
 			interval.current = undefined;
-		}
+		};
 	}, [startTime]);
 
 	const startTimer = () => {
@@ -60,6 +60,5 @@ export const useStopWatch = () => {
 		resetTimer,
 		isRunning,
 		time: currentTime,
-
 	};
 };

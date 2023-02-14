@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import styled from "@emotion/styled";
+
 import {Icon} from "../../../shared/components/icon/icon";
 import {ICON_COLLECTION} from "../../../shared/components/icon/icon-list";
 
@@ -52,7 +53,6 @@ const ControllerButton = styled.button`
 
 const body = document.querySelector('#root')
 const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({children}) => {
-
 	const [x, setX] = useState('150px')
 	const [y, setY] = useState((window.innerHeight / 3) + 'px')
 	const [controllerPosition, setControllerPosition] = useState({x: 150, y: window.innerHeight / 3})
@@ -71,7 +71,6 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({c
 	);
 
 	useEffect(() => {
-		console.log('effect')
 		window.addEventListener('mouseup', handelMouseUp)
 		if (isDown) {
 			window.addEventListener('mousemove', update)

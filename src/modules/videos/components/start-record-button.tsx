@@ -1,7 +1,10 @@
 import React, {memo} from 'react';
-import {Button} from "../../../shared/components/button/button";
+
 import {styled} from '@mui/material/styles';
+
 import {ReactComponent as IconRecord} from 'shared/components/icon/collection/record.svg';
+
+import {Button} from "../../../shared/components/button/button";
 
 
 const RecordButton = styled(Button)`

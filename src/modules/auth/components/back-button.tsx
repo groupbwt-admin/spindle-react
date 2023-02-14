@@ -1,10 +1,13 @@
 import * as React from 'react';
-import { Button } from 'shared/components/button/button';
 import { Link } from 'react-router-dom';
+
+import { css, styled } from '@mui/material/styles';
+
 import { AUTH_ROUTES } from 'shared/config/routes';
+
+import { Button } from 'shared/components/button/button';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
-import { css, styled } from '@mui/material/styles';
 
 const StyledButton = styled(Button)(
 	({ theme }) => css`

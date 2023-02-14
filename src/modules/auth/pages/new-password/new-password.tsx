@@ -1,14 +1,19 @@
 import { useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
-import { NewPasswordForm } from 'modules/auth/pages/new-password/components/new-password-form';
-import {AuthApi, ResetPasswordDto} from 'app/api/auth-api/auth-api';
-import { Typography } from 'shared/components/typography/typography';
-import { authState } from 'app/store/auth/state';
-import { AUTH_ROUTES } from 'shared/config/routes';
+import { AxiosError } from 'axios';
 import { BackButton } from 'modules/auth/components/back-button';
-import {AxiosError} from "axios";
+import { NewPasswordForm } from 'modules/auth/pages/new-password/components/new-password-form';
+
+import { styled } from '@mui/material/styles';
+
+import { AuthApi, ResetPasswordDto } from 'app/api/auth-api/auth-api';
+
+import { authState } from 'app/store/auth/state';
+
+import { AUTH_ROUTES } from 'shared/config/routes';
+
+import { Typography } from 'shared/components/typography/typography';
 
 const Container = styled('div')`
 	display: flex;

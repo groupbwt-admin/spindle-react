@@ -1,7 +1,7 @@
 {
 	"settings": {
 		"react": {
-			"version": "18.2"
+			"version": "detect"
 		}
 	},
 	"env": {
@@ -14,7 +14,14 @@
 		"plugin:react/recommended",
 		"plugin:@typescript-eslint/eslint-recommended",
 		"plugin:@typescript-eslint/recommended",
-		"plugin:react/jsx-runtime"
+		"prettier"
+	],
+	"plugins": [
+		"react",
+		"@typescript-eslint",
+		"prettier",
+		"simple-import-sort",
+		"import"
 	],
 	"globals": {
 		"Atomics": "readonly",
@@ -29,14 +36,48 @@
 		"sourceType": "module",
 		"project": "./tsconfig.json"
 	},
-	"plugins": ["react", "@typescript-eslint"],
 	"rules": {
+		"simple-import-sort/imports": [
+			"error",
+			{
+				"groups": [
+					// Packages `react` related packages come first.
+					["^react", "^@?\\w"],
+					// MUI packages.
+					["^(@mui)(/.*|$)"],
+					//Shared types packages
+					["^(shared/types)(/.*|$)"],
+					// Api packages.
+					["^(app/api)(/.*|$)"],
+					// Internal packages.
+					["^(app/store)(/.*|$)"],
+					//Rest shared packages
+					["^(shared/(constants|hooks|config|utils|services))(/.*|$)"],
+					// Components packages.
+					["^(shared/components)(/.*|$)"],
+					// Side effect imports.
+					["^\\u0000"],
+					// Parent imports. Put `..` last.
+					["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+					// Other relative imports. Put same-folder imports and `.` last.
+					["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+					// Style imports.
+					["^.+\\.?(css)$"]
+				]
+			}
+		],
+		"react/react-in-jsx-scope": "off",
 		"no-param-reassign": 0,
 		"no-mixed-spaces-and-tabs": 0,
 		"react-hooks/exhaustive-deps": 0,
-		"react/react-in-jsx-scope": 0,
-		"no-empty-function": "off",
-		"@typescript-eslint/no-empty-function": "off",
-		"@typescript-eslint/no-non-null-assertion": "off"
+		"no-sequences": [0, "SequenceExpression"],
+		"@typescript-eslint/no-non-null-assertion": 0,
+		"@typescript-eslint/no-empty-function": 0,
+		"no-duplicate-imports": [
+			"error",
+			{
+				"includeExports": true
+			}
+		]
 	}
 }

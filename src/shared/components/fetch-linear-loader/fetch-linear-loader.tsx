@@ -1,0 +1,15 @@
+import styled from '@emotion/styled';
+
+import { LinearProgress } from '@mui/material';
+
+const StyledLinearProgress = styled(LinearProgress)`
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 100;
+	width: 100%;
+`;
+
+export const FetchLinearLoader = () => {
+	return <StyledLinearProgress color="primary" />;
+};

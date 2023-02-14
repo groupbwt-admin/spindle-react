@@ -1,14 +1,18 @@
-import { useEffect } from 'react';
 import * as React from 'react';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { MainLayout } from 'shared/layout/main-layout';
+
 import { CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
+
+import { selectIsLoggedIn } from 'app/store/auth/selects';
 import {
-	selectIsLoggedIn,
-} from 'app/store/auth/selects';
-import { MainLayout } from 'shared/layout/main-layout';
+	selectIsLoadingUserData,
+	selectUserData,
+} from 'app/store/user/selects';
 import { userState } from 'app/store/user/state';
-import { selectIsLoadingUserData } from 'app/store/user/selects';
-import { useLocation } from 'react-router-dom';
+
 import { AUTH_ROUTES } from 'shared/config/routes';
 
 const SpinnerContainer = styled('div')`
@@ -22,8 +26,9 @@ const SpinnerContainer = styled('div')`
 export const AppLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const location = useLocation();
 	const isUserAuth = selectIsLoggedIn();
-	const isLoadingUserData = selectIsLoadingUserData();
+	const user = selectUserData();
 	const isAuthLayout = location.pathname.startsWith(AUTH_ROUTES.ROOT.path);
+	const isUserDataLoading = selectIsLoadingUserData();
 
 	useEffect(() => {
 		if (isUserAuth) {
@@ -31,7 +36,7 @@ export const AppLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
 		}
 	}, [isUserAuth]);
 
-	if (isLoadingUserData) {
+	if (isUserDataLoading) {
 		return (
 			<SpinnerContainer>
 				<CircularProgress />

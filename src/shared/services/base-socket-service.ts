@@ -1,6 +1,8 @@
-import socketIOClient, {Socket} from "socket.io-client";
-import {RECORD_SOCKET_PATH} from 'shared/config/variables';
-import {LocalStorageService} from "./local-storage-service";
+import socketIOClient, { Socket } from 'socket.io-client';
+
+import { RECORD_SOCKET_PATH } from 'shared/config/variables';
+
+import { LocalStorageService } from './local-storage-service';
 
 class _SocketService {
 	private _socket: Socket = socketIOClient(RECORD_SOCKET_PATH!, {
@@ -8,11 +10,11 @@ class _SocketService {
 			polling: {
 				extraHeaders: {
 					Authorization: `Bearer ${LocalStorageService.get('token')}`,
-				}
-			}
+				},
+			},
 		},
 		autoConnect: false,
-	})
+	});
 	get socket(): Socket {
 		return this._socket;
 	}
@@ -22,19 +24,19 @@ class _SocketService {
 	}
 
 	emit(type: string, payload?: object | void) {
-		this.socket.emit(type, payload && payload)
+		this.socket.emit(type, payload && payload);
 	}
 
 	save(type, fn) {
-		this.socket.emit(type, fn)
+		this.socket.emit(type, fn);
 	}
 
 	on(type: string, fn) {
-		this.socket.on(type, fn)
+		this.socket.on(type, fn);
 	}
 
 	off(type: string) {
-		this.socket.off(type)
+		this.socket.off(type);
 	}
 }
 

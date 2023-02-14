@@ -1,7 +1,9 @@
-import {ICON_COLLECTION} from "../../../shared/components/icon/icon-list";
 import React from "react";
-import {Icon} from "../../../shared/components/icon/icon";
 import styled from "@emotion/styled/macro";
+
+import {Icon} from "../../../shared/components/icon/icon";
+import {ICON_COLLECTION} from "../../../shared/components/icon/icon-list";
+
 import {StopWatch} from "./stop-watch";
 
 const ControllerButton = styled.button`

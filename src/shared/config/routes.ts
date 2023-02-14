@@ -37,5 +37,10 @@ export const VIDEO_ROUTES = {
 	VIDEO: {
 		path: '/videos/:id',
 		generate: (id: string) => generatePath('/videos/:id', { id }),
+		generateExternalPath: (id: string) =>
+			window.location.origin + generatePath('/videos/:id', { id }),
+	},
+	PROFILE: {
+		path: '/profile',
 	},
 };

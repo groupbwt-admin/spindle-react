@@ -1,15 +1,21 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { createTheme, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { BrowserRouter } from 'react-router-dom';
+import { isPast } from 'date-fns';
 import jwtDecode from 'jwt-decode';
-import { LocalStorageService } from './shared/services/local-storage-service';
-import reportWebVitals from './reportWebVitals';
-import { authState } from './app/store/auth/state';
+
+import { createTheme, ThemeProvider } from '@mui/material';
+
+import { IToken } from 'shared/types/token';
+
+import { authState } from 'app/store/auth/state';
+
+import { LocalStorageService } from 'shared/services/local-storage-service';
+
 import App from './app/app';
-import { IToken } from './shared/types/token';
+import reportWebVitals from './reportWebVitals';
 
 const theme = createTheme({
 	palette: {
@@ -44,10 +50,18 @@ const theme = createTheme({
 			fontWeight: 700,
 			color: '#231D2C',
 		},
+		h2: {
+			fontSize: '24px',
+			lineHeight: '39px',
+			fontWeight: 600,
+		},
 		h3: {
 			fontSize: '18px',
 			lineHeight: '24px',
 			fontWeight: 700,
+		},
+		h4: {
+			fontSize: '16px',
 		},
 		caption: {
 			fontSize: '1.125rem',
@@ -80,8 +94,7 @@ const theme = createTheme({
 				sizeSmall: {
 					padding: '8px 16px',
 					fontSize: '12px',
-					lineHeight: '18px'
-
+					lineHeight: '18px',
 				},
 				root: {
 					disabled: {
@@ -128,8 +141,19 @@ const theme = createTheme({
 				},
 			},
 		},
+		MuiTooltip: {
+			styleOverrides: {
+				tooltip: {
+					fontSize: '14px',
+					borderRadius: '10px',
+					backgroundColor: '#828CB1',
+				},
+			},
+		},
 	},
 });
+
+console.log(theme);
 
 const queryClient = new QueryClient();
 
@@ -138,9 +162,7 @@ const queryClient = new QueryClient();
 
 	if (savedToken) {
 		const decodedJwtToken: IToken = jwtDecode(LocalStorageService.get('token'));
-
-		const currentTime = Date.now() / 1000;
-		const isExpired = decodedJwtToken.exp <= currentTime;
+		const isExpired = isPast(decodedJwtToken.exp * 1000);
 
 		if (!isExpired) {
 			authState.setUser(savedToken);

@@ -1,11 +1,16 @@
-import { styled } from '@mui/material/styles';
-import { Typography } from 'shared/components/typography/typography';
 import { useMutation } from 'react-query';
+
+import { styled } from '@mui/material/styles';
+
 import { AuthApi } from 'app/api/auth-api/auth-api';
+
+import { selectUserData } from 'app/store/user/selects';
+
+import { useLogout } from 'shared/hooks/use-logout';
+
 import { Button } from 'shared/components/button/button';
 import { ButtonList } from 'shared/components/button-list/button-list';
-import { useLogout } from 'shared/hooks/use-logout';
-import {selectUserData} from "app/store/user/selects";
+import { Typography } from 'shared/components/typography/typography';
 
 const Title = styled(Typography)`
 	margin-top: 20px;
@@ -48,8 +53,8 @@ export const MustVerifyEmailPage = () => {
 		<Container>
 			<Title variant="h1">Verify your email address</Title>
 			<Description variant="body1">
-				Almost there! We’ve sent an email to {userData?.email} to verify
-				your email address and activate your account. The link in the email will
+				Almost there! We’ve sent an email to {userData?.email} to verify your
+				email address and activate your account. The link in the email will
 				expire in 24 hours.
 			</Description>
 			<Description variant="body1">Didn&apos;t receive the email?</Description>
@@ -60,7 +65,12 @@ export const MustVerifyEmailPage = () => {
 					fullWidth
 					onClick={handleResendEmail}
 				/>
-				<Button label="Sign Out" variant='outlined' fullWidth onClick={handleLogout} />
+				<Button
+					label="Sign Out"
+					variant="outlined"
+					fullWidth
+					onClick={handleLogout}
+				/>
 			</StyledButtonList>
 		</Container>
 	);

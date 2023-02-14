@@ -1,8 +1,8 @@
-import { forwardRef, InputHTMLAttributes, useId } from 'react';
 import * as React from 'react';
-import { InputLabel } from '@mui/material';
-import { InputBase, InputBaseProps } from '@mui/material';
-import { styled, css } from '@mui/material/styles';
+import { forwardRef, InputHTMLAttributes, useId } from 'react';
+
+import { InputBase, InputBaseProps, InputLabel } from '@mui/material';
+import { css, styled } from '@mui/material/styles';
 
 const AppInput = styled(InputBase)(
 	({ theme }) => css`
@@ -21,6 +21,7 @@ const AppInput = styled(InputBase)(
 				border-color: ${theme.palette.primary.main};
 			}
 		}
+
 		&.Mui-error input {
 			border-color: ${theme.palette.error.main};
 		}

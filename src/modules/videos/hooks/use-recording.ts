@@ -1,13 +1,16 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigate} from "react-router-dom";
+
+import {socketState} from 'app/store/record-socket/state';
+
 import {VIDEO_ROUTES} from "shared/config/routes";
 import {RECORDING_STATUS, SOCKET_ACTIONS} from "shared/constants/record-statuses";
-import {socketState} from 'app/store/record-socket/state';
-import {SocketService} from "../../../shared/services/base-socket-service";
+
 import {selectStatus} from "../../../app/store/record-socket/selects";
+import {SocketService} from "../../../shared/services/base-socket-service";
 
 export const useRecording = () => {
-	const [isMicrophoneOn, setIsMicrophoneOn] = useState(false)
+	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true)
 	const [counterBeforeStart, setCounterBeforeStart] = useState<number>(3)
 
 	const mediaRecorder = useRef<MediaRecorder | null>(null);

@@ -1,14 +1,15 @@
 import * as React from 'react';
-import {styled} from '@mui/material/styles';
-import {Container} from '@mui/material';
 import {AppMenu} from 'shared/layout/components/app-menu';
-import {useControlVideo} from "../../modules/videos/hooks/use-record-video";
+
+import {Container} from '@mui/material';
+import {styled} from '@mui/material/styles';
+
 import {RecordContext} from "../../modules/videos/context/record-context";
+import {useControlVideo} from "../../modules/videos/hooks/use-record-video";
 
 const MainLayoutContainer = styled(Container)`
 	display: flex;
 	height: 100vh;
-	width: 100vw;
 `;
 
 const Main = styled('main')`

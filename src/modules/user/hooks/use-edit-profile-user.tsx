@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import { useMutation } from 'react-query';
+import { EditUserForm } from 'modules/user/components/edit-user-form';
+
+import { UserApi } from 'app/api/user-api/user-api';
+
+import { selectUserData } from 'app/store/user/selects';
+import { userState } from 'app/store/user/state';
+
+import { Button } from 'shared/components/button/button';
 import { Modal } from 'shared/components/modal';
 import { Typography } from 'shared/components/typography/typography';
-import { Button } from 'shared/components/button/button';
-import { EditUserForm } from 'modules/user/components/edit-user-form';
-import { useMutation } from 'react-query';
-import { UserApi } from 'app/api/user-api/user-api';
-import { userState } from 'app/store/user/state';
-import { selectUserData } from 'app/store/user/selects';
 
 export function useEditProfileUser() {
 	const [isModalOpen, setIsModalOpen] = useState(false);

@@ -1,8 +1,10 @@
 import React, { forwardRef, InputHTMLAttributes } from 'react';
+
 import { Checkbox as ExternalCheckbox, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
+
 import { Icon } from 'shared/components/icon/icon';
+import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 
 const StyledCheckbox = styled(ExternalCheckbox)`
 	margin-right: 12px;
@@ -25,30 +27,31 @@ export interface CheckboxProps {
 	label?: React.ReactNode | string;
 	tabIndex?: InputHTMLAttributes<HTMLInputElement>['tabIndex'];
 	onChange?: InputHTMLAttributes<HTMLInputElement>['onChange'];
+	onClick?: InputHTMLAttributes<HTMLLabelElement>['onClick'];
 }
 
 const RootCheckbox: React.ForwardRefRenderFunction<
 	HTMLInputElement,
 	CheckboxProps
-> = ({ checked, label, className, ...props }, ref) => {
+> = ({ checked, label, className, onClick, ...props }, ref) => {
 	return (
-		<div className={className}>
-			<FormControlLabel
-				value="start"
-				control={
-					<StyledCheckbox
-						icon={<Icon icon={ICON_COLLECTION.empty_checkbox} />}
-						checked={checked}
-						inputProps={{ 'aria-label': 'controlled' }}
-						size="small"
-						inputRef={ref}
-						{...props}
-					/>
-				}
-				label={label}
-				labelPlacement="end"
-			/>
-		</div>
+		<FormControlLabel
+			value="start"
+			control={
+				<StyledCheckbox
+					icon={<Icon icon={ICON_COLLECTION.empty_checkbox} />}
+					checked={checked}
+					inputProps={{ 'aria-label': 'controlled' }}
+					size="small"
+					inputRef={ref}
+					{...props}
+				/>
+			}
+			label={label || false}
+			labelPlacement="end"
+			className={className}
+			onClick={onClick}
+		/>
 	);
 };
 

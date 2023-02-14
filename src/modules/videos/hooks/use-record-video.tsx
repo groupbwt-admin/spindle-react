@@ -1,9 +1,10 @@
+import { selectIsRecording, selectStatus} from "../../../app/store/record-socket/selects";
+import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
 import {Countdown} from "../components/countdown";
 import {RecordControlPanel} from "../components/record-controll-panel";
-import {useRecording} from "./use-recording";
-import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
-import { selectIsRecording, selectStatus} from "../../../app/store/record-socket/selects";
 import {WrapperRecordController} from "../components/wrapper-record-controller";
+
+import {useRecording} from "./use-recording";
 
 export const useControlVideo = () => {
 	const status = selectStatus()

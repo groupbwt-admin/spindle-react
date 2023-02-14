@@ -1,8 +1,9 @@
 import React, {memo, useMemo} from 'react';
 import styled from "@emotion/styled/macro";
-import {useStopWatch} from "../hooks/use-stop-watch";
-import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
+
 import {selectStatus} from "../../../app/store/record-socket/selects";
+import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
+import {useStopWatch} from "../hooks/use-stop-watch";
 
 const ControllerStopWatch = styled.p`
 	font-family: 'Catamaran';

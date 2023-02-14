@@ -1,7 +1,8 @@
-import {devtools,} from 'valtio/utils'
 import {proxy} from 'valtio';
-import {SocketService} from "../../../shared/services/base-socket-service";
+import {devtools,} from 'valtio/utils'
+
 import {RECORDING_STATUS, SOCKET_ACTIONS} from "../../../shared/constants/record-statuses";
+import {SocketService} from "../../../shared/services/base-socket-service";
 
 interface ISocket {
 	isLoading: boolean
