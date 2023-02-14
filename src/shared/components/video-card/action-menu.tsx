@@ -16,7 +16,7 @@ const StyledMenu = styled(Menu)`
 	}
 `;
 
-const StyledButton = styled(IconButton)`
+const StyledMenuButton = styled(IconButton)`
 	&.open {
 		opacity: 1 !important;
 	}
@@ -90,7 +90,7 @@ export const ActionMenu: React.FC<VideoActionMenuProps> = ({
 
 	return (
 		<>
-			<StyledButton
+			<StyledMenuButton
 				onClick={handleClick}
 				aria-controls={open ? 'video-menu' : undefined}
 				aria-haspopup="true"
@@ -98,7 +98,7 @@ export const ActionMenu: React.FC<VideoActionMenuProps> = ({
 				className={clsx(className, open && 'open')}
 			>
 				<Icon icon={ICON_COLLECTION.action_menu} />
-			</StyledButton>
+			</StyledMenuButton>
 			<StyledMenu
 				id="video-menu"
 				anchorEl={anchorEl}
