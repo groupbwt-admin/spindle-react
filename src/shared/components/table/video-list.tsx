@@ -5,7 +5,10 @@ import styled from '@emotion/styled/macro';
 import { IVideo } from 'shared/types/video';
 
 import { Button } from 'shared/components/button/button';
-import { VideoCard } from 'shared/components/video-card/video-card';
+import {
+	VideoCard,
+	VideoCardProps,
+} from 'shared/components/video-card/video-card';
 
 const VideoContainer = styled(InfiniteScroll)`
 	width: 100%;
@@ -60,13 +63,14 @@ const BtnContainer = styled.div`
 
 interface VideoListProps {
 	list: IVideo[];
+	activeActions?: VideoCardProps['activeActions'];
 	selectedVideos: Record<IVideo['id'], IVideo>;
 	isVideoLoading?: boolean;
 	hasNextPage?: boolean;
 	isSelectMode: boolean;
 	loadNextPage: () => void;
 	onChecked: (IVideo) => void;
-	onDeleteVideo: (video: IVideo) => void;
+	onDeleteVideo?: (video: IVideo) => void;
 }
 
 export const VideoList: React.FC<VideoListProps> = ({
@@ -76,6 +80,7 @@ export const VideoList: React.FC<VideoListProps> = ({
 	loadNextPage,
 	selectedVideos,
 	list,
+	activeActions,
 	onChecked,
 	onDeleteVideo,
 }) => {
@@ -102,6 +107,7 @@ export const VideoList: React.FC<VideoListProps> = ({
 						key={item.id}
 						video={item}
 						checked={isCardChecked(item.id)}
+						activeActions={activeActions}
 						onChecked={onChecked}
 						isSelectMode={isSelectMode}
 						onDelete={onDeleteVideo}

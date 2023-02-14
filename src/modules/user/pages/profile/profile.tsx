@@ -1,6 +1,4 @@
 import styled from '@emotion/styled/macro';
-import { ActionPanel } from 'modules/user/pages/profile/components/action-panel';
-import { VideoList } from 'modules/user/pages/profile/components/video-list';
 import { useProfile } from 'modules/user/pages/profile/use-profile';
 
 import { Avatar } from 'shared/components/avatar/avatar';
@@ -12,6 +10,8 @@ import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { SearchInput } from 'shared/components/search-input/search-input';
 import { SortDropdown } from 'shared/components/sort-dropdown/sort-dropdown';
+import { ActionPanel } from 'shared/components/table/action-panel';
+import { VideoList } from 'shared/components/table/video-list';
 import { Typography } from 'shared/components/typography/typography';
 import { VideoListSkeleton } from 'shared/components/video-list-skeleton/video-list-skeleton';
 

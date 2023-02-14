@@ -246,9 +246,7 @@ export function useProfile() {
 		if (!navigator.clipboard || isLinksCopied) return;
 
 		const linksToCopy = selectedVideosArray.reduce((acc, cur) => {
-			return cur.id
-				? acc + `${VIDEO_ROUTES.VIDEO.generateExternalPath(cur.id)}\n`
-				: acc;
+			return acc + `${VIDEO_ROUTES.VIDEO.generateExternalPath(cur.id)}\n`;
 		}, '');
 		await navigator.clipboard.writeText(linksToCopy);
 		setIsLinksCopied(true);

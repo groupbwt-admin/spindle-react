@@ -1,3 +1,5 @@
+import download from 'downloadjs';
+
 import { ITag, IVideo, IVideoSign } from 'shared/types/video';
 
 import { RequestSortType } from 'shared/constants/request-sort-type';
@@ -88,10 +90,11 @@ export class VideoApiService implements VideoApiInterface {
 		return payload.data.data;
 	};
 
-	downloadVideoById = async (videoId) => {
-		return await this.http.get(`/videos/${videoId}/download`, {
+	downloadVideoById = async ({ id, title }) => {
+		const res = await this.http.get(`/videos/${id}/download`, {
 			responseType: 'blob',
 		});
+		download(res.data, title, res.headers.contentType);
 	};
 
 	deleteVideoById = async (videoId) => {

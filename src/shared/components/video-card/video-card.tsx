@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import download from 'downloadjs';
 import PreviewPlaceholder from 'shared/assets/images/no-preview-placeholder.png';
 
 import {
@@ -27,7 +26,10 @@ import { Checkbox } from 'shared/components/checkbox/checkbox';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { Typography } from 'shared/components/typography/typography';
-import { ActionMenu } from 'shared/components/video-card/action-menu';
+import {
+	ActionMenu,
+	VideoActionMenuProps,
+} from 'shared/components/video-card/action-menu';
 
 const StyledCheckbox = styled(Checkbox)`
 	position: absolute;
@@ -159,30 +161,28 @@ const StyledBadgeIcon = styled(Icon)`
 	margin-left: 5px;
 `;
 
-interface VideoCardProps {
+export interface VideoCardProps {
 	video: IVideo;
+	activeActions?: VideoActionMenuProps['activeActions'];
 	isSelectMode: boolean;
 	className?: string;
 	checked: boolean;
 	onChecked: (IVideo) => void;
-	onDelete: (video: IVideo) => void;
+	onDelete?: (video: IVideo) => void;
 }
 
 export const VideoCard: React.FC<VideoCardProps> = ({
 	checked,
 	isSelectMode,
 	video,
+	activeActions,
 	className,
 	onChecked,
 	onDelete,
 }) => {
 	const navigate = useNavigate();
 	const copyLinkTimerRef = useRef<ReturnType<typeof setTimeout>>();
-	const downloadVideoMutation = useMutation(VideoApi.downloadVideoById, {
-		onSuccess: async (fileData) => {
-			download(fileData.data, video.title, fileData.headers.contentType);
-		},
-	});
+	const downloadVideoMutation = useMutation(VideoApi.downloadVideoById);
 
 	const [isLinkCopied, setIsLinkCopied] = useState(false);
 
@@ -208,12 +208,12 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 
 	const handleDownload = (e) => {
 		e.stopPropagation();
-		downloadVideoMutation.mutate(video.id);
+		downloadVideoMutation.mutate({ id: video.id, title: video.title });
 	};
 
 	const handleOpenDeleteModal = (e) => {
 		e.stopPropagation();
-		onDelete(video);
+		onDelete && onDelete(video);
 	};
 
 	const handleCopyLink = async (e) => {
@@ -280,6 +280,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 				/>
 				<StyledActionMenu
 					isLinkCopied={isLinkCopied}
+					activeActions={activeActions}
 					onDownload={handleDownload}
 					onDelete={handleOpenDeleteModal}
 					onCopyLink={handleCopyLink}
