@@ -90,9 +90,11 @@ export class VideoApiService implements VideoApiInterface {
 		return payload.data;
 	};
 
-	getVideoTags = async (): Promise<ITag[]> => {
-		const payload = await this.http.get(`/tags`, { params: { take: 50 } });
-		return payload.data.data;
+	getVideoTags = async ({ userId }): Promise<ITag[]> => {
+		const payload = await this.http.get(`/tags`, {
+			params: { take: 50, userId },
+		});
+		return payload.data;
 	};
 
 	downloadVideoById = async ({ id, title }) => {
