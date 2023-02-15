@@ -6,7 +6,7 @@ import {socketState} from 'app/store/record-socket/state';
 import {VIDEO_ROUTES} from "shared/config/routes";
 import {RECORDING_STATUS, SOCKET_ACTIONS} from "shared/constants/record-statuses";
 
-import {selectStatus} from "../../../app/store/record-socket/selects";
+import {selectIsRecording, selectStatus} from "../../../app/store/record-socket/selects";
 import {SocketService} from "../../../shared/services/base-socket-service";
 
 export const useRecording = () => {
@@ -59,13 +59,15 @@ export const useRecording = () => {
 			}
 
 			const stream: MediaStream = new MediaStream(tracks);
+
 			stream.getVideoTracks()[0].onended = (e) => {
 				stream.getTracks().map((track) => {
 					track.stop();
 				});
-				isCancel ? prevCancelStream() : stopRecording();
+				isCancel.current ? prevCancelStream() : stopRecording()
 			}
-			stream.getAudioTracks()[0].enabled = isMicrophoneOn
+			stream.getAudioTracks()[0].enabled = true
+			setIsMicrophoneOn(true)
 			const mediaRecorderLocal = new MediaRecorder(stream);
 
 			mediaRecorderLocal.onstart = () => {
@@ -120,7 +122,7 @@ export const useRecording = () => {
 				return newValue
 			})
 		},
-		[],
+		[isMicrophoneOn],
 	);
 
 	function prevCancelStream() {
@@ -138,7 +140,6 @@ export const useRecording = () => {
 	const stopRecording = useCallback(
 		async () => {
 			try {
-
 				mediaRecorder.current?.stop();
 				mediaRecorder.current?.stream.getTracks().map((track) => {
 					track.stop();
@@ -152,8 +153,9 @@ export const useRecording = () => {
 				socketState.setStatus(RECORDING_STATUS.error);
 			}
 		},
-		[],
+		[status],
 	);
+
 	const resetRecording = () => {
 		mediaRecorder.current?.stop();
 		mediaRecorder.current?.stream.getTracks().map((track) => {

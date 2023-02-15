@@ -1,12 +1,16 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { addSeconds, format, millisecondsToSeconds } from 'date-fns';
+import {useEffect, useMemo, useRef, useState} from 'react';
+import {addMinutes, addSeconds, format, millisecondsToMinutes, millisecondsToSeconds} from 'date-fns';
 
 const formatMs = (milliseconds: number) => {
 	const helperDate = addSeconds(
 		new Date(0),
 		millisecondsToSeconds(milliseconds),
 	);
-	return format(helperDate, 'mm:ss');
+	const helperHourDate = addMinutes(
+		new Date(Date.UTC(2018, 11, 1, -2, 0, 0)),
+		millisecondsToMinutes(milliseconds),
+	);
+	return milliseconds < 3600000 ? format(helperDate, 'mm:ss'): format(helperHourDate, 'kk:mm');
 };
 
 export const useStopWatch = () => {
