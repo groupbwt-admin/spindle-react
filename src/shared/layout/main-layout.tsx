@@ -5,7 +5,7 @@ import {Container} from '@mui/material';
 import {styled} from '@mui/material/styles';
 
 import {RecordContext} from "../../modules/videos/context/record-context";
-import {useControlVideo} from "../../modules/videos/hooks/use-record-video";
+import {useRecordVideo} from "../../modules/videos/hooks/use-record-video";
 
 const MainLayoutContainer = styled(Container)`
 	display: flex;
@@ -21,7 +21,7 @@ const Main = styled('main')`
 
 
 export const MainLayout: React.FC<React.PropsWithChildren> = ({children}) => {
-	const {models: {recordWidget}, commands: {startRecording}} = useControlVideo()
+	const {models: {recordWidget}, commands: {startRecording}} = useRecordVideo()
 
 	return (
 		<RecordContext.Provider value={{isShow: true, startRecording: startRecording}}>

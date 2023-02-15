@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 
 import {socketState} from 'app/store/record-socket/state';
@@ -6,18 +6,20 @@ import {socketState} from 'app/store/record-socket/state';
 import {VIDEO_ROUTES} from "shared/config/routes";
 import {RECORDING_STATUS, SOCKET_ACTIONS} from "shared/constants/record-statuses";
 
-import {selectIsRecording, selectStatus} from "../../../app/store/record-socket/selects";
+import {selectAuthUserData} from "../../../app/store/auth/selects";
+import {selectStatus} from "../../../app/store/record-socket/selects";
 import {SocketService} from "../../../shared/services/base-socket-service";
 
 export const useRecording = () => {
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true)
 	const [counterBeforeStart, setCounterBeforeStart] = useState<number>(3)
-
 	const mediaRecorder = useRef<MediaRecorder | null>(null);
 	const isCancel = useRef(false);
 	const status = selectStatus()
 	const navigate = useNavigate()
+	const user = selectAuthUserData()
 	useEffect(() => {
+		if (!user) return
 		socketState.onConnectListener()
 		socketState.onDisconnectedListener(() => {
 				if (mediaRecorder.current) {
@@ -112,18 +114,15 @@ export const useRecording = () => {
 		[status],
 	);
 
-	const toggleMicrophone = useCallback(
-		() => {
-			setIsMicrophoneOn((prevValue) => {
-				const newValue = !prevValue;
-				if (mediaRecorder.current) {
-					mediaRecorder.current.stream.getAudioTracks()[0].enabled = newValue
-				}
-				return newValue
-			})
-		},
-		[isMicrophoneOn],
-	);
+	const toggleMicrophone = useCallback(() => {
+		setIsMicrophoneOn((prevValue) => {
+			const newValue = !prevValue;
+			if (mediaRecorder.current) {
+				mediaRecorder.current.stream.getAudioTracks()[0].enabled = newValue
+			}
+			return newValue
+		})
+	}, [isMicrophoneOn]);
 
 	function prevCancelStream() {
 		isCancel.current = true

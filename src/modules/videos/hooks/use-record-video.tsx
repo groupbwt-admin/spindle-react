@@ -6,7 +6,7 @@ import {WrapperRecordController} from "../components/wrapper-record-controller";
 
 import {useRecording} from "./use-recording";
 
-export const useControlVideo = () => {
+export const useRecordVideo = () => {
 	const status = selectStatus()
 	const isRecording = selectIsRecording()
 	const {
@@ -33,7 +33,7 @@ export const useControlVideo = () => {
 													resetRecording={resetRecording}
 													toggleMicrophone={toggleMicrophone}
 													isMuted={isMicrophoneOn}
-													isPaused={status == RECORDING_STATUS.paused}/>
+													isPaused={status === RECORDING_STATUS.paused}/>
 		</WrapperRecordController>
 	const countDownView = (status === RECORDING_STATUS.idle) &&
 		<Countdown onCancel={prevCancelStream} count={counterBeforeStart}/>
