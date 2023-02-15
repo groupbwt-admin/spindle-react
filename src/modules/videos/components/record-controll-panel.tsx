@@ -21,7 +21,7 @@ const ControllerButton = styled.button`
 
 
 interface IRecordControlPanel {
-	stopRecording: () => void,
+	onVideoSaved: () => void,
 	resumeRecording: () => void,
 	pauseRecording: () => void,
 	resetRecording: () => void,
@@ -31,7 +31,7 @@ interface IRecordControlPanel {
 }
 
 const RecordControlPanelComponent: React.FC<IRecordControlPanel> = ({
-																																			stopRecording,
+																																			onVideoSaved,
 																																			resumeRecording,
 																																			pauseRecording,
 																																			resetRecording,
@@ -41,7 +41,7 @@ const RecordControlPanelComponent: React.FC<IRecordControlPanel> = ({
 																																		}) => {
 	return (
 		<>
-			<ControllerButton onClick={stopRecording}><Icon icon={ICON_COLLECTION.stop}/></ControllerButton>
+			<ControllerButton onClick={onVideoSaved}><Icon icon={ICON_COLLECTION.stop}/></ControllerButton>
 			{
 				isPaused ?
 					<ControllerButton

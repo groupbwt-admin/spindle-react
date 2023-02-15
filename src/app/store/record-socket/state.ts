@@ -1,23 +1,23 @@
 import {proxy} from 'valtio';
 import {devtools,} from 'valtio/utils'
 
-import {RECORDING_STATUS, SOCKET_ACTIONS} from "../../../shared/constants/record-statuses";
-import {SocketService} from "../../../shared/services/base-socket-service";
+import {RECORDING_STATUS, SOCKET_ACTIONS} from "shared/constants/record-statuses";
+import {SocketService} from "shared/services/base-socket-service";
 
 interface ISocket {
 	isLoading: boolean
 	error: string
 	isConnect: boolean
+	recordStatus: string,
+	isRecording: boolean
 	emit: (data: IEmitProps) => void;
 	save: (type: string, fn: (video: object) => void) => void
 	connect: () => void,
+	close: () => void,
 	onConnectListener: () => void,
 	onDisconnectedListener: (stopRecording: () => void) => void,
 	unfollowListener: (type: string) => void,
-	close: () => void,
 	setStatus: (status: string) => void,
-	recordStatus: string,
-	isRecording: boolean
 	setIsRecording: (isShow: boolean) => void,
 
 }
@@ -35,10 +35,7 @@ export const socketState = proxy<ISocket>(
 		isConnect: false,
 		recordStatus: RECORDING_STATUS.permission_requested,
 		isRecording: false,
-		setIsRecording(isShow) {
-			this.isRecording = isShow
-		},
-		emit(data: IEmitProps) {
+		emit(data) {
 			if (this.recordStatus !== RECORDING_STATUS.reset) {
 				SocketService.emit(data.type, data.payload)
 			}
@@ -50,6 +47,10 @@ export const socketState = proxy<ISocket>(
 			if (!SocketService.socket.connected) {
 				SocketService.socket.connect()
 			}
+		},
+		close() {
+			SocketService.socket.close()
+			this.isConnect = false
 		},
 		onConnectListener() {
 			SocketService.on(SOCKET_ACTIONS.connect, () => {
@@ -69,15 +70,13 @@ export const socketState = proxy<ISocket>(
 				this.isConnect = false
 			}
 		},
-		close() {
-			SocketService.socket.close()
-			this.isConnect = false
-		},
-
-
 		setStatus(status) {
 			this.recordStatus = status
 		},
+		setIsRecording(isShow) {
+			this.isRecording = isShow
+		},
+
 	},
 )
 

@@ -6,27 +6,30 @@ import {ReactComponent as IconRecord} from 'shared/components/icon/collection/re
 
 import {Button} from "../../../shared/components/button/button";
 
+interface IRecordButton {
+	isRecording: boolean
+}
 
-const RecordButton = styled(Button)`
-	max-width: 190px;
-	color: #ffffff;
-	position: fixed;
-	top: 24px;
-	right: 32px;
+const RecordButton = styled(Button)<IRecordButton>`
+  max-width: 190px;
+  color: #ffffff;
+  span svg circle {
+    stroke: ${props => props.isRecording && 'red'};
+  }
 `;
 
 interface IStartRecordButton {
-	isShow: boolean,
+	isRecording: boolean,
 	onStartRecording: () => void
 }
 
-const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({isShow, onStartRecording}) => {
-	if (!isShow) return null
+const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({isRecording, onStartRecording}) => {
 	return (
 		<RecordButton
-			label="Start Recording"
+			isRecording = {isRecording}
+			label={isRecording ? "Recording" : "Start Recording"}
 			startIcon={<IconRecord/>}
-			onClick={onStartRecording}/>
+			onClick={isRecording ? undefined : onStartRecording}/>
 
 	);
 };

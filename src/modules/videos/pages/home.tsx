@@ -1,10 +1,8 @@
 import * as React from 'react';
 import styled from '@emotion/styled/macro';
 
-import {Button} from 'shared/components/button/button';
 import {EmptyVideoList} from 'shared/components/empty-video-llist/empty-video-list';
 import {Filter} from 'shared/components/filter/filter';
-import {ReactComponent as IconRecord} from 'shared/components/icon/collection/record.svg';
 import {SearchInput} from 'shared/components/search-input/search-input';
 import {SortDropdown} from 'shared/components/sort-dropdown/sort-dropdown';
 import {ActionPanel} from 'shared/components/table/action-panel';
@@ -12,6 +10,7 @@ import {VideoList} from 'shared/components/table/video-list';
 import {Typography} from 'shared/components/typography/typography';
 import {VideoListSkeleton} from 'shared/components/video-list-skeleton/video-list-skeleton';
 
+import {StartRecordButton} from "../components/start-record-button";
 import {useRecordContext} from "../hooks/use-record-context";
 
 import {useHome} from './use-home';
@@ -52,10 +51,6 @@ const Title = styled(Typography)`
 	flex-shrink: 0;
 `;
 
-const RecordButton = styled(Button)`
-	max-width: 190px;
-	color: #ffffff;
-`;
 
 export const HomePage = () => {
 	const [value, setValue] = React.useState(0);
@@ -68,20 +63,12 @@ export const HomePage = () => {
 		<>
 			<HeaderContainer>
 				<Title variant="h1">My videos</Title>
-				{!isRecording && <RecordButton
-					label="Start Recording"
-					startIcon={<IconRecord/>}
-					onClick={startRecording}
-				/>}
+
+				<StartRecordButton isRecording={isRecording} onStartRecording={startRecording}/>
+
 
 			</HeaderContainer>
 			<ContentContainer>
-				{/*<TabsList value={value} handleChange={handleChange}>*/}
-				{/*	<Tab label="My videos" />*/}
-				{/*	<Tab label="Shared videos" />*/}
-				{/*	<Tab label="All videos" />*/}
-				{/*</TabsList>*/}
-
 				<FiltersPanel>
 					<SearchInput
 						value={models.searchQuery}

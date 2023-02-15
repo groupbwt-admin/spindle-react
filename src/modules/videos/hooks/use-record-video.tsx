@@ -16,18 +16,18 @@ export const useRecordVideo = () => {
 		},
 		command: {
 			startRecording,
-			stopRecording,
+			onVideoSaved,
 			resumeRecording,
 			pauseRecording,
 			resetRecording,
 			toggleMicrophone,
-			prevCancelStream,
+			onCancelPreview,
 		}
 	} = useRecording();
 
 
 	const recordControlPanel = isRecording && <WrapperRecordController>
-			<RecordControlPanel stopRecording={stopRecording}
+			<RecordControlPanel onVideoSaved={onVideoSaved}
 													resumeRecording={resumeRecording}
 													pauseRecording={pauseRecording}
 													resetRecording={resetRecording}
@@ -36,7 +36,7 @@ export const useRecordVideo = () => {
 													isPaused={status === RECORDING_STATUS.paused}/>
 		</WrapperRecordController>
 	const countDownView = (status === RECORDING_STATUS.idle) &&
-		<Countdown onCancel={prevCancelStream} count={counterBeforeStart}/>
+		<Countdown onCancel={onCancelPreview} count={counterBeforeStart}/>
 
 	const recordWidget = <>
 		{recordControlPanel}

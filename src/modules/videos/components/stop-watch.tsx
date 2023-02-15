@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react';
+import React, {memo, useEffect} from 'react';
 import styled from "@emotion/styled/macro";
 
 import {selectStatus} from "../../../app/store/record-socket/selects";
@@ -22,17 +22,20 @@ export const StopWatchComponent = () => {
 		time
 	} = useStopWatch()
 	const status = selectStatus()
-	const watchStatus = useMemo(
-		() => {
-			status === RECORDING_STATUS.recording && startTimer()
-			status === RECORDING_STATUS.stopped && pauseTimer()
-			status === RECORDING_STATUS.paused && pauseTimer()
-			status === RECORDING_STATUS.error && resetTimer()
-			status === RECORDING_STATUS.permission_requested && resetTimer()
-			status === RECORDING_STATUS.idle && resetTimer()
-		},
-		[status],
-	);
+
+	const statusFn = {
+		[RECORDING_STATUS.recording]: () => startTimer(),
+		[RECORDING_STATUS.stopped]: () => pauseTimer(),
+		[RECORDING_STATUS.paused]: () => pauseTimer(),
+		[RECORDING_STATUS.error]: () => resetTimer(),
+		[RECORDING_STATUS.permission_requested]: () => resetTimer(),
+		[RECORDING_STATUS.idle]: () => resetTimer(),
+	}
+
+	useEffect(() => {
+		statusFn[status]()
+	}, [status]);
+
 
 	return (
 		<ControllerStopWatch>{time}</ControllerStopWatch>

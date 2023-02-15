@@ -10,7 +10,7 @@ const formatMs = (milliseconds: number) => {
 		new Date(Date.UTC(2018, 11, 1, -2, 0, 0)),
 		millisecondsToMinutes(milliseconds),
 	);
-	return milliseconds < 3600000 ? format(helperDate, 'mm:ss'): format(helperHourDate, 'kk:mm');
+	return milliseconds < 3600000 ? format(helperDate, 'mm:ss') : format(helperHourDate, 'kk:mm');
 };
 
 export const useStopWatch = () => {
