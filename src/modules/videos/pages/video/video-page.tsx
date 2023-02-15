@@ -12,9 +12,18 @@ import { getUserAvatarURL } from 'shared/utils/get-file-url';
 import { Avatar } from 'shared/components/avatar/avatar';
 import { Button } from 'shared/components/button/button';
 import { ReactComponent as IconRecord } from 'shared/components/icon/collection/record.svg';
+import { Icon } from 'shared/components/icon/icon';
+import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { TagsAutocomplete } from 'shared/components/tags-autocomplete/tags-autocomplete';
 import { Typography } from 'shared/components/typography/typography';
 import { ActionMenu } from 'shared/components/video-card/action-menu';
+
+const VideoPageContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+	margin-bottom: 40px;
+`;
 
 const HeaderContainer = styled.div`
 	display: flex;
@@ -27,11 +36,13 @@ const DetailedInfoContainer = styled.div`
 	flex-wrap: wrap;
 	width: 100%;
 	max-width: 890px;
+	margin: 0 auto;
 `;
 
 const ActionsContainer = styled.div`
 	display: flex;
 	justify-content: flex-end;
+	align-items: center;
 	column-gap: 12px;
 	padding: 16px 0;
 
@@ -56,6 +67,7 @@ const StyledVideo = styled.video`
 	width: 100%;
 	aspect-ratio: 2/1;
 	border-radius: 10px;
+	margin-bottom: 16px;
 `;
 
 const StyledAvatar = styled(Avatar)`
@@ -73,6 +85,12 @@ const RecordButton = styled(Button)`
 	max-width: 190px;
 	color: #ffffff;
 	justify-self: flex-start;
+`;
+
+const StyledButtonIcon = styled(Icon)`
+	width: 24px;
+	height: 24px;
+	margin-left: 4px;
 `;
 
 export const VideoPage: React.FC = () => {
@@ -93,18 +111,32 @@ export const VideoPage: React.FC = () => {
 	if (!videoUrl.data?.url || !video) return <></>;
 
 	return (
-		<>
+		<VideoPageContainer>
 			<HeaderContainer>
 				<Title variant="h1">My videos</Title>
 				<RecordButton label="Start Recording" startIcon={<IconRecord />} />
 			</HeaderContainer>
 			<StyledVideo autoPlay controls src={videoUrl.data.url} />
 			{/*<VideoPlayer />*/}
-			<Title variant="h1">Figma project one - august 2022</Title>
+			<Title variant="h1">{video.title}</Title>
 			<ActionsContainer>
-				<ViewsCount variant="body1">4 views</ViewsCount>
-				<Button label="Copy link" color="secondary" variant="outlined" />
-				<Button label="Download" color="secondary" variant="outlined" />
+				<ViewsCount variant="body1">
+					{video.viewsCount === 1
+						? `${video.viewsCount} view`
+						: `${video.viewsCount} views`}
+				</ViewsCount>
+				<Button
+					label="Copy link"
+					color="secondary"
+					variant="outlined"
+					endIcon={<StyledButtonIcon icon={ICON_COLLECTION.copy_link} />}
+				/>
+				<Button
+					label="Download"
+					color="secondary"
+					variant="outlined"
+					endIcon={<StyledButtonIcon icon={ICON_COLLECTION.download} />}
+				/>
 				<ActionMenu
 					isLinkCopied={false}
 					onDownload={() => {}}
@@ -128,6 +160,6 @@ export const VideoPage: React.FC = () => {
 				</div>
 				<TagsAutocomplete />
 			</DetailedInfoContainer>
-		</>
+		</VideoPageContainer>
 	);
 };
