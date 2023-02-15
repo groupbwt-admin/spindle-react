@@ -16,6 +16,7 @@ const StyledButton = styled(ExternalButton)`
 	&.MuiButton-outlinedSecondary {
 		color: ${({ theme }) => theme.palette.text.primary};
 		border: 1px solid ${({ theme }) => theme.palette.secondary.main};
+		background-color: ${({ theme }) => theme.palette.common.white};
 		font-weight: 400;
 	}
 `;
