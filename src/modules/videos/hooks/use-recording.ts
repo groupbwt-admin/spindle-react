@@ -12,11 +12,14 @@ import {SocketService} from "../../../shared/services/base-socket-service";
 export const useRecording = () => {
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true)
 	const [counterBeforeStart, setCounterBeforeStart] = useState<number>(3)
+	const [streamChunks, setStreamChunks] = useState<Array<Blob> | []>([])
 
 	const mediaRecorder = useRef<MediaRecorder | null>(null);
 	const isCancel = useRef(false);
 	const status = selectStatus()
 	const navigate = useNavigate()
+
+
 	useEffect(() => {
 		socketState.onConnectListener()
 		socketState.onDisconnectedListener(() => {
@@ -47,6 +50,19 @@ export const useRecording = () => {
 			const mediaDevices = navigator.mediaDevices;
 			const displayMedia = await mediaDevices.getDisplayMedia();
 			const userMedia = await mediaDevices.getUserMedia({
+				video: {
+					width: {
+						min: 1280,
+						ideal: 1920,
+						max: 2560,
+					},
+					height: {
+						min: 720,
+						ideal: 1080,
+						max: 1440
+					},
+					facingMode: 'user'
+				},
 				audio: {
 					echoCancellation: true,
 					noiseSuppression: true,
@@ -76,6 +92,7 @@ export const useRecording = () => {
 
 			mediaRecorderLocal.ondataavailable = (event) => {
 				socketState.emit({type: SOCKET_ACTIONS.start, payload: {chunk: event.data}})
+				setStreamChunks(prevState => [...prevState, event.data])
 			};
 
 			return wait().then(() => {
@@ -184,9 +201,11 @@ export const useRecording = () => {
 		[],
 	);
 
+	console.log(mediaRecorder.current?.stream.getVideoTracks())
+
 
 	return {
-		models: {isMicrophoneOn, isCancel, counterBeforeStart},
+		models: {isMicrophoneOn, isCancel, counterBeforeStart, streamChunks},
 		command: {
 			prevCancelStream,
 			toggleMicrophone,
