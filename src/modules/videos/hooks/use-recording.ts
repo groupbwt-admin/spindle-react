@@ -1,8 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 
-import {useEventCallback} from "@mui/material";
-
 import {selectAuthUserData} from "app/store/auth/selects";
 import {selectStatus} from "app/store/record-socket/selects";
 import {socketState} from 'app/store/record-socket/state';
@@ -10,6 +8,8 @@ import {socketState} from 'app/store/record-socket/state';
 import {VIDEO_ROUTES} from "shared/config/routes";
 import {RECORDING_STATUS, SOCKET_ACTIONS} from "shared/constants/record-statuses";
 import {SocketService} from "shared/services/base-socket-service";
+
+import {useEvent} from "../../../shared/hooks/use-event";
 
 export const useRecording = () => {
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true)
@@ -116,7 +116,7 @@ export const useRecording = () => {
 		[status],
 	);
 
-	const toggleMicrophone = useEventCallback(() => {
+	const toggleMicrophone = useEvent(() => {
 		setIsMicrophoneOn((prevValue) => {
 			const newValue = !prevValue;
 			if (mediaRecorder.current) {
