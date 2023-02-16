@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import styled from '@emotion/styled/macro';
-import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
+import {useEditProfileUser} from 'modules/user/hooks/use-edit-profile-user';
 
-import { Menu, MenuItem } from '@mui/material';
-import { css } from '@mui/material/styles';
+import {Menu, MenuItem} from '@mui/material';
+import {css} from '@mui/material/styles';
 
-import { selectUserData } from 'app/store/user/selects';
+import {selectUserData} from 'app/store/user/selects';
 
-import { APP_ROLE_NAMES } from 'shared/constants/roles';
-import { useLogout } from 'shared/hooks/use-logout';
+import {APP_ROLE_NAMES} from 'shared/constants/roles';
+import {useLogout} from 'shared/hooks/use-logout';
 
-import { Avatar } from 'shared/components/avatar/avatar';
-import { Icon } from 'shared/components/icon/icon';
-import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
-import { Typography } from 'shared/components/typography/typography';
+import {Avatar} from 'shared/components/avatar/avatar';
+import {Icon} from 'shared/components/icon/icon';
+import {ICON_COLLECTION} from 'shared/components/icon/icon-list';
+import {Typography} from 'shared/components/typography/typography';
+
+import {useRecordContext} from "../../../modules/videos/hooks/use-record-context";
 
 const UserInfo = styled.div`
 	max-width: calc(100% - 92px);
 	opacity: 0;
-	color: ${({ theme }) => theme.palette.primary.light};
+	color: ${({theme}) => theme.palette.primary.light};
 	transform: translateX(-10px);
-	transition: opacity 0.3s ${({ theme }) => theme.transitions.easing.easeIn},
-		transform 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
+	transition: opacity 0.3s ${({theme}) => theme.transitions.easing.easeIn},
+	transform 0.3s ${({theme}) => theme.transitions.easing.easeIn};
 
 	p {
 		overflow: hidden;
@@ -37,10 +39,10 @@ const UserInfoContainer = styled.div<{
 	display: flex;
 	align-items: center;
 	padding: 0 4px;
-	color: ${({ theme }) => theme.palette.primary.light};
+	color: ${({theme}) => theme.palette.primary.light};
 	cursor: pointer;
 
-	${({ expanded }) =>
+	${({expanded}) =>
 		expanded &&
 		css`
 			${UserInfo} {
@@ -61,7 +63,7 @@ const StyledUserIcon = styled(Icon)<{
 	margin-left: 6px;
 	transition: transform 0.3s ease;
 
-	${({ open }) =>
+	${({open}) =>
 		open &&
 		css`
 			transform: rotate(180deg);
@@ -96,24 +98,28 @@ const MenuUserVideosInfo = styled(Typography)`
 
 const StyledIcon = styled(Icon)`
 	margin-right: 10px;
+
 `;
 
-const StyledMenuItem = styled(MenuItem)`
+const StyledMenuItem = styled(MenuItem)<{ isDisable?: boolean }>`
 	padding-bottom: 13px;
 	padding-top: 13px;
 	padding-left: 24px;
+	opacity: ${props => props.isDisable ? '0.5' : '1'};
+	cursor: ${props => props.isDisable ? 'not-allowed' : 'pointer'};
 `;
+
 
 interface UserMenuProps {
 	expanded: boolean;
 }
 
-export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
+export const UserMenu: React.FC<UserMenuProps> = ({expanded}) => {
 	const useLogoutHook = useLogout();
 	const user = selectUserData();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const { modal, handleOpen } = useEditProfileUser();
-
+	const {modal, handleOpen} = useEditProfileUser();
+	const {isRecording} = useRecordContext()
 	const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -146,12 +152,12 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 				aria-haspopup="true"
 				aria-expanded={open ? 'true' : undefined}
 			>
-				<UserAvatar src={user.avatar} alt={user.fullName} />
+				<UserAvatar src={user.avatar} alt={user.fullName}/>
 				<UserInfo>
 					<Typography variant="h3">{user.fullName}</Typography>
 					{userRole && <Typography variant="body2">{userRole}</Typography>}
 				</UserInfo>
-				<StyledUserIcon icon={ICON_COLLECTION.chevron_down} open={open} />
+				<StyledUserIcon icon={ICON_COLLECTION.chevron_down} open={open}/>
 			</UserInfoContainer>
 			<StyledMenu
 				id="basic-menu"
@@ -176,18 +182,19 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 				}}
 			>
 				<MenuUserBio>
-					<UserAvatar src={user.avatar} alt={user.fullName} />
+					<UserAvatar src={user.avatar} alt={user.fullName}/>
 					<UserInfo>
 						<Typography variant="h3">{user.fullName}</Typography>
 						<MenuUserVideosInfo variant="body2">8 videos</MenuUserVideosInfo>
 					</UserInfo>
 				</MenuUserBio>
 				<StyledMenuItem onClick={handleEditProfile}>
-					<StyledIcon icon={ICON_COLLECTION.edit} />
+					<StyledIcon icon={ICON_COLLECTION.edit}/>
 					Edit Profile
 				</StyledMenuItem>
-				<StyledMenuItem onClick={handleLogout}>
-					<StyledIcon icon={ICON_COLLECTION.logout} />
+				<StyledMenuItem onClick={isRecording ? undefined : handleLogout}
+												isDisable={isRecording}>
+					<StyledIcon icon={ICON_COLLECTION.logout}/>
 					Logout
 				</StyledMenuItem>
 			</StyledMenu>

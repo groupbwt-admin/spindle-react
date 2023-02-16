@@ -43,7 +43,7 @@ export const useRecording = () => {
 		const myInterval = setInterval(() => setCounterBeforeStart((prevState) => prevState - 1), 1000)
 		setTimeout(() => {
 			resolve(clearInterval(myInterval))
-		}, 4000);
+		}, 3500);
 	});
 
 	const requestMediaStream = async () => {

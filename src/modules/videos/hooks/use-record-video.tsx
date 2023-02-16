@@ -1,4 +1,4 @@
-import { selectIsRecording, selectStatus} from "../../../app/store/record-socket/selects";
+import {selectIsRecording, selectStatus} from "../../../app/store/record-socket/selects";
 import {RECORDING_STATUS} from "../../../shared/constants/record-statuses";
 import {Countdown} from "../components/countdown";
 import {RecordControlPanel} from "../components/record-controll-panel";
@@ -27,14 +27,14 @@ export const useRecordVideo = () => {
 
 
 	const recordControlPanel = isRecording && <WrapperRecordController>
-			<RecordControlPanel onVideoSaved={onVideoSaved}
-													resumeRecording={resumeRecording}
-													pauseRecording={pauseRecording}
-													resetRecording={resetRecording}
-													toggleMicrophone={toggleMicrophone}
-													isMuted={isMicrophoneOn}
-													isPaused={status === RECORDING_STATUS.paused}/>
-		</WrapperRecordController>
+		<RecordControlPanel onVideoSaved={onVideoSaved}
+												resumeRecording={resumeRecording}
+												pauseRecording={pauseRecording}
+												resetRecording={resetRecording}
+												toggleMicrophone={toggleMicrophone}
+												isMuted={isMicrophoneOn}
+												isPaused={status === RECORDING_STATUS.paused}/>
+	</WrapperRecordController>
 	const countDownView = (status === RECORDING_STATUS.idle) &&
 		<Countdown onCancel={onCancelPreview} count={counterBeforeStart}/>
 

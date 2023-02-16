@@ -1,8 +1,8 @@
-import socketIOClient, { Socket } from 'socket.io-client';
+import socketIOClient, {Socket} from 'socket.io-client';
 
-import { RECORD_SOCKET_PATH } from 'shared/config/variables';
+import {RECORD_SOCKET_PATH} from 'shared/config/variables';
 
-import { LocalStorageService } from './local-storage-service';
+import {LocalStorageService} from './local-storage-service';
 
 class _SocketService {
 	private _socket: Socket = socketIOClient(RECORD_SOCKET_PATH!, {
@@ -27,11 +27,11 @@ class _SocketService {
 		this.socket.emit(type, payload && payload);
 	}
 
-	save(type, fn) {
+	save(type: string, fn: (video: object) => void) {
 		this.socket.emit(type, fn);
 	}
 
-	on(type: string, fn) {
+	on(type: string, fn: () => void) {
 		this.socket.on(type, fn);
 	}
 

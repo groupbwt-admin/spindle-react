@@ -3,6 +3,7 @@ import styled from '@emotion/styled/macro';
 
 import {Button} from "shared/components/button/button";
 
+
 const CountWrapper = styled.div`
 	position: fixed;
 	z-index: 100;
@@ -30,10 +31,11 @@ const CancelButton = styled(Button)`
 
 interface ICountdown {
 	count: number,
-	onCancel: () => void
+	onCancel: () => void,
 }
 
 export const CountdownComponent: React.FC<ICountdown> = ({count, onCancel}) => {
+	if (count < 1) return null
 	return (
 		<CountWrapper>
 			<CountValue>{count}</CountValue>
