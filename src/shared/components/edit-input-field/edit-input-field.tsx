@@ -20,7 +20,7 @@ const StyledInputAdornment = styled(InputAdornment)`
 
 const StyledInput = styled(Input)`
 	.MuiInputBase-input {
-		border: none;
+		border-color: transparent;
 	}
 
 	input {
@@ -28,9 +28,11 @@ const StyledInput = styled(Input)`
 		line-height: 52px;
 		font-weight: 700;
 		color: #231d2c;
+		transition: border-color 0.3s
+			${({ theme }) => theme.transitions.easing.easeIn};
 
 		&:hover {
-			box-shadow: 0 0 0 1px ${({ theme }) => theme.palette.primary.main};
+			border-color: ${({ theme }) => theme.palette.primary.main};
 		}
 	}
 
@@ -44,8 +46,6 @@ const StyledInput = styled(Input)`
 		input {
 			padding: 0;
 			background-color: transparent;
-			transition: box-shadow 0.3s
-				${({ theme }) => theme.transitions.easing.easeIn};
 		}
 	}
 `;

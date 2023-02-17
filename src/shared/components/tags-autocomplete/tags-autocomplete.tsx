@@ -28,13 +28,13 @@ const StyledInput = styled(TextField)`
 	position: relative;
 	border-radius: 10px;
 	background-color: #ffffff;
-	box-shadow: 0 0 0 1px #eeeff1;
-	transition: box-shadow 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
+	border: 1px solid #eeeff1;
+	transition: border-color 0.3s
+		${({ theme }) => theme.transitions.easing.easeIn};
 	padding: 8px 40px 8px 6px;
 
-	&:hover,
-	&:focus {
-		box-shadow: 0 0 0 1px ${({ theme }) => theme.palette.primary.main};
+	&:hover {
+		border-color: ${({ theme }) => theme.palette.primary.main};
 	}
 
 	fieldset {
@@ -57,8 +57,13 @@ const FormControl = styled.div`
 			background-color: transparent;
 			border: none;
 			border-radius: 10px;
-			box-shadow: 0 0 0 1px transparent;
 			padding: 0;
+		}
+	}
+
+	&.isFocused {
+		${StyledInput} {
+			border-color: ${({ theme }) => theme.palette.primary.main};
 		}
 	}
 
@@ -124,6 +129,7 @@ export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 	const [tagsList, setTagsList] = useState(initialTags);
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isFocused, setIsFocused] = useState(false);
 
 	const toggleEditMode = (e, state) => {
 		e.stopPropagation();
@@ -171,7 +177,11 @@ export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 
 	return (
 		<FormControl
-			className={clsx(className, isEditMode && 'editMode')}
+			className={clsx(
+				className,
+				isEditMode && 'editMode',
+				isFocused && 'isFocused',
+			)}
 			onClick={(e) => toggleEditMode(e, true)}
 		>
 			<Autocomplete
@@ -191,6 +201,8 @@ export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 				renderInput={(params) => (
 					<StyledInput {...params} placeholder="Tap to add tag" />
 				)}
+				onFocus={() => setIsFocused(true)}
+				onBlur={() => setIsFocused(false)}
 			/>
 			<StyledInputAdornment>
 				{!isLoading && (
