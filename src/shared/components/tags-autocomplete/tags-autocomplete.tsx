@@ -112,7 +112,7 @@ interface TagsAutocompleteProps {
 	className?: string;
 	options?: string[];
 	initialTags: string[];
-	onUpdateTags: (payload: any) => void;
+	onUpdateTags: (payload: string[]) => void;
 }
 
 export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
@@ -126,7 +126,6 @@ export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 	const [isLoading, setIsLoading] = useState(false);
 
 	const toggleEditMode = (e, state) => {
-		console.log(e);
 		e.stopPropagation();
 		setIsEditMode(state);
 	};

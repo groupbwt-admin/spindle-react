@@ -57,18 +57,6 @@ const Title = styled(Typography)`
 	flex-shrink: 0;
 `;
 
-const VideoTitle = styled(Typography)`
-	flex-shrink: 0;
-	cursor: pointer;
-	border-radius: 10px;
-	padding: 8px;
-	transition: box-shadow 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
-
-	&:hover {
-		box-shadow: 0 0 0 1px ${({ theme }) => theme.palette.primary.main};
-	}
-`;
-
 const ViewsCount = styled(Typography)`
 	color: ${({ theme }) => theme.palette.text.secondary};
 	margin-right: auto;
@@ -131,8 +119,6 @@ export const VideoPage: React.FC = () => {
 				src={models.videoUrl.data.url}
 				controlsList="nodownload"
 			/>
-			{/*<VideoPlayer />*/}
-			{/*<VideoTitle variant="h1">{models.video.title}</VideoTitle>*/}
 			<EditInputField
 				value={models.video.title}
 				onSubmit={(value) => commands.handleUpdateVideo({ title: value })}
