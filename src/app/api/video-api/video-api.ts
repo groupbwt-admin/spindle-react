@@ -70,6 +70,15 @@ export class VideoApiService implements VideoApiInterface {
 		return res.data;
 	};
 
+	updateVideoById = async ({ id, payload }): Promise<IVideo> => {
+		const res = await this.http.patch(`/videos/${id}`, {
+			title: 'My video',
+			isComments: false,
+			...payload,
+		});
+		return res.data;
+	};
+
 	getVideos = async ({
 		signal,
 		...params
@@ -92,7 +101,7 @@ export class VideoApiService implements VideoApiInterface {
 
 	getVideoTags = async ({ userId }): Promise<ITag[]> => {
 		const payload = await this.http.get(`/tags`, {
-			params: { take: 50, userId },
+			params: { userId },
 		});
 		return payload.data;
 	};

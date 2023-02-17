@@ -53,6 +53,7 @@ const ErrorText = styled('div')(
 );
 
 export interface InputProps {
+	value?: string;
 	className?: string;
 	type?: InputHTMLAttributes<HTMLInputElement>['type'];
 	autoComplete?: InputHTMLAttributes<HTMLInputElement>['autoComplete'];
@@ -75,13 +76,16 @@ export interface InputProps {
 const RootInput: React.ForwardRefRenderFunction<
 	HTMLInputElement,
 	InputProps
-> = ({ className, label, helperText, error, errorText, ...props }, ref) => {
+> = (
+	{ value, className, label, helperText, error, errorText, ...props },
+	ref,
+) => {
 	const id = useId();
 
 	return (
 		<InputContainer className={className} htmlFor={id}>
-			<AppLabel htmlFor={id}>{label}</AppLabel>
-			<AppInput inputRef={ref} id={id} fullWidth {...props} />
+			{!!label && <AppLabel htmlFor={id}>{label}</AppLabel>}
+			<AppInput inputRef={ref} id={id} fullWidth value={value} {...props} />
 			{helperText && <HelperText>{helperText}</HelperText>}
 			{error && <ErrorText>{errorText}</ErrorText>}
 		</InputContainer>
