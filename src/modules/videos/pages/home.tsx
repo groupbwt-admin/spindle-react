@@ -46,7 +46,11 @@ const HeaderContainer = styled.div`
 	justify-content: space-between;
 `;
 
-const ContentContainer = styled.div``;
+const ContentContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+`;
 
 const Title = styled(Typography)`
 	flex-shrink: 0;
@@ -105,6 +109,7 @@ export const HomePage = () => {
 				<FiltersPanel>
 					<SearchInput
 						value={models.searchQuery}
+						isLoading={models.isSearching}
 						onChange={commands.handleSearch}
 						onClear={commands.handleClearSearch}
 					/>

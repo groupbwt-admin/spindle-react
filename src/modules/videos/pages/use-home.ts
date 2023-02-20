@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Dayjs } from 'dayjs';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import dayjs, { Dayjs } from 'dayjs';
+import queryString from 'query-string';
 
 import { IVideo } from 'shared/types/video';
 
@@ -32,7 +34,7 @@ const SORT_OPTIONS: SortOption[] = [
 ];
 
 export interface IFilterOptions {
-	criteriaTags?: string[];
+	criteriaTags: string[];
 	dateFrom: Dayjs | null;
 	dateTo: Dayjs | null;
 	order: RequestSortType.ASC | RequestSortType.DESC;
@@ -40,23 +42,33 @@ export interface IFilterOptions {
 }
 
 export function useHome() {
-	const [meta, setMeta] = useState<VideoListResponseDto['meta']>({
-		page: 1,
-		hasPreviousPage: false,
-		hasNextPage: false,
-		itemCount: 1,
-		pageCount: 1,
-		take: 30,
-		search: '',
+	const location = useLocation();
+	const params = queryString.parse(location.search);
+	const [meta, setMeta] = useState<VideoListResponseDto['meta']>(() => {
+		const { page, search, ...rest } = params;
+		return {
+			page: page ? +page : 1,
+			hasPreviousPage: false,
+			hasNextPage: false,
+			itemCount: 1,
+			pageCount: 1,
+			take: 30,
+			search: (search as string) || '',
+		};
 	});
-	const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
-		criteriaTags: [],
-		dateFrom: null,
-		dateTo: null,
-		order: RequestSortType.DESC,
-		sortField: 'created_at',
+	const [filterOptions, setFilterOptions] = useState<IFilterOptions>(() => {
+		const { page, search, ...rest } = params;
+		return {
+			criteriaTags: [],
+			dateFrom: null,
+			dateTo: null,
+			order: RequestSortType.DESC,
+			sortField: 'created_at',
+			...rest,
+		};
 	});
 	const [isLinksCopied, setIsLinksCopied] = useState(false);
+	const [searchParams, setSearchParams] = useSearchParams();
 	const copyLinkTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 	const user = selectUserData();
 
@@ -111,11 +123,33 @@ export function useHome() {
 					meta: data.meta,
 				};
 			});
+			setSearchParams((prev) =>
+				queryString.stringify(
+					{
+						...prev,
+						...filterOptions,
+					},
+					{ skipNull: true, skipEmptyString: true },
+				),
+			);
 		});
 	}, [filterOptions]);
 
 	useEffectAfterMount(() => {
-		searchVideos(() => ({ search: meta.search, page: 1 }));
+		searchVideos(
+			() => ({ search: meta.search, page: 1 }),
+			() =>
+				setSearchParams((prev) => {
+					return queryString.stringify(
+						{
+							...filterOptions,
+							search: meta.search,
+							page: 1,
+						},
+						{ skipNull: true, skipEmptyString: true },
+					);
+				}),
+		);
 	}, [meta.search]);
 
 	const tags = useQuery({
@@ -131,9 +165,12 @@ export function useHome() {
 			page: meta.page,
 			search: meta.search,
 			...filterOptions,
-			dateFrom:
-				filterOptions.dateFrom && filterOptions.dateFrom.format('YYYY-MM-DD'),
-			dateTo: filterOptions.dateTo && filterOptions.dateTo.format('YYYY-MM-DD'),
+			dateFrom: filterOptions.dateFrom
+				? dayjs(filterOptions.dateFrom).format('YYYY-MM-DD')
+				: null,
+			dateTo: filterOptions.dateTo
+				? dayjs(filterOptions.dateTo).format('YYYY-MM-DD')
+				: null,
 			...params,
 		};
 	};
@@ -154,6 +191,16 @@ export function useHome() {
 							meta: data.meta,
 						};
 					});
+					setSearchParams((prev) =>
+						queryString.stringify(
+							{
+								...prev,
+								...filterOptions,
+								page: newPage,
+							},
+							{ skipNull: true, skipEmptyString: true },
+						),
+					);
 				}),
 			0,
 		);

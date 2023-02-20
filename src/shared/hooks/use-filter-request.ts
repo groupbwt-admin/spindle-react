@@ -51,6 +51,7 @@ export function useFilterRequest<R, P = object, F = object>({
 				return result;
 			} catch (e) {
 				setIsSearching(false);
+				return Promise.reject(e);
 			}
 		}, 300),
 		[...searchFuncDependencies],

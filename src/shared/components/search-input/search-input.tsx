@@ -3,7 +3,7 @@ import { useId, useRef } from 'react';
 import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 
-import { InputAdornment, InputBase } from '@mui/material';
+import { CircularProgress, InputAdornment, InputBase } from '@mui/material';
 import { css } from '@mui/material/styles';
 
 import { Icon } from 'shared/components/icon/icon';
@@ -13,8 +13,10 @@ import { InputProps } from 'shared/components/input/input';
 const StyledInputAdornment = styled(InputAdornment)`
 	position: absolute;
 	left: 20px;
-	top: 50%;
+	top: calc(50% - 12px);
 	transition: opacity 0.3s ease;
+	height: auto;
+	margin-right: 0;
 
 	svg {
 		width: 19px;
@@ -68,13 +70,13 @@ const AppInput = styled(InputBase)(
 			transition: width 0.3s ease;
 			width: 100%;
 
-			${StyledInputAdornment} {
-				opacity: 0;
-			}
+			// ${StyledInputAdornment} {
+			// 	opacity: 0;
+			// }
 
-			input {
-				padding-left: 12px;
-			}
+			//input {
+			//	padding-left: 12px;
+			//}
 		}
 
 		&.hasValue {
@@ -87,13 +89,14 @@ const AppInput = styled(InputBase)(
 
 interface SearchInputProps extends InputProps {
 	value: string;
+	isLoading?: boolean;
 	onClear: () => void;
 }
 
 export const SearchInput: React.ForwardRefRenderFunction<
 	HTMLInputElement,
 	SearchInputProps
-> = ({ value, className, onClear, ...props }) => {
+> = ({ value, isLoading, className, onClear, ...props }) => {
 	const id = useId();
 	const inputEl = useRef<HTMLInputElement | null>(null);
 
@@ -102,16 +105,24 @@ export const SearchInput: React.ForwardRefRenderFunction<
 		inputEl.current && inputEl.current.focus();
 	};
 
+	console.log(isLoading);
+
 	return (
 		<AppInput
 			value={value}
 			inputRef={inputEl}
+			type="search"
+			autoComplete="off"
 			id={id}
 			className={clsx(className, value && 'hasValue')}
 			{...props}
 			startAdornment={
 				<StyledInputAdornment position="start">
-					<Icon icon={ICON_COLLECTION.search} />
+					{!isLoading ? (
+						<Icon icon={ICON_COLLECTION.search} />
+					) : (
+						<CircularProgress color="primary" size={24} />
+					)}
 				</StyledInputAdornment>
 			}
 			endAdornment={
