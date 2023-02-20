@@ -162,6 +162,17 @@ const StyledBadgeIcon = styled(Icon)`
 	margin-left: 5px;
 `;
 
+const PAGE_TITLES = {
+	[VIDEO_ROUTES.MY_VIDEOS.path]: {
+		routePath: [VIDEO_ROUTES.MY_VIDEOS.path],
+		title: [VIDEO_ROUTES.MY_VIDEOS.title],
+	},
+	[VIDEO_ROUTES.PROFILE.path]: {
+		routePath: [VIDEO_ROUTES.MY_VIDEOS.path],
+		title: [VIDEO_ROUTES.MY_VIDEOS.title],
+	},
+};
+
 export interface VideoCardProps {
 	video: IVideo;
 	activeActions?: VideoActionMenuProps['activeActions'];
@@ -204,10 +215,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 			navigate(VIDEO_ROUTES.VIDEO.generate(video.id), {
 				state: {
 					from: location.pathname + location.search,
-					title:
-						location.pathname === VIDEO_ROUTES.MY_VIDEOS.path
-							? VIDEO_ROUTES.MY_VIDEOS.title
-							: VIDEO_ROUTES.PROFILE.title,
+					title: PAGE_TITLES[location.pathname].title,
 				},
 			});
 		} else {

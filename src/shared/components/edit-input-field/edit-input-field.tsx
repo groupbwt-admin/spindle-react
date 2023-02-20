@@ -75,10 +75,12 @@ const RootEditInputField: React.ForwardRefRenderFunction<
 		setIsLoading(false);
 	};
 
+	const handleChange = (e) => setInputVal(e.target.value);
+
 	return (
 		<StyledInput
 			value={inputVal}
-			onChange={(e) => setInputVal(e.target.value)}
+			onChange={handleChange}
 			className={clsx(className, isEditMode && 'editMode')}
 			onClick={(e) => toggleEditMode(e, true)}
 			endAdornment={
@@ -88,10 +90,7 @@ const RootEditInputField: React.ForwardRefRenderFunction<
 							<Icon icon={ICON_COLLECTION.close} />
 						</StyledIconButton>
 					)}
-					<StyledIconButton
-						onClick={(e) => submitHandler(e)}
-						isLoading={isLoading}
-					>
+					<StyledIconButton onClick={submitHandler} isLoading={isLoading}>
 						<Icon icon={ICON_COLLECTION.checkmark} />
 					</StyledIconButton>
 				</StyledInputAdornment>
