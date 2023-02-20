@@ -127,6 +127,8 @@ export function useHome() {
 				queryString.stringify(
 					{
 						...prev,
+						search: meta.search,
+						page: meta.page,
 						...filterOptions,
 					},
 					{ skipNull: true, skipEmptyString: true },
@@ -139,7 +141,7 @@ export function useHome() {
 		searchVideos(
 			() => ({ search: meta.search, page: 1 }),
 			() =>
-				setSearchParams((prev) => {
+				setSearchParams(() => {
 					return queryString.stringify(
 						{
 							...filterOptions,

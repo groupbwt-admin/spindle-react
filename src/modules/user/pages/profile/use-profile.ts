@@ -147,6 +147,8 @@ export function useProfile() {
 				queryString.stringify(
 					{
 						...prev,
+						search: meta.search,
+						page: meta.page,
 						...filterOptions,
 					},
 					{ skipNull: true, skipEmptyString: true },
@@ -159,16 +161,16 @@ export function useProfile() {
 		searchVideos(
 			() => ({ search: meta.search, page: 1 }),
 			() =>
-				setSearchParams((prev) =>
-					queryString.stringify(
+				setSearchParams((prev) => {
+					return queryString.stringify(
 						{
-							...prev,
+							...filterOptions,
 							search: meta.search,
 							page: 1,
 						},
 						{ skipNull: true, skipEmptyString: true },
-					),
-				),
+					);
+				}),
 		);
 	}, [meta.search]);
 
@@ -213,6 +215,7 @@ export function useProfile() {
 							{
 								...prev,
 								...filterOptions,
+								page: newPage,
 							},
 							{ skipNull: true, skipEmptyString: true },
 						),

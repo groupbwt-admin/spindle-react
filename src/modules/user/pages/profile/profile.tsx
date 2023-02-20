@@ -95,6 +95,7 @@ export const ProfilePage = () => {
 			<FiltersPanel>
 				<SearchInput
 					value={models.searchQuery}
+					isLoading={models.isSearching}
 					onChange={commands.handleSearch}
 					onClear={commands.handleClearSearch}
 				/>

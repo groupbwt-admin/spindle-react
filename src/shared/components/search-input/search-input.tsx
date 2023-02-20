@@ -100,12 +100,10 @@ export const SearchInput: React.ForwardRefRenderFunction<
 	const id = useId();
 	const inputEl = useRef<HTMLInputElement | null>(null);
 
-	const handleClear = (e) => {
+	const handleClear = () => {
 		onClear();
 		inputEl.current && inputEl.current.focus();
 	};
-
-	console.log(isLoading);
 
 	return (
 		<AppInput
