@@ -183,7 +183,7 @@ export const Filter: React.FC<FilterProps> = ({
 							/>
 						</DateContainer>
 					</SectionContainer>
-					{tags?.length && (
+					{!!tags?.length && (
 						<SectionContainer>
 							<Typography variant="h3">Tags</Typography>
 							{tags.map((tag) => (

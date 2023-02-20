@@ -1,16 +1,14 @@
 import React from 'react';
-import { useQuery } from 'react-query';
-import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled/macro';
 import { format } from 'date-fns';
+import { useVideo } from 'modules/videos/pages/video/use-video';
 
-import { VideoApi } from 'app/api/video-api/video-api';
-
-import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
 import { Avatar } from 'shared/components/avatar/avatar';
 import { Button } from 'shared/components/button/button';
+import { IconButton } from 'shared/components/button/icon-button';
+import { EditInputField } from 'shared/components/edit-input-field/edit-input-field';
 import { ReactComponent as IconRecord } from 'shared/components/icon/collection/record.svg';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
@@ -22,18 +20,19 @@ const VideoPageContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	min-height: 100%;
-	margin-bottom: 40px;
+	margin: 0 auto 40px;
 `;
 
 const HeaderContainer = styled.div`
 	display: flex;
-	justify-content: space-between;
+	align-items: center;
 	padding-bottom: 60px;
 `;
 
 const DetailedInfoContainer = styled.div`
 	display: flex;
 	flex-wrap: wrap;
+	gap: 16px;
 	width: 100%;
 	max-width: 890px;
 	margin: 0 auto;
@@ -65,15 +64,24 @@ const ViewsCount = styled(Typography)`
 
 const StyledVideo = styled.video`
 	width: 100%;
-	aspect-ratio: 2/1;
+	height: 56.25vw;
+	max-height: calc(100vh - 300px);
+	min-height: 480px;
 	border-radius: 10px;
 	margin-bottom: 16px;
+`;
+
+const StyledIconButton = styled(IconButton)`
+	background: #ffffff;
+	border: 1px solid #eeeff1;
+	border-radius: 10px;
+	padding: 15px 24px;
+	margin-right: 12px;
 `;
 
 const StyledAvatar = styled(Avatar)`
 	width: 42px;
 	height: 42px;
-	margin-right: 16px;
 	border: none;
 `;
 
@@ -85,6 +93,7 @@ const RecordButton = styled(Button)`
 	max-width: 190px;
 	color: #ffffff;
 	justify-self: flex-start;
+	margin-left: auto;
 `;
 
 const StyledButtonIcon = styled(Icon)`
@@ -94,72 +103,78 @@ const StyledButtonIcon = styled(Icon)`
 `;
 
 export const VideoPage: React.FC = () => {
-	const urlParams = useParams<{ id: string }>();
+	const { models, commands } = useVideo();
 
-	const videoUrl = useQuery({
-		queryKey: [VIDEO_QUERY_KEYS.video_stream_url, urlParams.id],
-		queryFn: () => VideoApi.getVideoUrl({ id: urlParams.id! }),
-		enabled: !!urlParams.id,
-	});
-
-	const { data: video } = useQuery({
-		queryKey: [VIDEO_QUERY_KEYS.video, urlParams.id],
-		queryFn: () => VideoApi.getVideoInfoById({ id: urlParams.id! }),
-		enabled: !!urlParams.id,
-	});
-
-	if (!videoUrl.data?.url || !video) return <></>;
+	if (!models.videoUrl.data?.url || !models.video) return <></>;
 
 	return (
 		<VideoPageContainer>
 			<HeaderContainer>
-				<Title variant="h1">My videos</Title>
+				<StyledIconButton onClick={commands.handleBack}>
+					<Icon icon={ICON_COLLECTION.arrow_left} />
+				</StyledIconButton>
+				<Title variant="h1">{models.pageTitle}</Title>
 				<RecordButton label="Start Recording" startIcon={<IconRecord />} />
 			</HeaderContainer>
-			<StyledVideo autoPlay controls src={videoUrl.data.url} />
-			{/*<VideoPlayer />*/}
-			<Title variant="h1">{video.title}</Title>
+			<StyledVideo
+				controls
+				src={models.videoUrl.data.url}
+				controlsList="nodownload"
+			/>
+			<EditInputField
+				value={models.video.title}
+				onSubmit={(value) => commands.handleUpdateVideo({ title: value })}
+			/>
 			<ActionsContainer>
 				<ViewsCount variant="body1">
-					{video.viewsCount === 1
-						? `${video.viewsCount} view`
-						: `${video.viewsCount} views`}
+					{models.video.viewsCount === 1
+						? `${models.video.viewsCount} view`
+						: `${models.video.viewsCount} views`}
 				</ViewsCount>
 				<Button
-					label="Copy link"
+					label={models.isLinkCopied ? 'Copied' : 'Copy link'}
 					color="secondary"
 					variant="outlined"
 					endIcon={<StyledButtonIcon icon={ICON_COLLECTION.copy_link} />}
+					onClick={commands.handleCopyLink}
 				/>
 				<Button
 					label="Download"
 					color="secondary"
 					variant="outlined"
 					endIcon={<StyledButtonIcon icon={ICON_COLLECTION.download} />}
+					onClick={commands.handleDownload}
 				/>
 				<ActionMenu
 					isLinkCopied={false}
-					onDownload={() => {}}
-					onCopyLink={() => {}}
-					onDelete={() => {}}
+					onDownload={commands.handleDownload}
+					onCopyLink={commands.handleCopyLink}
+					onDelete={commands.handleDeleteVideo}
 				/>
 			</ActionsContainer>
 			<DetailedInfoContainer>
 				<StyledAvatar
 					src={
-						video.user.avatar ? getUserAvatarURL(video.user.avatar) : undefined
+						models.video.user.avatar
+							? getUserAvatarURL(models.video.user.avatar)
+							: undefined
 					}
 				/>
 				<div>
 					<Typography variant="body1">
-						{video.user.firstName + video.user.lastName}
+						{models.video.user.firstName + models.video.user.lastName}
 					</Typography>
 					<StyledCaption variant="subtitle2">
-						{format(new Date(video.createdAt), 'MMMM d, yyyy')}
+						{format(new Date(models.video.createdAt), 'MMMM d, yyyy')}
 					</StyledCaption>
 				</div>
-				<TagsAutocomplete />
+				<TagsAutocomplete
+					options={models.tags}
+					initialTags={models.video.tags}
+					onUpdateTags={(value) => commands.handleUpdateVideo({ tags: value })}
+				/>
 			</DetailedInfoContainer>
+			{models.deleteVideoModal}
 		</VideoPageContainer>
 	);
 };

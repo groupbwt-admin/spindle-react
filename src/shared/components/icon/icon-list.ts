@@ -2,6 +2,7 @@ import { ReactComponent as ActionMenu } from 'shared/components/icon/collection/
 import { ReactComponent as ArrowLeft } from 'shared/components/icon/collection/arrow-left.svg';
 import { ReactComponent as ArrowLeftOutlined } from 'shared/components/icon/collection/arrow-left-outlined.svg';
 import { ReactComponent as ArrowRightOutlined } from 'shared/components/icon/collection/arrow-right-outlined.svg';
+import { ReactComponent as Checkmark } from 'shared/components/icon/collection/check.svg';
 import { ReactComponent as ChevronDown } from 'shared/components/icon/collection/chevron-down.svg';
 import { ReactComponent as Close } from 'shared/components/icon/collection/close.svg';
 import { ReactComponent as Comments } from 'shared/components/icon/collection/comments.svg';
@@ -46,7 +47,8 @@ export const ICON_COLLECTION = {
 	sort_arrow_up: SortArrowUp,
 	sort_arrow_down: SortArrowDown,
 	calendar: Calendar,
+	checkmark: Checkmark,
 };
 
 type Keys = keyof typeof ICON_COLLECTION;
-export type IconCollectionType = typeof ICON_COLLECTION[Keys];
+export type IconCollectionType = (typeof ICON_COLLECTION)[Keys];

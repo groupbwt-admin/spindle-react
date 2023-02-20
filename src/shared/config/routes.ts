@@ -32,6 +32,7 @@ export const AUTH_ROUTES = {
 
 export const VIDEO_ROUTES = {
 	MY_VIDEOS: {
+		title: 'My videos',
 		path: '/',
 	},
 	VIDEO: {
@@ -41,6 +42,7 @@ export const VIDEO_ROUTES = {
 			window.location.origin + generatePath('/videos/:id', { id }),
 	},
 	PROFILE: {
+		title: 'My profile',
 		path: '/profile',
 	},
 };
