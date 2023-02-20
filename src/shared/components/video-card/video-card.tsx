@@ -164,11 +164,9 @@ const StyledBadgeIcon = styled(Icon)`
 
 const PAGE_TITLES = {
 	[VIDEO_ROUTES.MY_VIDEOS.path]: {
-		routePath: [VIDEO_ROUTES.MY_VIDEOS.path],
 		title: [VIDEO_ROUTES.MY_VIDEOS.title],
 	},
 	[VIDEO_ROUTES.PROFILE.path]: {
-		routePath: [VIDEO_ROUTES.MY_VIDEOS.path],
 		title: [VIDEO_ROUTES.MY_VIDEOS.title],
 	},
 };
@@ -213,10 +211,12 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 	const handleClick = () => {
 		if (!isSelectMode) {
 			navigate(VIDEO_ROUTES.VIDEO.generate(video.id), {
-				state: {
-					from: location.pathname + location.search,
-					title: PAGE_TITLES[location.pathname].title,
-				},
+				state: PAGE_TITLES[location.pathname]
+					? {
+							from: location.pathname + location.search,
+							title: PAGE_TITLES[location.pathname].title,
+					  }
+					: undefined,
 			});
 		} else {
 			onChecked({ video, checked: !checked });

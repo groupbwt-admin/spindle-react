@@ -62,8 +62,8 @@ const RootEditInputField: React.ForwardRefRenderFunction<
 	const [inputVal, setInputVal] = useState(value);
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+
 	const toggleEditMode = (e, state) => {
-		e.stopPropagation();
 		setIsEditMode(state);
 	};
 
@@ -77,16 +77,27 @@ const RootEditInputField: React.ForwardRefRenderFunction<
 
 	const handleChange = (e) => setInputVal(e.target.value);
 
+	const handleInputClick = (e) => {
+		e.stopPropagation();
+		if (isEditMode) return;
+		toggleEditMode(e, true);
+	};
+
+	const handleCancelEdit = (e) => {
+		e.stopPropagation();
+		toggleEditMode(e, false);
+	};
+
 	return (
 		<StyledInput
 			value={inputVal}
 			onChange={handleChange}
 			className={clsx(className, isEditMode && 'editMode')}
-			onClick={(e) => toggleEditMode(e, true)}
+			onClick={handleInputClick}
 			endAdornment={
 				<StyledInputAdornment position="end">
 					{!isLoading && (
-						<StyledIconButton onClick={(e) => toggleEditMode(e, false)}>
+						<StyledIconButton onClick={handleCancelEdit}>
 							<Icon icon={ICON_COLLECTION.close} />
 						</StyledIconButton>
 					)}
