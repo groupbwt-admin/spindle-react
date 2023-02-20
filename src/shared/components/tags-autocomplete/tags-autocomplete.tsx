@@ -175,6 +175,8 @@ export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 		toggleEditMode(e, false);
 	};
 
+	const handleChange = (e, value) => setTagsList(value);
+
 	return (
 		<FormControl
 			className={clsx(
@@ -190,7 +192,7 @@ export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 				value={tagsList}
 				options={options || []}
 				defaultValue={tagsList}
-				onChange={(e, value) => setTagsList(value)}
+				onChange={handleChange}
 				disablePortal
 				readOnly={isLoading}
 				freeSolo
@@ -206,14 +208,11 @@ export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 			/>
 			<StyledInputAdornment>
 				{!isLoading && (
-					<StyledIconButton onClick={(e) => handleCancelEdit(e)}>
+					<StyledIconButton onClick={handleCancelEdit}>
 						<Icon icon={ICON_COLLECTION.close} />
 					</StyledIconButton>
 				)}
-				<StyledIconButton
-					onClick={(e) => submitHandler(e)}
-					isLoading={isLoading}
-				>
+				<StyledIconButton onClick={submitHandler} isLoading={isLoading}>
 					<Icon icon={ICON_COLLECTION.checkmark} />
 				</StyledIconButton>
 			</StyledInputAdornment>

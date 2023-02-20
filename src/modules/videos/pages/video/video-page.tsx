@@ -20,7 +20,7 @@ const VideoPageContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	min-height: 100%;
-	margin-bottom: 40px;
+	margin: 0 auto 40px;
 `;
 
 const HeaderContainer = styled.div`
@@ -64,7 +64,9 @@ const ViewsCount = styled(Typography)`
 
 const StyledVideo = styled.video`
 	width: 100%;
-	aspect-ratio: 2/0.92;
+	height: 56.25vw;
+	max-height: calc(100vh - 300px);
+	min-height: 480px;
 	border-radius: 10px;
 	margin-bottom: 16px;
 `;
