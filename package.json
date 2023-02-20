@@ -65,7 +65,9 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"pre-commit": "lint-staged"
+		"prepare": "husky install",
+		"pre-commit": "lint-staged",
+		"post-commit": "git update-index --again"
 	},
 	"browserslist": {
 		"production": [
@@ -78,5 +80,12 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
+	},
+	"lint-staged": {
+		"*.{ts,tsx,js,jsx}": [
+			"prettier --write",
+			"eslint --fix"
+		],
+		"*.{scss,css,json}": "prettier --write"
 	}
 }

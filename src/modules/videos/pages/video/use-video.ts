@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -48,7 +49,9 @@ export function useVideo() {
 		downloadVideoMutation.mutate({ id: video?.id, title: video?.title });
 	};
 
-	const onVideosDeleted = async () => {};
+	const onVideosDeleted = async () => {
+		nav(location.state.from || VIDEO_ROUTES.MY_VIDEOS);
+	};
 
 	const { modal: deleteVideoModal, startDeleteVideos } = useDeleteVideo({
 		onVideosDeleted,
@@ -73,13 +76,17 @@ export function useVideo() {
 		nav(location.state.from || VIDEO_ROUTES.MY_VIDEOS);
 	};
 
+	const tagsArray = useMemo(() => {
+		return tags?.data?.map((tag) => tag.tag);
+	}, [tags.data]);
+
 	return {
 		models: {
 			pageTitle: location.state.title || 'My videos',
 			deleteVideoModal,
 			videoUrl,
 			video,
-			tags: tags?.data?.map((tag) => tag.tag),
+			tags: tagsArray,
 			isLinkCopied,
 		},
 		commands: {
