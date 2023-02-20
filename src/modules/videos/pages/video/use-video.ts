@@ -10,6 +10,7 @@ import { selectUserData } from 'app/store/user/selects';
 
 import { VIDEO_ROUTES } from 'shared/config/routes';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
+import { useChangeAccessSettings } from 'shared/hooks/use-change-access-settings';
 import { useCopyLink } from 'shared/hooks/use-copy-link';
 import { useDeleteVideo } from 'shared/hooks/use-delete-video';
 
@@ -61,6 +62,15 @@ export function useVideo() {
 		startDeleteVideos([video]);
 	};
 
+	const onSettingsChanged = () => {};
+
+	const { modal: accessSettingsModal, startChangeSettings } =
+		useChangeAccessSettings({ onSettingsChanged });
+
+	const handleChangeVideoSettings = (video: IVideo) => {
+		startChangeSettings([video]);
+	};
+
 	const handleUpdateVideo = async (payload) => {
 		const res = await updateVideoMutation.mutateAsync({
 			id: video?.id,
@@ -84,6 +94,7 @@ export function useVideo() {
 		models: {
 			pageTitle: location.state.title || 'My videos',
 			deleteVideoModal,
+			accessSettingsModal,
 			videoUrl,
 			video,
 			tags: tagsArray,
@@ -95,6 +106,7 @@ export function useVideo() {
 			handleDeleteVideo,
 			handleUpdateVideo,
 			handleBack,
+			handleChangeVideoSettings,
 		},
 	};
 }
