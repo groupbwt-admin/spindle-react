@@ -28,12 +28,16 @@ const StyledButtonIcon = styled(Icon)`
 	margin-left: 4px;
 `;
 
+const StyledCopyLinkButton = styled(Button)`
+	border-radius: 10px;
+`;
+
 interface DeleteVideoModalProps {
 	video: IVideo | null;
 	accessOptions: { title: string; value: VideoPermissionsEnum }[];
 	isLoading: boolean;
 	isLinkCopied?: boolean;
-	handleCopyLink?: () => void;
+	handleCopyLink?: (e) => void;
 	handleChangePermissions: (VideoPermissionsEnum) => void;
 	handleChangeCommentsPermission: (isComments: boolean) => void;
 }
@@ -67,7 +71,7 @@ export const AccessSettingsModal: React.FC<DeleteVideoModalProps> = ({
 					options={accessOptions}
 					onChange={handleChangePermissions}
 				/>
-				<Button
+				<StyledCopyLinkButton
 					label={isLinkCopied ? 'Copied' : 'Copy link'}
 					color="secondary"
 					variant="outlined"
