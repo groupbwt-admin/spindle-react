@@ -31,10 +31,6 @@ class _SocketService {
 		return this._socket();
 	}
 
-	// set socket(value: Socket) {
-	// 	this._socket() = value;
-	// }
-
 	emit(type: string, payload?: object | void) {
 		this._socket().emit(type, payload && payload);
 	}
