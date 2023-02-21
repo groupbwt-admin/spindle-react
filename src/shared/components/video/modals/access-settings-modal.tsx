@@ -35,6 +35,7 @@ interface DeleteVideoModalProps {
 	isLinkCopied?: boolean;
 	handleCopyLink?: () => void;
 	handleChangePermissions: (VideoPermissionsEnum) => void;
+	handleChangeCommentsPermission: (isComments: boolean) => void;
 }
 
 export const AccessSettingsModal: React.FC<DeleteVideoModalProps> = ({
@@ -44,6 +45,7 @@ export const AccessSettingsModal: React.FC<DeleteVideoModalProps> = ({
 	isLoading,
 	handleCopyLink,
 	handleChangePermissions,
+	handleChangeCommentsPermission,
 }) => {
 	const modalContext = useContext(ModalContext);
 
@@ -53,7 +55,11 @@ export const AccessSettingsModal: React.FC<DeleteVideoModalProps> = ({
 				<Typography variant="h3">Settings</Typography>
 			</Modal.Header>
 			<ModalContent>
-				<Switch label="Allow comments" />
+				<Switch
+					label="Allow comments"
+					value={video?.isComments}
+					onChange={handleChangeCommentsPermission}
+				/>
 			</ModalContent>
 			<Modal.Footer>
 				<Select

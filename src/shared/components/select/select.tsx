@@ -9,6 +9,7 @@ import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 
 const StyledSelect = styled(ExternalSelect)`
 	border-radius: 10px;
+	border-color: #eeeff1;
 `;
 
 const StyledIcon = styled(Icon)`

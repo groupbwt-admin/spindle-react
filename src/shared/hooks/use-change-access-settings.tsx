@@ -39,6 +39,15 @@ export function useChangeAccessSettings({ onSettingsChanged }) {
 		return res;
 	});
 
+	const changeCommentsPermissionMutation = useMutation(async (isComments) => {
+		const res = await VideoApi.updateVideoById({
+			id: video?.id,
+			payload: { isComments: isComments },
+		});
+		await onSettingsChanged();
+		return res;
+	});
+
 	const handleClose = () => setIsModalOpen(false);
 
 	const startChangeSettings = (video) => {
@@ -48,6 +57,12 @@ export function useChangeAccessSettings({ onSettingsChanged }) {
 
 	const handleChangePermissions = async (viewAccess) => {
 		const res = await changePermissionsMutation.mutateAsync(viewAccess);
+		setVideo(res);
+		return;
+	};
+
+	const handleChangeCommentsPermission = async (isComments) => {
+		const res = await changeCommentsPermissionMutation.mutateAsync(isComments);
 		setVideo(res);
 		return;
 	};
@@ -63,6 +78,7 @@ export function useChangeAccessSettings({ onSettingsChanged }) {
 				video={video}
 				isLoading={changePermissionsMutation.isLoading}
 				handleChangePermissions={handleChangePermissions}
+				handleChangeCommentsPermission={handleChangeCommentsPermission}
 			/>
 		</Modal.Root>
 	);
