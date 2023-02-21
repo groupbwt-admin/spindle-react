@@ -69,14 +69,6 @@ const AppInput = styled(InputBase)(
 		&.hasValue {
 			transition: width 0.3s ease;
 			width: 100%;
-
-			// ${StyledInputAdornment} {
-			// 	opacity: 0;
-			// }
-
-			//input {
-			//	padding-left: 12px;
-			//}
 		}
 
 		&.hasValue {

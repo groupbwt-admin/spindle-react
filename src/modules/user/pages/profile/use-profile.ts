@@ -46,8 +46,8 @@ export interface IFilterOptions {
 export function useProfile() {
 	const { modal, handleOpen } = useEditProfileUser();
 	const location = useLocation();
-	const params = queryString.parse(location.search);
 	const [meta, setMeta] = useState<VideoListResponseDto['meta']>(() => {
+		const params = queryString.parse(location.search);
 		const { page, search, ...rest } = params;
 		return {
 			page: page ? +page : 1,
@@ -60,6 +60,7 @@ export function useProfile() {
 		};
 	});
 	const [filterOptions, setFilterOptions] = useState<IFilterOptions>(() => {
+		const params = queryString.parse(location.search);
 		const { page, search, ...rest } = params;
 		return {
 			criteriaTags: [],
