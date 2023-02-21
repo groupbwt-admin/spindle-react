@@ -1,5 +1,7 @@
 import { IUser } from 'shared/types/user';
 
+import { VideoPermissionsEnum } from 'shared/hooks/use-change-access-settings';
+
 export interface IVideo {
 	id: string;
 	createdAt: string;
@@ -11,6 +13,7 @@ export interface IVideo {
 	user: IUser;
 	countComment: number;
 	viewsCount: number;
+	viewAccess: VideoPermissionsEnum;
 }
 
 export interface IVideoSign {

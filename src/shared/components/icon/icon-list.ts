@@ -14,6 +14,7 @@ import { ReactComponent as Edit } from 'shared/components/icon/collection/edit.s
 import { ReactComponent as EditProfile } from 'shared/components/icon/collection/edit-profile.svg';
 import { ReactComponent as EmptyCheckbox } from 'shared/components/icon/collection/empty-checkbox.svg';
 import { ReactComponent as Filter } from 'shared/components/icon/collection/filter.svg';
+import { ReactComponent as Globe } from 'shared/components/icon/collection/globe.svg';
 import { ReactComponent as Logout } from 'shared/components/icon/collection/logout.svg';
 import { ReactComponent as QuoteIcon } from 'shared/components/icon/collection/quote.svg';
 import { ReactComponent as Search } from 'shared/components/icon/collection/search.svg';
@@ -48,6 +49,7 @@ export const ICON_COLLECTION = {
 	sort_arrow_down: SortArrowDown,
 	calendar: Calendar,
 	checkmark: Checkmark,
+	globe: Globe,
 };
 
 type Keys = keyof typeof ICON_COLLECTION;
