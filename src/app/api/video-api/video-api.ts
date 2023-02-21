@@ -116,6 +116,13 @@ export class VideoApiService implements VideoApiInterface {
 	deleteVideoById = async (videoId) => {
 		return await this.http.delete(`/videos/${videoId}`);
 	};
+
+	changeVideoPermissions = async ({ id, viewAccess }): Promise<IVideo> => {
+		const payload = await this.http.patch(`/videos/${id}/change-permission`, {
+			viewAccess,
+		});
+		return payload.data;
+	};
 }
 
 export const VideoApi = new VideoApiService(new BaseHttpServices());

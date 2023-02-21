@@ -51,7 +51,7 @@ export function useVideo() {
 	};
 
 	const onVideosDeleted = async () => {
-		nav(location.state.from || VIDEO_ROUTES.MY_VIDEOS);
+		nav(location.state?.from || VIDEO_ROUTES.MY_VIDEOS);
 	};
 
 	const { modal: deleteVideoModal, startDeleteVideos } = useDeleteVideo({
@@ -83,7 +83,7 @@ export function useVideo() {
 	};
 
 	const handleBack = () => {
-		nav(location.state.from || VIDEO_ROUTES.MY_VIDEOS);
+		nav(location.state?.from || VIDEO_ROUTES.MY_VIDEOS);
 	};
 
 	const tagsArray = useMemo(() => {
@@ -92,7 +92,7 @@ export function useVideo() {
 
 	return {
 		models: {
-			pageTitle: location.state.title || 'My videos',
+			pageTitle: location.state?.title || 'My videos',
 			deleteVideoModal,
 			accessSettingsModal,
 			videoUrl,
