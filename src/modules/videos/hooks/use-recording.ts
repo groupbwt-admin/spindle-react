@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 import {selectAuthUserData} from "app/store/auth/selects";
 import {selectStatus} from "app/store/record-socket/selects";
@@ -13,7 +13,14 @@ import {useEvent} from "../../../shared/hooks/use-event";
 
 const DEFAULT_COUNTER = 3
 const RECORDING_INTERVAL = 1000
-
+const PAGE_TITLES = {
+	[VIDEO_ROUTES.MY_VIDEOS.path]: {
+		title: [VIDEO_ROUTES.MY_VIDEOS.title],
+	},
+	[VIDEO_ROUTES.PROFILE.path]: {
+		title: [VIDEO_ROUTES.MY_VIDEOS.title],
+	},
+};
 export const useRecording = () => {
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true)
 	const [counterBeforeStart, setCounterBeforeStart] = useState<number>(3)
@@ -22,7 +29,7 @@ export const useRecording = () => {
 	const status = selectStatus()
 	const navigate = useNavigate()
 	const user = selectAuthUserData()
-
+	const location = useLocation();
 	useEffect(() => {
 		if (!user) return
 		socketState.onConnectListener()
@@ -144,7 +151,14 @@ export const useRecording = () => {
 
 	const onNavigateToVideoPage = (video) => {
 		if (video) {
-			navigate(VIDEO_ROUTES.VIDEO.generate(video.id))
+			navigate(VIDEO_ROUTES.VIDEO.generate(video.id), {
+				state: PAGE_TITLES[location.pathname]
+					? {
+						from: location.pathname + location.search,
+						title: PAGE_TITLES[location.pathname].title,
+					}
+					: undefined,
+			})
 		}
 	}
 
