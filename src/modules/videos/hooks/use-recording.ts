@@ -11,6 +11,9 @@ import {SocketService} from "shared/services/base-socket-service";
 
 import {useEvent} from "../../../shared/hooks/use-event";
 
+const DEFAULT_COUNTER = 3
+const RECORDING_INTERVAL = 1000
+
 export const useRecording = () => {
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true)
 	const [counterBeforeStart, setCounterBeforeStart] = useState<number>(3)
@@ -37,6 +40,13 @@ export const useRecording = () => {
 				SocketService.socket.close()
 			}
 		};
+	}, []);
+	useEffect(() => {
+		window.addEventListener('storage', (event) => {
+			if (event.key === 'token') {
+				onVideoSaved()
+			}
+		})
 	}, []);
 
 	const wait = () => new Promise<void>((resolve) => {
@@ -84,7 +94,7 @@ export const useRecording = () => {
 
 			return wait().then(() => {
 				if (!isCancel.current) {
-					mediaRecorderLocal.start(1000);
+					mediaRecorderLocal.start(RECORDING_INTERVAL);
 					mediaRecorder.current = mediaRecorderLocal
 					socketState.setStatus(RECORDING_STATUS.recording);
 					socketState.setIsRecording(true)
@@ -106,7 +116,7 @@ export const useRecording = () => {
 		async () => {
 			try {
 				isCancel.current = false
-				setCounterBeforeStart(3)
+				setCounterBeforeStart(DEFAULT_COUNTER)
 				await requestMediaStream()
 			} catch (e) {
 				console.log('Socket Connect:' + e)

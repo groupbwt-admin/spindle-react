@@ -10,6 +10,7 @@ interface ISocket {
 	isConnect: boolean
 	recordStatus: string,
 	isRecording: boolean
+	isOnline: boolean
 	emit: (data: IEmitProps) => void;
 	save: (type: string, fn: (video: object) => void) => void
 	connect: () => void,
@@ -19,6 +20,7 @@ interface ISocket {
 	unfollowListener: (type: string) => void,
 	setStatus: (status: string) => void,
 	setIsRecording: (isShow: boolean) => void,
+	setIsOnline: (isOnline: boolean) => void
 
 }
 
@@ -35,6 +37,7 @@ export const socketState = proxy<ISocket>(
 		isConnect: false,
 		recordStatus: RECORDING_STATUS.permission_requested,
 		isRecording: false,
+		isOnline: true,
 		emit(data) {
 			if (this.recordStatus !== RECORDING_STATUS.reset) {
 				SocketService.emit(data.type, data.payload)
@@ -61,7 +64,7 @@ export const socketState = proxy<ISocket>(
 			SocketService.on(SOCKET_ACTIONS.disconnect, () => {
 				this.isConnect = false
 				stopRecording()
-				SocketService.socket.close()
+				SocketService.socket?.close()
 			})
 		},
 		unfollowListener(type) {
@@ -76,7 +79,9 @@ export const socketState = proxy<ISocket>(
 		setIsRecording(isShow) {
 			this.isRecording = isShow
 		},
-
+		setIsOnline(isOnline) {
+			this.isOnline = isOnline
+		},
 	},
 )
 

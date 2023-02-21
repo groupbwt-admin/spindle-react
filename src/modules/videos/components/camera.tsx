@@ -1,59 +1,41 @@
-import {useRef} from 'react';
+import React from 'react';
 import styled from '@emotion/styled/macro';
 
-import {useRecordCamera} from "../hooks/use-record-camera";
+import {WrapperCamera} from "./wrappper-camera";
+
 
 const VideoCamera = styled.video`
-	position: fixed;
-	top: 0;
-	left: 0;
-	//border-radius: 50%;
-	//border-radius: 50%;
+	border-radius: 50%;
+	object-fit: cover;
 	height: 200px;
 	width: 200px;
-	object-fit: cover;
-	:not([controls]):picture-in-picture {
-		box-shadow: 0 0 0 5px red;
-		border-radius: 50%;
+	box-shadow: 1px 1px 27px -2px rgba(0, 0, 0, 0.74);
+	transition: filter 0.3s ease-out;
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+
+	&:hover {
+		filter: brightness(60%);
 	}
 `
 
-export const Camera = () => {
-	const {mediaStream} = useRecordCamera()
-	const videoRef = useRef<any>(null);
-	if (mediaStream && videoRef.current && !videoRef.current?.srcObject) {
-		videoRef.current.srcObject = mediaStream;
-	}
-	if (!mediaStream) {
-		return null;
-	}
-	const onPip = () => {
-		if (document.pictureInPictureElement) {
-			document.exitPictureInPicture();
-		} else if (document.pictureInPictureEnabled) {
-			videoRef.current.requestPictureInPicture().then((pictureInPictureWindow) => {
-				pictureInPictureWindow.onresize = printPipWindowDimensions;
-			});
-		}
-	}
+interface ICamera {
+	isShowCamera: boolean,
+	videoRef: any,
+}
 
-	function printPipWindowDimensions(evt) {
-		const pipWindow = evt.target;
-		console.log(`The floating window dimensions are: ${pipWindow.width}x${pipWindow.height}px`);
-		// will print:
-		// The floating window dimensions are: 640x360px
-	}
-
+export const Camera: React.FC<ICamera> = ({isShowCamera, videoRef}) => {
+	if (!isShowCamera) return null
 	return (
-		<>
+		<WrapperCamera>
 			<VideoCamera
 				ref={videoRef}
 				autoPlay
 				playsInline
 				muted
 			/>
-			<button onClick={onPip}>onPip</button>
-		</>
+		</WrapperCamera>
+
 
 	);
 };

@@ -14,7 +14,7 @@ const ControllerStopWatch = styled.p`
 	margin: 0;
 	border-top: 1px solid #FFFFFF;
 `;
-export const StopWatchComponent = () => {
+export const StopWatch = () => {
 	const {
 		startTimer,
 		pauseTimer,
@@ -24,12 +24,12 @@ export const StopWatchComponent = () => {
 	const status = selectStatus()
 
 	const statusFn = {
-		[RECORDING_STATUS.recording]: () => startTimer(),
-		[RECORDING_STATUS.stopped]: () => pauseTimer(),
-		[RECORDING_STATUS.paused]: () => pauseTimer(),
-		[RECORDING_STATUS.error]: () => resetTimer(),
-		[RECORDING_STATUS.permission_requested]: () => resetTimer(),
-		[RECORDING_STATUS.idle]: () => resetTimer(),
+		[RECORDING_STATUS.recording]: startTimer,
+		[RECORDING_STATUS.stopped]: pauseTimer,
+		[RECORDING_STATUS.paused]: pauseTimer,
+		[RECORDING_STATUS.error]: resetTimer,
+		[RECORDING_STATUS.permission_requested]: resetTimer,
+		[RECORDING_STATUS.idle]: resetTimer,
 	}
 
 	useEffect(() => {
@@ -41,5 +41,4 @@ export const StopWatchComponent = () => {
 		<ControllerStopWatch>{time}</ControllerStopWatch>
 	);
 };
-export const StopWatch = memo(StopWatchComponent)
 

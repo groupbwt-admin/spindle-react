@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useEffect} from "react";
 import {AppMenu} from 'shared/layout/components/app-menu';
 
 import {Container} from '@mui/material';
@@ -24,7 +25,7 @@ export const MainLayout: React.FC<React.PropsWithChildren> = ({children}) => {
 	const {models: {recordWidget}, commands: {startRecording}} = useRecordVideo()
 
 	return (
-		<RecordContext.Provider value={{isShow: true, startRecording: startRecording}}>
+		<RecordContext.Provider value={{isShow: true, startRecording: startRecording, isOnline: true}}>
 			<MainLayoutContainer disableGutters maxWidth={false} id="drag-container">
 				{recordWidget}
 				<AppMenu/>

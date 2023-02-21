@@ -22,7 +22,7 @@ const ControllerWrapper = styled.div<IControllerWrapper>`
 	padding: ${props => props.isHorizontal ? '14px 30px 14px 24px' : '24px 18px'};
 	background: #000000;
 	border-radius: 50px;
-	width: ${props => props.isHorizontal ? '360px' : '70px'};
+	width: ${props => props.isHorizontal ? 'auto' : '70px'};
 	align-items: center;
 	${props => props.isMouseUp && 'transition: top 0.2s ease;	transition: left 0.2s ease;'}
 
@@ -53,9 +53,11 @@ const ControllerButton = styled.button`
 
 const body = document.querySelector('#root')
 const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({children}) => {
+	const windowHeight = window.innerHeight
+	const windowWidth = window.innerWidth
 	const [x, setX] = useState('150px')
-	const [y, setY] = useState((window.innerHeight / 3) + 'px')
-	const [controllerPosition, setControllerPosition] = useState({x: 150, y: window.innerHeight / 3})
+	const [y, setY] = useState((windowHeight / 3) + 'px')
+	const [controllerPosition, setControllerPosition] = useState({x: 150, y: windowHeight / 3})
 	const [isDown, setIsDown] = useState(false)
 	const [isColumn, setIsColumn] = useState(true);
 
@@ -70,6 +72,26 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({c
 		[isDown],
 	);
 
+	const findPosition = () => {
+		if (controllerPosition.y < 300) {
+			setX((windowWidth / 2.5) + 'px')
+			setY((30) + 'px')
+			setIsColumn(false)
+		} else if (controllerPosition.y > (windowHeight - 400)) {
+			setX((windowWidth / 2.5) + 'px')
+			setY((windowHeight - 100) + 'px')
+			setIsColumn(false)
+		} else if (controllerPosition.x > (windowWidth / 2)) {
+			setX((windowWidth - 150) + 'px')
+			setY((windowHeight / 3) + 'px')
+			setIsColumn(true)
+		} else {
+			setX('150px')
+			setY((windowHeight / 3) + 'px')
+			setIsColumn(true)
+		}
+	}
+
 	useEffect(() => {
 		window.addEventListener('mouseup', handelMouseUp)
 		if (isDown) {
@@ -77,30 +99,18 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({c
 			body?.addEventListener('mouseleave', handelMouseUp)
 		} else {
 			window.removeEventListener('mousemove', update)
-			if (controllerPosition.y < 300) {
-				setX((window.innerWidth / 2.5) + 'px')
-				setY((30) + 'px')
-				setIsColumn(false)
-			} else if (controllerPosition.y > (window.innerHeight - 400)) {
-				setX((window.innerWidth / 2.5) + 'px')
-				setY((window.innerHeight - 100) + 'px')
-				setIsColumn(false)
-			} else if (controllerPosition.x > (window.innerWidth / 2)) {
-				setX((window.innerWidth - 150) + 'px')
-				setY((window.innerHeight / 3) + 'px')
-				setIsColumn(true)
-			} else {
-				setX('150px')
-				setY((window.innerHeight / 3) + 'px')
-				setIsColumn(true)
-			}
 		}
 		return () => {
 			window.removeEventListener('mousemove', update)
 			window.removeEventListener('mouseup', handelMouseUp)
 			body?.removeEventListener('mouseleave', handelMouseUp)
-
 		};
+	}, [isDown]);
+
+	useEffect(() => {
+		if (!isDown) {
+			findPosition()
+		}
 	}, [isDown]);
 
 	const handelMouseDown = (e) => {

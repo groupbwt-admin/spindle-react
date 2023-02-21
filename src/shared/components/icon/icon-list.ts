@@ -2,6 +2,8 @@ import {ReactComponent as ActionMenu} from 'shared/components/icon/collection/ac
 import {ReactComponent as ArrowLeft} from 'shared/components/icon/collection/arrow-left.svg';
 import {ReactComponent as ArrowLeftOutlined} from 'shared/components/icon/collection/arrow-left-outlined.svg';
 import {ReactComponent as ArrowRightOutlined} from 'shared/components/icon/collection/arrow-right-outlined.svg';
+import {ReactComponent as Camera} from 'shared/components/icon/collection/camera.svg';
+import {ReactComponent as CameraOff} from 'shared/components/icon/collection/camera-off.svg';
 import {ReactComponent as ChevronDown} from 'shared/components/icon/collection/chevron-down.svg';
 import {ReactComponent as Close} from 'shared/components/icon/collection/close.svg';
 import {ReactComponent as Comments} from 'shared/components/icon/collection/comments.svg';
@@ -10,6 +12,7 @@ import {ReactComponent as DefaultSort} from 'shared/components/icon/collection/d
 import {ReactComponent as Delete} from 'shared/components/icon/collection/delete.svg';
 import {ReactComponent as Download} from 'shared/components/icon/collection/download.svg';
 import {ReactComponent as DragIndicator} from 'shared/components/icon/collection/drag-indicator.svg';
+import {ReactComponent as DragPan} from 'shared/components/icon/collection/drag-pan.svg';
 import {ReactComponent as Edit} from 'shared/components/icon/collection/edit.svg';
 import {ReactComponent as EditProfile} from 'shared/components/icon/collection/edit-profile.svg';
 import {ReactComponent as EmptyCheckbox} from 'shared/components/icon/collection/empty-checkbox.svg';
@@ -17,6 +20,7 @@ import {ReactComponent as Filter} from 'shared/components/icon/collection/filter
 import {ReactComponent as Logout} from 'shared/components/icon/collection/logout.svg';
 import {ReactComponent as Microphone} from 'shared/components/icon/collection/microphone.svg';
 import {ReactComponent as MicrophoneOff} from 'shared/components/icon/collection/microphone-off.svg';
+import {ReactComponent as OpenNew} from 'shared/components/icon/collection/open_new.svg';
 import {ReactComponent as Pause} from 'shared/components/icon/collection/pause.svg';
 import {ReactComponent as QuoteIcon} from 'shared/components/icon/collection/quote.svg';
 import {ReactComponent as Reset} from 'shared/components/icon/collection/reset.svg';
@@ -60,6 +64,10 @@ export const ICON_COLLECTION = {
 	microphone: Microphone,
 	microphone_off: MicrophoneOff,
 	drag_indicator: DragIndicator,
+	camera: Camera,
+	camera_off: CameraOff,
+	drag_pan: DragPan,
+	open_new: OpenNew
 };
 
 type Keys = keyof typeof ICON_COLLECTION;

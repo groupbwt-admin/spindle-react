@@ -34,8 +34,7 @@ interface ICountdown {
 	onCancel: () => void,
 }
 
-export const CountdownComponent: React.FC<ICountdown> = ({count, onCancel}) => {
-	if (count < 1) return null
+export const Countdown: React.FC<ICountdown> = ({count, onCancel}) => {
 	return (
 		<CountWrapper>
 			<CountValue>{count}</CountValue>
@@ -44,4 +43,4 @@ export const CountdownComponent: React.FC<ICountdown> = ({count, onCancel}) => {
 	);
 }
 
-export const Countdown = React.memo(CountdownComponent)
+

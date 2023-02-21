@@ -7,17 +7,16 @@ import {ICON_COLLECTION} from "../../../shared/components/icon/icon-list";
 import {StopWatch} from "./stop-watch";
 
 const ControllerButton = styled.button`
-  background: transparent;
-  padding: 12px 4px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: all 0.1s ease-out;
+	background: transparent;
+	padding: 12px 4px;
+	border: 1px solid transparent;
+	cursor: pointer;
+	transition: all 0.1s ease-out;
 
-  &:hover {
-    transform: translateY(-2px);
-  }
+	&:hover {
+		transform: translateY(-2px);
+	}
 `;
-
 
 
 interface IRecordControlPanel {
@@ -26,8 +25,10 @@ interface IRecordControlPanel {
 	pauseRecording: () => void,
 	resetRecording: () => void,
 	toggleMicrophone: () => void,
+	toggleCamera: () => void,
 	isMuted: boolean,
-	isPaused: boolean
+	isShowCamera: boolean,
+	isPaused: boolean,
 }
 
 const RecordControlPanelComponent: React.FC<IRecordControlPanel> = ({
@@ -36,7 +37,9 @@ const RecordControlPanelComponent: React.FC<IRecordControlPanel> = ({
 																																			pauseRecording,
 																																			resetRecording,
 																																			toggleMicrophone,
+																																			toggleCamera,
 																																			isMuted,
+																																			isShowCamera,
 																																			isPaused,
 																																		}) => {
 	return (
@@ -62,7 +65,12 @@ const RecordControlPanelComponent: React.FC<IRecordControlPanel> = ({
 					<Icon icon={ICON_COLLECTION.microphone_off}/>
 				}
 			</ControllerButton>
-			<StopWatch/>
+			<ControllerButton onClick={toggleCamera}>
+				{isShowCamera ?
+					<Icon icon={ICON_COLLECTION.camera}/> :
+					<Icon icon={ICON_COLLECTION.camera_off}/>
+				}
+			</ControllerButton>
 		</>
 	);
 }
