@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { Dayjs } from 'dayjs';
 import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
+import queryString from 'query-string';
 
 import { IVideo } from 'shared/types/video';
 
@@ -43,22 +45,33 @@ export interface IFilterOptions {
 
 export function useProfile() {
 	const { modal, handleOpen } = useEditProfileUser();
-	const [meta, setMeta] = useState<VideoListResponseDto['meta']>({
-		page: 1,
-		hasPreviousPage: false,
-		hasNextPage: false,
-		itemCount: 1,
-		pageCount: 1,
-		take: 30,
-		search: '',
+	const location = useLocation();
+	const [meta, setMeta] = useState<VideoListResponseDto['meta']>(() => {
+		const params = queryString.parse(location.search);
+		const { page, search, ...rest } = params;
+		return {
+			page: page ? +page : 1,
+			hasPreviousPage: false,
+			hasNextPage: false,
+			itemCount: 1,
+			pageCount: 1,
+			take: 30,
+			search: (search as string) || '',
+		};
 	});
-	const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
-		criteriaTags: [],
-		dateFrom: null,
-		dateTo: null,
-		order: RequestSortType.DESC,
-		sortField: 'created_at',
+	const [filterOptions, setFilterOptions] = useState<IFilterOptions>(() => {
+		const params = queryString.parse(location.search);
+		const { page, search, ...rest } = params;
+		return {
+			criteriaTags: [],
+			dateFrom: null,
+			dateTo: null,
+			order: RequestSortType.DESC,
+			sortField: 'created_at',
+			...rest,
+		};
 	});
+	const [searchParams, setSearchParams] = useSearchParams();
 	const [isLinksCopied, setIsLinksCopied] = useState(false);
 	const copyLinkTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 	const user = selectUserData();
@@ -131,11 +144,35 @@ export function useProfile() {
 					meta: data.meta,
 				};
 			});
+			setSearchParams((prev) =>
+				queryString.stringify(
+					{
+						...prev,
+						search: meta.search,
+						page: meta.page,
+						...filterOptions,
+					},
+					{ skipNull: true, skipEmptyString: true },
+				),
+			);
 		});
 	}, [filterOptions]);
 
 	useEffectAfterMount(() => {
-		searchVideos(() => ({ search: meta.search, page: 1 }));
+		searchVideos(
+			() => ({ search: meta.search, page: 1 }),
+			() =>
+				setSearchParams((prev) => {
+					return queryString.stringify(
+						{
+							...filterOptions,
+							search: meta.search,
+							page: 1,
+						},
+						{ skipNull: true, skipEmptyString: true },
+					);
+				}),
+		);
 	}, [meta.search]);
 
 	const tags = useQuery({
@@ -174,6 +211,16 @@ export function useProfile() {
 							meta: data.meta,
 						};
 					});
+					setSearchParams((prev) =>
+						queryString.stringify(
+							{
+								...prev,
+								...filterOptions,
+								page: newPage,
+							},
+							{ skipNull: true, skipEmptyString: true },
+						),
+					);
 				}),
 			0,
 		);
