@@ -12,6 +12,7 @@ const StyledMenu = styled(Menu)`
 	.MuiMenu-paper {
 		min-width: 200px;
 		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+		background-color: ${({ theme }) => theme.palette.common.white};
 		border-radius: 10px;
 	}
 `;

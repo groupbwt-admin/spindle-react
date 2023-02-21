@@ -4,6 +4,7 @@ import {ReactComponent as ArrowLeftOutlined} from 'shared/components/icon/collec
 import {ReactComponent as ArrowRightOutlined} from 'shared/components/icon/collection/arrow-right-outlined.svg';
 import {ReactComponent as Camera} from 'shared/components/icon/collection/camera.svg';
 import {ReactComponent as CameraOff} from 'shared/components/icon/collection/camera-off.svg';
+import {ReactComponent as Checkmark} from 'shared/components/icon/collection/check.svg';
 import {ReactComponent as ChevronDown} from 'shared/components/icon/collection/chevron-down.svg';
 import {ReactComponent as Close} from 'shared/components/icon/collection/close.svg';
 import {ReactComponent as Comments} from 'shared/components/icon/collection/comments.svg';
@@ -57,6 +58,7 @@ export const ICON_COLLECTION = {
 	sort_arrow_up: SortArrowUp,
 	sort_arrow_down: SortArrowDown,
 	calendar: Calendar,
+	checkmark: Checkmark,
 	stop: Stop,
 	pause: Pause,
 	reset: Reset,

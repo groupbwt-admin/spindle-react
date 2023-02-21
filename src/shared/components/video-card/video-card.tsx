@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useMutation } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 import { format } from 'date-fns';
@@ -19,6 +19,7 @@ import { IVideo } from 'shared/types/video';
 import { VideoApi } from 'app/api/video-api/video-api';
 
 import { VIDEO_ROUTES } from 'shared/config/routes';
+import { useCopyLink } from 'shared/hooks/use-copy-link';
 import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
 import { Avatar } from 'shared/components/avatar/avatar';
@@ -161,6 +162,15 @@ const StyledBadgeIcon = styled(Icon)`
 	margin-left: 5px;
 `;
 
+const PAGE_TITLES = {
+	[VIDEO_ROUTES.MY_VIDEOS.path]: {
+		title: [VIDEO_ROUTES.MY_VIDEOS.title],
+	},
+	[VIDEO_ROUTES.PROFILE.path]: {
+		title: [VIDEO_ROUTES.MY_VIDEOS.title],
+	},
+};
+
 export interface VideoCardProps {
 	video: IVideo;
 	activeActions?: VideoActionMenuProps['activeActions'];
@@ -181,10 +191,10 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 	onDelete,
 }) => {
 	const navigate = useNavigate();
+	const location = useLocation();
+	const { isLinkCopied, handleCopyLink } = useCopyLink(video);
 	const copyLinkTimerRef = useRef<ReturnType<typeof setTimeout>>();
 	const downloadVideoMutation = useMutation(VideoApi.downloadVideoById);
-
-	const [isLinkCopied, setIsLinkCopied] = useState(false);
 
 	useEffect(() => {
 		return () => {
@@ -200,7 +210,14 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 
 	const handleClick = () => {
 		if (!isSelectMode) {
-			navigate(VIDEO_ROUTES.VIDEO.generate(video.id));
+			navigate(VIDEO_ROUTES.VIDEO.generate(video.id), {
+				state: PAGE_TITLES[location.pathname]
+					? {
+							from: location.pathname + location.search,
+							title: PAGE_TITLES[location.pathname].title,
+					  }
+					: undefined,
+			});
 		} else {
 			onChecked({ video, checked: !checked });
 		}
@@ -214,19 +231,6 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 	const handleOpenDeleteModal = (e) => {
 		e.stopPropagation();
 		onDelete && onDelete(video);
-	};
-
-	const handleCopyLink = async (e) => {
-		e.stopPropagation();
-		if (isLinkCopied || !navigator.clipboard) return;
-
-		await navigator.clipboard.writeText(
-			VIDEO_ROUTES.VIDEO.generateExternalPath(video.id),
-		);
-		setIsLinkCopied(true);
-		copyLinkTimerRef.current = setTimeout(() => {
-			setIsLinkCopied(false);
-		}, 1500);
 	};
 
 	return (
