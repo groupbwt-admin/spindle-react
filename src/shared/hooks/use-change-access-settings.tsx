@@ -5,6 +5,8 @@ import { IVideo } from 'shared/types/video';
 
 import { VideoApi } from 'app/api/video-api/video-api';
 
+import { useCopyLink } from 'shared/hooks/use-copy-link';
+
 import { Modal } from 'shared/components/modal';
 import { AccessSettingsModal } from 'shared/components/video/modals/access-settings-modal';
 
@@ -29,6 +31,8 @@ const VIDEO_PERMISSIONS_OPTIONS = [
 export function useChangeAccessSettings({ onSettingsChanged }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [video, setVideo] = useState<IVideo | null>(null);
+
+	const { isLinkCopied, handleCopyLink } = useCopyLink(video);
 
 	const changePermissionsMutation = useMutation(async (viewAccess) => {
 		const res = await VideoApi.changeVideoPermissions({
@@ -76,9 +80,11 @@ export function useChangeAccessSettings({ onSettingsChanged }) {
 			<AccessSettingsModal
 				accessOptions={VIDEO_PERMISSIONS_OPTIONS}
 				video={video}
+				isLinkCopied={isLinkCopied}
 				isLoading={changePermissionsMutation.isLoading}
 				handleChangePermissions={handleChangePermissions}
 				handleChangeCommentsPermission={handleChangeCommentsPermission}
+				handleCopyLink={handleCopyLink}
 			/>
 		</Modal.Root>
 	);
