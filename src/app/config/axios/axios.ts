@@ -9,8 +9,13 @@ const axiosInstance = Axios.create({
 
 axiosInstance.interceptors.request.use(
 	function (config) {
-		(config.headers || {})['Authorization'] =
-			'Bearer ' + LocalStorageService.get('token');
+		const token = LocalStorageService.get('token');
+		if (token) {
+			(config.headers || {})['Authorization'] = token
+				? 'Bearer ' + LocalStorageService.get('token')
+				: undefined;
+		}
+
 		return config;
 	},
 	function (error) {
