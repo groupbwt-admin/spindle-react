@@ -1,11 +1,12 @@
 import React, { ReactNode } from 'react';
+import { BoundaryError } from 'shared/models/custom-errors';
 
 interface Props {
 	children?: ReactNode;
 }
 
 interface State {
-	error: any;
+	error: BoundaryError | null;
 }
 
 export class ErrorBoundary extends React.Component<Props, State> {

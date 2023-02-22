@@ -4,7 +4,6 @@ import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 
 import { CircularProgress, InputAdornment, InputBase } from '@mui/material';
-import { css } from '@mui/material/styles';
 
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
@@ -33,51 +32,50 @@ const StyledClearInputAdornment = styled(InputAdornment)`
 	cursor: pointer;
 `;
 
-const AppInput = styled(InputBase)(
-	({ theme }) => css`
-		display: flex;
-		position: relative;
+const AppInput = styled(InputBase)`
+	display: flex;
+	position: relative;
 
-		input {
-			max-width: 100%;
-			background-color: #ffffff;
-			border: 1px solid #eeeff1;
-			border-radius: 10px;
-			padding: 14px 12px 14px 46px;
-			transition: border-color 0.3s ${theme.transitions.easing.easeIn};
+	input {
+		max-width: 100%;
+		background-color: #ffffff;
+		border: 1px solid ${({ theme }) => theme.palette.text.secondary};
+		border-radius: 10px;
+		padding: 14px 12px 14px 46px;
+		transition: border-color 0.3s
+			${({ theme }) => theme.transitions.easing.easeIn};
 
-			&::placeholder {
-				color: ${theme.palette.text.secondary};
-			}
-
-			&:focus {
-				border-color: ${theme.palette.primary.main};
-			}
+		&::placeholder {
+			color: ${({ theme }) => theme.palette.text.secondary};
 		}
 
-		&.Mui-error input {
-			border-color: ${theme.palette.error.main};
+		&:focus {
+			border-color: ${({ theme }) => theme.palette.primary.main};
 		}
+	}
 
-		&.MuiInputBase-root {
-			transition: width 0.3s ease;
-			width: 54px;
-			max-width: 400px;
-		}
+	&.Mui-error input {
+		border-color: ${({ theme }) => theme.palette.error.main};
+	}
 
-		&.Mui-focused,
-		&.hasValue {
-			transition: width 0.3s ease;
-			width: 100%;
-		}
+	&.MuiInputBase-root {
+		transition: width 0.3s ease;
+		width: 54px;
+		max-width: 400px;
+	}
 
-		&.hasValue {
-			${StyledClearInputAdornment} {
-				display: block;
-			}
+	&.Mui-focused,
+	&.hasValue {
+		transition: width 0.3s ease;
+		width: 100%;
+	}
+
+	&.hasValue {
+		${StyledClearInputAdornment} {
+			display: block;
 		}
-	`,
-);
+	}
+`;
 
 interface SearchInputProps extends InputProps {
 	value: string;

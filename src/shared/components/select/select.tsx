@@ -11,7 +11,7 @@ const StyledSelect = styled(ExternalSelect)`
 	border-radius: 10px;
 
 	fieldset {
-		border-color: #eeeff1;
+		border-color: ${({ theme }) => theme.palette.secondary.main};
 	}
 `;
 
@@ -26,7 +26,7 @@ const SelectValue = styled.div`
 `;
 
 interface SelectProps {
-	value?: VideoPermissionsEnum;
+	value?: string;
 	options: { title: string; value: VideoPermissionsEnum }[];
 	onChange: (VideoPermissionsEnum) => void;
 }

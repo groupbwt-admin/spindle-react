@@ -29,7 +29,7 @@ const VIDEO_PERMISSIONS_OPTIONS = [
 	},
 ];
 
-export function useChangeAccessSettings({ onSettingsChanged }) {
+export function useChangeAccessSettings() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [videoId, setVideoId] = useState(null);
 	const client = useQueryClient();
@@ -44,21 +44,17 @@ export function useChangeAccessSettings({ onSettingsChanged }) {
 	const { isLinkCopied, handleCopyLink } = useCopyLink(video);
 
 	const changePermissionsMutation = useMutation(async (viewAccess) => {
-		const res = await VideoApi.changeVideoPermissions({
+		return await VideoApi.changeVideoPermissions({
 			id: video?.id,
 			viewAccess,
 		});
-		await onSettingsChanged();
-		return res;
 	});
 
 	const changeCommentsPermissionMutation = useMutation(async (isComments) => {
-		const res = await VideoApi.updateVideoById({
+		return await VideoApi.updateVideoById({
 			id: video?.id,
 			payload: { isComments: isComments },
 		});
-		await onSettingsChanged();
-		return res;
 	});
 
 	const startChangeSettings = async (id) => {

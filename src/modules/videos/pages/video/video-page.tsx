@@ -46,8 +46,8 @@ const ActionsContainer = styled.div`
 	padding: 16px 0;
 
 	.MuiButtonBase-root {
-		background: #ffffff;
-		border: 1px solid #eeeff1;
+		background: ${({ theme }) => theme.palette.common.white};
+		border: 1px solid ${({ theme }) => theme.palette.text.secondary};
 		border-radius: 10px;
 		padding: 16px 24px;
 	}
@@ -72,8 +72,8 @@ const StyledVideo = styled.video`
 `;
 
 const StyledIconButton = styled(IconButton)`
-	background: #ffffff;
-	border: 1px solid #eeeff1;
+	background: ${({ theme }) => theme.palette.common.white};
+	border: 1px solid ${({ theme }) => theme.palette.text.secondary};
 	border-radius: 10px;
 	padding: 15px 24px;
 	margin-right: 12px;
@@ -91,7 +91,7 @@ const StyledCaption = styled(Typography)`
 
 const RecordButton = styled(Button)`
 	max-width: 190px;
-	color: #ffffff;
+	color: ${({ theme }) => theme.palette.common.white};
 	justify-self: flex-start;
 	margin-left: auto;
 `;

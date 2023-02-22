@@ -47,14 +47,14 @@ export interface IFilterOptions {
 export function useProfile() {
 	const { modal, handleOpen } = useEditProfileUser();
 
-	const onSettingsChanged = () => {};
-
 	const { modal: accessSettingsModal, startChangeSettings } =
-		useChangeAccessSettings({ onSettingsChanged });
+		useChangeAccessSettings();
+
 	const location = useLocation();
+
 	const [meta, setMeta] = useState<VideoListResponseDto['meta']>(() => {
 		const params = queryString.parse(location.search);
-		const { page, search, ...rest } = params;
+		const { page, search } = params;
 		return {
 			page: page ? +page : 1,
 			hasPreviousPage: false,
@@ -168,16 +168,16 @@ export function useProfile() {
 		searchVideos(
 			() => ({ search: meta.search, page: 1 }),
 			() =>
-				setSearchParams((prev) => {
-					return queryString.stringify(
+				setSearchParams(() =>
+					queryString.stringify(
 						{
 							...filterOptions,
 							search: meta.search,
 							page: 1,
 						},
 						{ skipNull: true, skipEmptyString: true },
-					);
-				}),
+					),
+				),
 		);
 	}, [meta.search]);
 

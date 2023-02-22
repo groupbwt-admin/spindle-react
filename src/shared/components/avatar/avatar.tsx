@@ -6,7 +6,7 @@ import { Avatar as MuiAvatar } from '@mui/material';
 const StyledAvatar = styled(MuiAvatar)`
 	width: 42px;
 	height: 42px;
-	border: 2px solid #ffffff;
+	border: 2px solid ${({ theme }) => theme.palette.common.white};
 	flex-shrink: 0;
 `;
 
