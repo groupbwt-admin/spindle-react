@@ -71,6 +71,7 @@ interface VideoListProps {
 	loadNextPage: () => void;
 	onChecked: (IVideo) => void;
 	onDeleteVideo?: (video: IVideo) => void;
+	onChangeSettings?: (video: IVideo) => void;
 }
 
 export const VideoList: React.FC<VideoListProps> = ({
@@ -83,6 +84,7 @@ export const VideoList: React.FC<VideoListProps> = ({
 	activeActions,
 	onChecked,
 	onDeleteVideo,
+	onChangeSettings,
 }) => {
 	const isCardChecked = (cardId) => {
 		return !!selectedVideos[cardId];
@@ -111,6 +113,7 @@ export const VideoList: React.FC<VideoListProps> = ({
 						onChecked={onChecked}
 						isSelectMode={isSelectMode}
 						onDelete={onDeleteVideo}
+						onChangeSettings={onChangeSettings}
 					/>
 				))}
 			</VideoContainer>

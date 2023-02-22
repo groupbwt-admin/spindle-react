@@ -37,7 +37,7 @@ export const withSetupProfile = (Component) => {
 				<Navigate
 					to={
 						location.state?.from
-							? location.state.from
+							? location.state?.from
 							: VIDEO_ROUTES.MY_VIDEOS.path
 					}
 					replace

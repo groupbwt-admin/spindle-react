@@ -18,6 +18,7 @@ import { selectUserData } from 'app/store/user/selects';
 import { VIDEO_ROUTES } from 'shared/config/routes';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { RequestSortType } from 'shared/constants/request-sort-type';
+import { useChangeAccessSettings } from 'shared/hooks/use-change-access-settings';
 import { useDeleteVideo } from 'shared/hooks/use-delete-video';
 import { useEffectAfterMount } from 'shared/hooks/use-effect-after-mount';
 import { useFilterRequest } from 'shared/hooks/use-filter-request';
@@ -45,10 +46,15 @@ export interface IFilterOptions {
 
 export function useProfile() {
 	const { modal, handleOpen } = useEditProfileUser();
+
+	const { modal: accessSettingsModal, startChangeSettings } =
+		useChangeAccessSettings();
+
 	const location = useLocation();
+
 	const [meta, setMeta] = useState<VideoListResponseDto['meta']>(() => {
 		const params = queryString.parse(location.search);
-		const { page, search, ...rest } = params;
+		const { page, search } = params;
 		return {
 			page: page ? +page : 1,
 			hasPreviousPage: false,
@@ -162,16 +168,16 @@ export function useProfile() {
 		searchVideos(
 			() => ({ search: meta.search, page: 1 }),
 			() =>
-				setSearchParams((prev) => {
-					return queryString.stringify(
+				setSearchParams(() =>
+					queryString.stringify(
 						{
 							...filterOptions,
 							search: meta.search,
 							page: 1,
 						},
 						{ skipNull: true, skipEmptyString: true },
-					);
-				}),
+					),
+				),
 		);
 	}, [meta.search]);
 
@@ -286,6 +292,10 @@ export function useProfile() {
 		startDeleteVideos([video]);
 	};
 
+	const handleChangeVideoSettings = (video: IVideo) => {
+		startChangeSettings(video.id);
+	};
+
 	const handleDeleteSelectedVideos = () => {
 		startDeleteVideos(selectedVideosArray);
 	};
@@ -307,6 +317,7 @@ export function useProfile() {
 		models: {
 			modal,
 			deleteVideoModal,
+			accessSettingsModal,
 			user,
 			videos: videosData?.data ?? [],
 			meta: videosData?.meta,
@@ -333,6 +344,7 @@ export function useProfile() {
 			handleChangeSortField,
 			handleApplyFilters,
 			handleDeleteVideo,
+			handleChangeVideoSettings,
 			handleDeleteSelectedVideos,
 			handleCopySelectedLinks,
 		},

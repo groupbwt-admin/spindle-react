@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
 
-import {Button} from "shared/components/button/button";
-
+import { Button } from 'shared/components/button/button';
 
 const CountWrapper = styled.div`
 	position: fixed;
@@ -17,7 +16,7 @@ const CountWrapper = styled.div`
 `;
 const CountValue = styled.p`
 	color: #fff;
-	font-family: 'Catamaran';
+	font-family: 'Catamaran', serif;
 	font-style: normal;
 	font-weight: 600;
 	font-size: 180px;
@@ -26,21 +25,19 @@ const CountValue = styled.p`
 `;
 const CancelButton = styled(Button)`
 	max-width: 190px;
-	color: #ffffff;
+	color: ${({ theme }) => theme.palette.common.white};
 `;
 
 interface ICountdown {
-	count: number,
-	onCancel: () => void,
+	count: number;
+	onCancel: () => void;
 }
 
-export const Countdown: React.FC<ICountdown> = ({count, onCancel}) => {
+export const Countdown: React.FC<ICountdown> = ({ count, onCancel }) => {
 	return (
 		<CountWrapper>
 			<CountValue>{count}</CountValue>
-			<CancelButton label="Cancel Recording" onClick={onCancel}/>
+			<CancelButton label="Cancel Recording" onClick={onCancel} />
 		</CountWrapper>
 	);
-}
-
-
+};

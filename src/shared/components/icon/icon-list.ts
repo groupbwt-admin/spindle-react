@@ -18,7 +18,8 @@ import {ReactComponent as Edit} from 'shared/components/icon/collection/edit.svg
 import {ReactComponent as EditProfile} from 'shared/components/icon/collection/edit-profile.svg';
 import {ReactComponent as EmptyCheckbox} from 'shared/components/icon/collection/empty-checkbox.svg';
 import {ReactComponent as Filter} from 'shared/components/icon/collection/filter.svg';
-import {ReactComponent as Logout} from 'shared/components/icon/collection/logout.svg';
+import {ReactComponent as Globe } from 'shared/components/icon/collection/globe.svg';
+import { ReactComponent as Logout} from 'shared/components/icon/collection/logout.svg';
 import {ReactComponent as Microphone} from 'shared/components/icon/collection/microphone.svg';
 import {ReactComponent as MicrophoneOff} from 'shared/components/icon/collection/microphone-off.svg';
 import {ReactComponent as OpenNew} from 'shared/components/icon/collection/open_new.svg';
@@ -59,6 +60,7 @@ export const ICON_COLLECTION = {
 	sort_arrow_down: SortArrowDown,
 	calendar: Calendar,
 	checkmark: Checkmark,
+	globe: Globe,
 	stop: Stop,
 	pause: Pause,
 	reset: Reset,
