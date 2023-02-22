@@ -14,10 +14,10 @@ interface IRecordButton {
 
 const RecordButton = styled(Button)<IRecordButton>`
 	max-width: 190px;
-	color: #ffffff;
+	color: #fff;
 
 	span svg circle {
-		stroke: ${props => props.isRecording && 'red'};
+		stroke: ${props => props.isRecording && '#FF5656'};
 	}
 `;
 

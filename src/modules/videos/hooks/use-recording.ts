@@ -13,6 +13,8 @@ import {useEvent} from "../../../shared/hooks/use-event";
 
 const DEFAULT_COUNTER = 3
 const RECORDING_INTERVAL = 1000
+const INTERVAL_COUNT_START = 1000
+const COUNTDOWN_TIME = 3500
 const PAGE_TITLES = {
 	[VIDEO_ROUTES.MY_VIDEOS.path]: {
 		title: [VIDEO_ROUTES.MY_VIDEOS.title],
@@ -68,10 +70,10 @@ export const useRecording = () => {
 
 
 	const wait = () => new Promise<void>((resolve) => {
-		const myInterval = setInterval(() => setCounterBeforeStart((prevState) => prevState - 1), 1000)
+		const myInterval = setInterval(() => setCounterBeforeStart((prevState) => prevState - 1), INTERVAL_COUNT_START)
 		setTimeout(() => {
 			resolve(clearInterval(myInterval))
-		}, 3500);
+		}, COUNTDOWN_TIME);
 	});
 
 	const requestMediaStream = async () => {
@@ -160,17 +162,15 @@ export const useRecording = () => {
 	}
 
 
-	const onNavigateToVideoPage = (video) => {
-		if (video) {
-			navigate(VIDEO_ROUTES.VIDEO.generate(video.id), {
-				state: PAGE_TITLES[location.pathname]
-					? {
-						from: location.pathname + location.search,
-						title: PAGE_TITLES[location.pathname].title,
-					}
-					: undefined,
-			})
-		}
+	const onNavigateToVideoPage = (video: { id: string }) => {
+		navigate(VIDEO_ROUTES.VIDEO.generate(video?.id), {
+			state: PAGE_TITLES[location.pathname]
+				? {
+					from: location.pathname + location.search,
+					title: PAGE_TITLES[location.pathname].title,
+				}
+				: undefined,
+		})
 	}
 
 	const onStopMediaRecording = () => {
@@ -208,22 +208,18 @@ export const useRecording = () => {
 		socketState.setIsRecording(false)
 
 	}
-	const pauseRecording = useCallback(
+	const pauseRecording = useEvent(
 		() => {
 			socketState.setStatus(RECORDING_STATUS.paused);
 			mediaRecorder.current?.pause();
-		},
-		[],
-	);
+		});
 
 
-	const resumeRecording = useCallback(
+	const resumeRecording = useEvent(
 		() => {
 			socketState.setStatus(RECORDING_STATUS.recording);
 			mediaRecorder.current?.resume();
-		},
-		[],
-	);
+		});
 
 
 	return {

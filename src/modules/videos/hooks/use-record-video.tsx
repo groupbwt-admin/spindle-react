@@ -43,11 +43,9 @@ export const useRecordVideo = () => {
 		command: {toggleCamera}
 	} = useCameraControl()
 
-
 	const recordControlPanel = isRecording &&
 		<DragWrapperRecordController>
-			{isRecording && <Camera videoRef={videoRef}
-															isShowCamera={isOpenCamera}/>}
+			{isOpenCamera && <Camera videoRef={videoRef}/>}
 			<WrapperController>
 
 				<RecordControlPanel onVideoSaved={onVideoSaved}

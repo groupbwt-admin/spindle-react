@@ -12,7 +12,7 @@ interface ISocket {
 	isRecording: boolean
 	isOnline: boolean
 	emit: (data: IEmitProps) => void;
-	save: (type: string, fn: (video: object) => void) => void
+	save: (type: string, fn: (video: { id: string }) => void) => void
 	connect: () => void,
 	close: () => void,
 	onConnectListener: () => void,

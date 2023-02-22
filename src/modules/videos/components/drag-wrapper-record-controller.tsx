@@ -30,7 +30,7 @@ const ControllerWrapper = styled.div<IControllerWrapper>`
 
 
 interface IWrapperRecordController {
-	children: JSX.Element | JSX.Element[];
+	children: React.ReactNode;
 
 }
 

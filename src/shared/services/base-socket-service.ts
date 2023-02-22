@@ -36,7 +36,7 @@ class _SocketService {
 		this._socket().emit(type, payload && payload);
 	}
 
-	save(type: string, fn: (video: object) => void) {
+	save(type: string, fn: (video: { id: string }) => void) {
 		this._socket().emit(type, fn);
 	}
 

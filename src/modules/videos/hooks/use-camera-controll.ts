@@ -2,13 +2,33 @@ import {useEffect, useRef, useState} from 'react';
 
 import {selectIsRecording} from "app/store/record-socket/selects";
 
-import {useRecordCamera} from "./use-record-camera";
-
-
 export const useCameraControl = () => {
 	const [isOpenCamera, setIsOpenCamera] = useState(false);
 	const isRecording = selectIsRecording()
-	const {mediaStream, disabledVideoStream, enableVideoStream} = useRecordCamera()
+	const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
+
+	async function enableVideoStream() {
+		try {
+			const stream = await navigator.mediaDevices.getUserMedia({
+				audio: false,
+				video: {facingMode: "environment"}
+			});
+			setMediaStream(stream);
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+	const disabledVideoStream = () => {
+		try {
+			mediaStream?.getTracks().forEach(track => {
+				track.stop();
+			});
+		} catch (e) {
+			console.log(e)
+		}
+	}
+
 	const videoRef = useRef<any>(null);
 	if (mediaStream && videoRef.current && !videoRef.current?.srcObject) {
 		videoRef.current.srcObject = mediaStream;

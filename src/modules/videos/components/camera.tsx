@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
 
-import {WrapperCamera} from "./wrappper-camera";
-
 
 const VideoCamera = styled.video`
 	border-radius: 50%;
@@ -23,22 +21,17 @@ const VideoCamera = styled.video`
 `
 
 interface ICamera {
-	isShowCamera: boolean,
 	videoRef: any,
 }
 
-export const Camera: React.FC<ICamera> = ({isShowCamera, videoRef}) => {
-	if (!isShowCamera) return null
+export const Camera: React.FC<ICamera> = ({videoRef}) => {
 	return (
-		// <WrapperCamera>
-			<VideoCamera
-				ref={videoRef}
-				autoPlay
-				playsInline
-				muted
-			/>
-		// </WrapperCamera>
-
+		<VideoCamera
+			ref={videoRef}
+			autoPlay
+			playsInline
+			muted
+		/>
 
 	);
 };
