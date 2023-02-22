@@ -45,11 +45,6 @@ export function useVideo() {
 
 	const updateVideoMutation = useMutation(VideoApi.updateVideoById);
 
-	const handleDownload = (e) => {
-		e.stopPropagation();
-		downloadVideoMutation.mutate({ id: video?.id, title: video?.title });
-	};
-
 	const onVideosDeleted = async () => {
 		nav(location.state?.from || VIDEO_ROUTES.MY_VIDEOS);
 	};
@@ -57,6 +52,11 @@ export function useVideo() {
 	const { modal: deleteVideoModal, startDeleteVideos } = useDeleteVideo({
 		onVideosDeleted,
 	});
+
+	const handleDownload = (e) => {
+		e.stopPropagation();
+		downloadVideoMutation.mutate({ id: video?.id, title: video?.title });
+	};
 
 	const handleDeleteVideo = () => {
 		startDeleteVideos([video]);
@@ -68,7 +68,6 @@ export function useVideo() {
 		useChangeAccessSettings({ onSettingsChanged });
 
 	const handleChangeVideoSettings = () => {
-		console.log('open modal');
 		startChangeSettings(video?.id);
 	};
 

@@ -61,28 +61,22 @@ export function useChangeAccessSettings({ onSettingsChanged }) {
 		return res;
 	});
 
-	const handleClose = () => setIsModalOpen(false);
-
 	const startChangeSettings = async (id) => {
 		setVideoId(id);
 		setIsModalOpen(true);
 	};
 
+	const handleClose = () => setIsModalOpen(false);
+
 	const handleChangePermissions = async (viewAccess) => {
 		const res = await changePermissionsMutation.mutateAsync(viewAccess);
-		client.setQueryData(
-			[VIDEO_QUERY_KEYS.video, videoId],
-			(prevValue: IVideo | undefined) => res,
-		);
+		client.setQueryData([VIDEO_QUERY_KEYS.video, videoId], res);
 		return;
 	};
 
 	const handleChangeCommentsPermission = async (isComments) => {
 		const res = await changeCommentsPermissionMutation.mutateAsync(isComments);
-		client.setQueryData(
-			[VIDEO_QUERY_KEYS.video, videoId],
-			(prevValue: IVideo | undefined) => res,
-		);
+		client.setQueryData([VIDEO_QUERY_KEYS.video, videoId], res);
 		return;
 	};
 
