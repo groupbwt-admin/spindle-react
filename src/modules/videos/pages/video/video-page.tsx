@@ -150,7 +150,7 @@ export const VideoPage: React.FC = () => {
 					onDownload={commands.handleDownload}
 					onCopyLink={commands.handleCopyLink}
 					onDelete={commands.handleDeleteVideo}
-					onChangeSettings={(e) => commands.handleChangeVideoSettings}
+					onChangeSettings={commands.handleChangeVideoSettings}
 				/>
 			</ActionsContainer>
 			<DetailedInfoContainer>
@@ -176,6 +176,7 @@ export const VideoPage: React.FC = () => {
 				/>
 			</DetailedInfoContainer>
 			{models.deleteVideoModal}
+			{models.accessSettingsModal}
 		</VideoPageContainer>
 	);
 };

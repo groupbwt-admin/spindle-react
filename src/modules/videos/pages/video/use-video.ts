@@ -67,8 +67,9 @@ export function useVideo() {
 	const { modal: accessSettingsModal, startChangeSettings } =
 		useChangeAccessSettings({ onSettingsChanged });
 
-	const handleChangeVideoSettings = (video: IVideo) => {
-		startChangeSettings([video]);
+	const handleChangeVideoSettings = () => {
+		console.log('open modal');
+		startChangeSettings(video?.id);
 	};
 
 	const handleUpdateVideo = async (payload) => {

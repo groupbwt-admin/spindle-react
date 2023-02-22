@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { IVideo } from 'shared/types/video';
 
 import { VideoApi } from 'app/api/video-api/video-api';
 
+import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { useCopyLink } from 'shared/hooks/use-copy-link';
 
 import { Modal } from 'shared/components/modal';
@@ -30,7 +31,15 @@ const VIDEO_PERMISSIONS_OPTIONS = [
 
 export function useChangeAccessSettings({ onSettingsChanged }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [video, setVideo] = useState<IVideo | null>(null);
+	const [videoId, setVideoId] = useState(null);
+	const client = useQueryClient();
+
+	const { data: video, isLoading } = useQuery({
+		queryKey: [VIDEO_QUERY_KEYS.video, videoId],
+		queryFn: () =>
+			VideoApi.getVideoInfoById({ id: videoId as unknown as IVideo['id'] }),
+		enabled: !!videoId,
+	});
 
 	const { isLinkCopied, handleCopyLink } = useCopyLink(video);
 
@@ -54,20 +63,26 @@ export function useChangeAccessSettings({ onSettingsChanged }) {
 
 	const handleClose = () => setIsModalOpen(false);
 
-	const startChangeSettings = (video) => {
-		setVideo(video);
+	const startChangeSettings = async (id) => {
+		setVideoId(id);
 		setIsModalOpen(true);
 	};
 
 	const handleChangePermissions = async (viewAccess) => {
 		const res = await changePermissionsMutation.mutateAsync(viewAccess);
-		setVideo(res);
+		client.setQueryData(
+			[VIDEO_QUERY_KEYS.video, videoId],
+			(prevValue: IVideo | undefined) => res,
+		);
 		return;
 	};
 
 	const handleChangeCommentsPermission = async (isComments) => {
 		const res = await changeCommentsPermissionMutation.mutateAsync(isComments);
-		setVideo(res);
+		client.setQueryData(
+			[VIDEO_QUERY_KEYS.video, videoId],
+			(prevValue: IVideo | undefined) => res,
+		);
 		return;
 	};
 
@@ -81,7 +96,11 @@ export function useChangeAccessSettings({ onSettingsChanged }) {
 				accessOptions={VIDEO_PERMISSIONS_OPTIONS}
 				video={video}
 				isLinkCopied={isLinkCopied}
-				isLoading={changePermissionsMutation.isLoading}
+				isVideoDataLoading={isLoading}
+				isPermissionsLoading={changePermissionsMutation.isLoading}
+				isCommentsPermissionsLoading={
+					changeCommentsPermissionMutation.isLoading
+				}
 				handleChangePermissions={handleChangePermissions}
 				handleChangeCommentsPermission={handleChangeCommentsPermission}
 				handleCopyLink={handleCopyLink}

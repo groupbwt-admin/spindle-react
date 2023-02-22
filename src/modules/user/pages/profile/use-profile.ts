@@ -293,7 +293,7 @@ export function useProfile() {
 	};
 
 	const handleChangeVideoSettings = (video: IVideo) => {
-		startChangeSettings(video);
+		startChangeSettings(video.id);
 	};
 
 	const handleDeleteSelectedVideos = () => {
