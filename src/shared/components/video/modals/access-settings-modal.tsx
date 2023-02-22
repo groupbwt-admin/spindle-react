@@ -10,8 +10,29 @@ import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { Modal, ModalContext } from 'shared/components/modal';
 import { Select } from 'shared/components/select/select';
+import { SpinnerOverlay } from 'shared/components/spinner-overlay/spinner-overlay';
 import { Switch } from 'shared/components/switch/switch';
 import { Typography } from 'shared/components/typography/typography';
+
+const ModalContainer = styled.div`
+	min-height: 236px;
+	display: flex;
+	flex-direction: column;
+
+	.MuiBackdrop-root {
+		z-index: 1000;
+		border-radius: 0 0 10px 10px;
+		background-color: ${({ theme }) => theme.palette.common.white};
+		opacity: 0.6 !important;
+		color: ${({ theme }) => theme.palette.primary.main};
+		position: absolute;
+	}
+`;
+
+const ContentContainer = styled.div`
+	position: relative;
+	flex-grow: 1;
+`;
 
 const ModalContent = styled.div`
 	padding: 24px;
@@ -32,21 +53,25 @@ const StyledCopyLinkButton = styled(Button)`
 	border-radius: 10px;
 `;
 
-interface DeleteVideoModalProps {
-	video: IVideo | null;
+interface AccessModalProps {
+	video?: IVideo;
 	accessOptions: { title: string; value: VideoPermissionsEnum }[];
-	isLoading: boolean;
+	isVideoDataLoading: boolean;
+	isPermissionsLoading: boolean;
+	isCommentsPermissionsLoading: boolean;
 	isLinkCopied?: boolean;
 	handleCopyLink?: (e) => void;
 	handleChangePermissions: (VideoPermissionsEnum) => void;
 	handleChangeCommentsPermission: (isComments: boolean) => void;
 }
 
-export const AccessSettingsModal: React.FC<DeleteVideoModalProps> = ({
+export const AccessSettingsModal: React.FC<AccessModalProps> = ({
 	video,
 	isLinkCopied,
 	accessOptions,
-	isLoading,
+	isVideoDataLoading,
+	isPermissionsLoading,
+	isCommentsPermissionsLoading,
 	handleCopyLink,
 	handleChangePermissions,
 	handleChangeCommentsPermission,
@@ -54,31 +79,46 @@ export const AccessSettingsModal: React.FC<DeleteVideoModalProps> = ({
 	const modalContext = useContext(ModalContext);
 
 	return (
-		<>
+		<ModalContainer>
 			<Modal.Header onClose={modalContext.onClose}>
 				<Typography variant="h3">Settings</Typography>
 			</Modal.Header>
-			<ModalContent>
-				<Switch
-					label="Allow comments"
-					value={video?.isComments}
-					onChange={handleChangeCommentsPermission}
+			<ContentContainer>
+				<SpinnerOverlay
+					open={
+						isVideoDataLoading ||
+						isPermissionsLoading ||
+						isCommentsPermissionsLoading
+					}
 				/>
-			</ModalContent>
-			<Modal.Footer>
-				<Select
-					value={video?.viewAccess}
-					options={accessOptions}
-					onChange={handleChangePermissions}
-				/>
-				<StyledCopyLinkButton
-					label={isLinkCopied ? 'Copied' : 'Copy link'}
-					color="secondary"
-					variant="outlined"
-					endIcon={<StyledButtonIcon icon={ICON_COLLECTION.copy_link} />}
-					onClick={handleCopyLink}
-				/>
-			</Modal.Footer>
-		</>
+				<ModalContent>
+					{!isVideoDataLoading && (
+						<Switch
+							label="Allow comments"
+							value={video?.isComments}
+							onChange={handleChangeCommentsPermission}
+						/>
+					)}
+				</ModalContent>
+				<Modal.Footer>
+					{!isVideoDataLoading && (
+						<>
+							<Select
+								value={video?.viewAccess}
+								options={accessOptions}
+								onChange={handleChangePermissions}
+							/>
+							<StyledCopyLinkButton
+								label={isLinkCopied ? 'Copied' : 'Copy link'}
+								color="secondary"
+								variant="outlined"
+								endIcon={<StyledButtonIcon icon={ICON_COLLECTION.copy_link} />}
+								onClick={handleCopyLink}
+							/>
+						</>
+					)}
+				</Modal.Footer>
+			</ContentContainer>
+		</ModalContainer>
 	);
 };
