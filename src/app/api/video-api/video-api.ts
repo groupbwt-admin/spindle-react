@@ -1,4 +1,6 @@
+import { isAxiosError } from 'axios';
 import download from 'downloadjs';
+import { NotFoundVideoBoundaryError } from 'shared/models/custom-errors';
 
 import { ITag, IVideo, IVideoSign } from 'shared/types/video';
 
@@ -66,8 +68,15 @@ export class VideoApiService implements VideoApiInterface {
 	};
 
 	getVideoInfoById = async ({ id }: GetVideoUrlDto): Promise<IVideo> => {
-		const res = await this.http.get(`/videos/${id}/video-information`);
-		return res.data;
+		try {
+			const res = await this.http.get(`/videos/${id}/video-information`);
+			return res.data;
+		} catch (error) {
+			if (isAxiosError(error) && error.response?.status === 401) {
+				return Promise.reject(new NotFoundVideoBoundaryError());
+			}
+			return Promise.reject(error);
+		}
 	};
 
 	updateVideoById = async ({ id, payload }): Promise<IVideo> => {

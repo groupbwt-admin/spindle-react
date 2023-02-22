@@ -30,6 +30,7 @@ export function useVideo() {
 	const { data: video } = useQuery({
 		queryKey: [VIDEO_QUERY_KEYS.video, urlParams.id],
 		queryFn: () => VideoApi.getVideoInfoById({ id: urlParams.id! }),
+		useErrorBoundary: true,
 		enabled: !!urlParams.id,
 	});
 
