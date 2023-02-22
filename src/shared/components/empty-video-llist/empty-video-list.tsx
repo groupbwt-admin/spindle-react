@@ -2,14 +2,11 @@ import * as React from 'react';
 import styled from '@emotion/styled/macro';
 import image from 'shared/assets/images/empty-state.svg';
 
-import { Button } from 'shared/components/button/button';
-import { ReactComponent as IconRecord } from 'shared/components/icon/collection/record.svg';
-import { Typography } from 'shared/components/typography/typography';
+import {Typography} from 'shared/components/typography/typography';
 
-const RecordButton = styled(Button)`
-	max-width: 190px;
-	color: #ffffff;
-`;
+import {StartRecordButton} from "../../../modules/videos/components/start-record-button";
+import {useRecordContext} from "../../../modules/videos/hooks/use-record-context";
+
 
 const EmptyCard = styled.div`
 	width: 364px;
@@ -37,19 +34,21 @@ const CardImage = styled.div`
 `;
 
 const CardText = styled(Typography)`
-	color: ${({ theme }) => theme.palette.text.secondary};
+	color: ${({theme}) => theme.palette.text.secondary};
 	padding: 16px 0;
 `;
 
 export const EmptyVideoList = () => {
+	const {isRecording, startRecording, isOnline} = useRecordContext()
+
 	return (
 		<>
 			<EmptyCard>
 				<CardImage>
-					<img src={image} alt="empty list" />
+					<img src={image} alt="empty list"/>
 				</CardImage>
 				<CardText variant="body2">You don’t have any recordings yet.</CardText>
-				<RecordButton label="Start Recording" startIcon={<IconRecord />} />
+				<StartRecordButton isRecording={isRecording} onStartRecording={startRecording} isOnline={isOnline}/>
 			</EmptyCard>
 		</>
 	);

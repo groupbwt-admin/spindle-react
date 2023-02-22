@@ -1,36 +1,38 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, {useState} from 'react';
+import {NavLink} from 'react-router-dom';
 import styled from '@emotion/styled/macro';
-import { ReactComponent as Logo } from 'shared/assets/images/logo-reverse.svg';
-import { UserMenu } from 'shared/layout/components/user-menu';
+import {ReactComponent as Logo} from 'shared/assets/images/logo-reverse.svg';
+import {UserMenu} from 'shared/layout/components/user-menu';
+import {boolean} from "yup";
 
-import { css } from '@mui/material/styles';
+import {css} from '@mui/material/styles';
 
-import { ReactComponent as IconNotification } from 'shared/components/icon/collection/notification.svg';
-import { ReactComponent as IconProfile } from 'shared/components/icon/collection/profile.svg';
-import { ReactComponent as IconSearch } from 'shared/components/icon/collection/search.svg';
-import { ReactComponent as IconSettings } from 'shared/components/icon/collection/setting.svg';
-import { ReactComponent as IconVideos } from 'shared/components/icon/collection/video.svg';
-import { Icon } from 'shared/components/icon/icon';
-import { Typography } from 'shared/components/typography/typography';
+import {ReactComponent as IconNotification} from 'shared/components/icon/collection/notification.svg';
+import {ReactComponent as IconProfile} from 'shared/components/icon/collection/profile.svg';
+import {ReactComponent as IconSearch} from 'shared/components/icon/collection/search.svg';
+import {ReactComponent as IconSettings} from 'shared/components/icon/collection/setting.svg';
+import {ReactComponent as IconVideos} from 'shared/components/icon/collection/video.svg';
+import {Icon} from 'shared/components/icon/icon';
+import {Typography} from 'shared/components/typography/typography';
+
+import {useRecordContext} from "../../../modules/videos/hooks/use-record-context";
 
 const StyledLinkTitle = styled(Typography)`
 	white-space: nowrap;
 	opacity: 0;
 	transform: translateX(-10px);
-	transition: opacity 0.3s ${({ theme }) => theme.transitions.easing.easeIn},
-		transform 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
+	transition: opacity 0.3s ${({theme}) => theme.transitions.easing.easeIn},
+	transform 0.3s ${({theme}) => theme.transitions.easing.easeIn};
 `;
 
-const LogoWrapper = styled('div')`
+const LogoWrapper = styled('div')<{ isDisabled: boolean }>`
 	width: 158px;
-	cursor: pointer;
+	cursor: ${props => props.isDisabled ? 'not-allowed' : 'pointer'};
 
 	svg {
 		path:last-of-type {
 			opacity: 0;
-			transition: opacity 0.3s
-				${({ theme }) => theme.transitions.easing.easeInOut};
+			transition: opacity 0.3s ${({theme}) => theme.transitions.easing.easeInOut};
 		}
 	}
 `;
@@ -59,13 +61,13 @@ const MenuContainer = styled.aside<{
 	height: 100%;
 	width: 81px;
 	padding: 40px 15px 32px;
-	color: ${({ theme }) => theme.palette.primary.light};
+	color: ${({theme}) => theme.palette.primary.light};
 	border-right: 1px solid #eeedf1;
-	background-color: ${({ theme }) => theme.palette.primary.main};
+	background-color: ${({theme}) => theme.palette.primary.main};
 	overflow: hidden;
-	transition: width 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
+	transition: width 0.3s ${({theme}) => theme.transitions.easing.easeIn};
 
-	${({ open }) =>
+	${({open}) =>
 		open &&
 		css`
 			width: 236px;
@@ -114,7 +116,7 @@ const NavContainer = styled('nav')`
 `;
 
 const StyledNavLink = styled(NavLink)(
-	({ theme }) => css`
+	({theme}) => css`
 		padding: 13px 15px;
 		color: ${theme.palette.primary.light};
 		display: flex;
@@ -134,51 +136,51 @@ const StyledNavLink = styled(NavLink)(
 
 export const AppMenu = () => {
 	const [open, setOpen] = useState(false);
-
+	const {isRecording} = useRecordContext()
 	const toggleDrawer = () => {
 		setOpen((prev) => !prev);
 	};
 
 	return (
 		<MenuContainer open={open}>
-			<LogoWrapper onClick={toggleDrawer}>
-				<Logo />
+			<LogoWrapper onClick={isRecording ? undefined : toggleDrawer} isDisabled={isRecording}>
+				<Logo/>
 			</LogoWrapper>
 			<NavContainer>
 				<ul>
 					<li>
 						<StyledNavLink to="search">
-							<StyledNavIcon icon={IconSearch} />
+							<StyledNavIcon icon={IconSearch}/>
 							<StyledLinkTitle variant="h3">Search</StyledLinkTitle>
 						</StyledNavLink>
 					</li>
 					<li>
 						<StyledNavLink to="/">
-							<StyledNavIcon icon={IconVideos} />
+							<StyledNavIcon icon={IconVideos}/>
 							<StyledLinkTitle variant="h3">My Videos</StyledLinkTitle>
 						</StyledNavLink>
 					</li>
 					<li>
 						<StyledNavLink to="profile">
-							<StyledNavIcon icon={IconProfile} />
+							<StyledNavIcon icon={IconProfile}/>
 							<StyledLinkTitle variant="h3">My Profile</StyledLinkTitle>
 						</StyledNavLink>
 					</li>
 					<li>
 						<StyledNavLink to="settings">
-							<StyledNavIcon icon={IconSettings} />
+							<StyledNavIcon icon={IconSettings}/>
 							<StyledLinkTitle variant="h3">Settings</StyledLinkTitle>
 						</StyledNavLink>
 					</li>
 					<li>
 						<StyledNavLink to="notifications">
-							<StyledNavIcon icon={IconNotification} />
+							<StyledNavIcon icon={IconNotification}/>
 							<StyledLinkTitle variant="h3">Notifications</StyledLinkTitle>
 						</StyledNavLink>
 					</li>
 				</ul>
 			</NavContainer>
-			<UserMenu expanded={open} />
+			<UserMenu expanded={open}/>
 		</MenuContainer>
 	);
 };

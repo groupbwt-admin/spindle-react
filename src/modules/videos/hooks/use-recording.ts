@@ -1,68 +1,81 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {useLocation, useNavigate} from "react-router-dom";
 
-import { socketState } from 'app/store/record-socket/state';
+import {selectAuthUserData} from "app/store/auth/selects";
+import {selectStatus} from "app/store/record-socket/selects";
+import {socketState} from 'app/store/record-socket/state';
 
-import { VIDEO_ROUTES } from 'shared/config/routes';
-import {
-	RECORDING_STATUS,
-	SOCKET_ACTIONS,
-} from 'shared/constants/record-statuses';
+import {VIDEO_ROUTES} from "shared/config/routes";
+import {RECORDING_STATUS, SOCKET_ACTIONS} from "shared/constants/record-statuses";
+import {SocketService} from "shared/services/base-socket-service";
 
-import { SocketService } from '../../../shared/services/base-socket-service';
+import {useEvent} from "../../../shared/hooks/use-event";
 
-import { useStopWatch } from './use-stop-watch';
-
+const DEFAULT_COUNTER = 3
+const RECORDING_INTERVAL = 1000
+const INTERVAL_COUNT_START = 1000
+const COUNTDOWN_TIME = 3500
+const PAGE_TITLES = {
+	[VIDEO_ROUTES.MY_VIDEOS.path]: {
+		title: [VIDEO_ROUTES.MY_VIDEOS.title],
+	},
+	[VIDEO_ROUTES.PROFILE.path]: {
+		title: [VIDEO_ROUTES.MY_VIDEOS.title],
+	},
+};
 export const useRecording = () => {
-	const { startTimer, pauseTimer, resetTimer, time } = useStopWatch();
-	const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>();
-	const [status, setStatus] = useState<string>(
-		RECORDING_STATUS.permission_requested,
-	);
-	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true);
-	const navigate = useNavigate();
+	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true)
+	const [counterBeforeStart, setCounterBeforeStart] = useState<number>(3)
+	const mediaRecorder = useRef<MediaRecorder | null>(null);
+	const isCancel = useRef(false);
+	const status = selectStatus()
+	const navigate = useNavigate()
+	const user = selectAuthUserData()
+	const location = useLocation();
 	useEffect(() => {
-		socketState.onConnectListener();
-		socketState.onDisconnectedListener(() => stopRecording());
-		socketState.connect();
+		if (!user) return
+		socketState.onConnectListener()
+		socketState.onDisconnectedListener(() => {
+				if (mediaRecorder.current) {
+					onStopMediaRecording()
+				}
+			}
+		)
+		socketState.connect()
 		return () => {
-			socketState.unfollowListener(SOCKET_ACTIONS.disconnect);
-			socketState.unfollowListener(SOCKET_ACTIONS.connect);
+			socketState.unfollowListener(SOCKET_ACTIONS.disconnect)
+			socketState.unfollowListener(SOCKET_ACTIONS.connect)
 			if (SocketService.socket) {
-				SocketService.socket.close();
+				SocketService.socket.close()
 			}
 		};
 	}, []);
-	const toggleMicrophone = () => {
-		setIsMicrophoneOn((prevValue) => {
-			const newValue = !prevValue;
-			if (mediaRecorder) {
-				mediaRecorder.stream.getAudioTracks()[0].enabled = newValue;
+	useEffect(() => {
+		window.addEventListener('storage', (event) => {
+			if (event.key === 'token') {
+				onStopMediaRecording()
 			}
-			return newValue;
+		})
+	}, []);
+
+	useEffect(() => {
+		window.addEventListener('offline', (e) => {
+			socketState.setIsOnline(false)
 		});
-	};
-	const wait = () =>
-		new Promise<void>((resolve) => {
-			const myInterval = setInterval(() => console.log('1'), 1000);
-			setTimeout(() => {
-				resolve(clearInterval(myInterval));
-			}, 3000);
+		window.addEventListener('online', (e) => {
+			socketState.setIsOnline(true)
 		});
 
-	const onNavigateToVideoPage = (video) => {
-		if (video) {
-			navigate(VIDEO_ROUTES.VIDEO.generate(video.id));
-		}
-	};
-	const stopRecording = async () => {
-		try {
-			await mediaRecorder?.stop();
-		} catch (e) {
-			console.log('Stop Recording: ' + e);
-			setStatus(RECORDING_STATUS.error);
-		}
-	};
+	}, []);
+
+
+	const wait = () => new Promise<void>((resolve) => {
+		const myInterval = setInterval(() => setCounterBeforeStart((prevState) => prevState - 1), INTERVAL_COUNT_START)
+		setTimeout(() => {
+			resolve(clearInterval(myInterval))
+		}, COUNTDOWN_TIME);
+	});
+
 	const requestMediaStream = async () => {
 		try {
 			const mediaDevices = navigator.mediaDevices;
@@ -76,92 +89,150 @@ export const useRecording = () => {
 			});
 			const tracks = [...displayMedia.getTracks(), ...userMedia.getTracks()];
 			if (tracks.length) {
-				setStatus(RECORDING_STATUS.idle);
+				socketState.setStatus(RECORDING_STATUS.idle)
 			}
+
 			const stream: MediaStream = new MediaStream(tracks);
-			stream.getVideoTracks()[0].onended = (e) => {
-				stream.getTracks().map((track) => {
+
+			stream.getVideoTracks()[0].onended = () => {
+				stream.getTracks().forEach((track) => {
 					track.stop();
 				});
-				stopRecording();
-			};
-			stream.getAudioTracks()[0].enabled = isMicrophoneOn;
+				isCancel.current ? onCancelPreview() : onVideoSaved()
+			}
+			stream.getAudioTracks()[0].enabled = true
+			setIsMicrophoneOn(true)
 			const mediaRecorderLocal = new MediaRecorder(stream);
 
 			mediaRecorderLocal.onstart = () => {
-				socketState.emit({ type: SOCKET_ACTIONS.generate_video_path });
-				setStatus(RECORDING_STATUS.recording);
-				startTimer();
-			};
-			mediaRecorderLocal.onstop = () => {
-				pauseTimer();
-				setStatus(RECORDING_STATUS.stopped);
-				mediaRecorder?.stream.getTracks().map((track) => {
-					track.stop();
-				});
-				setMediaRecorder(null);
-				socketState.save(SOCKET_ACTIONS.save, onNavigateToVideoPage);
-			};
+				socketState.emit({type: SOCKET_ACTIONS.generate_video_path})
+			}
+
 			mediaRecorderLocal.ondataavailable = (event) => {
-				socketState.emit({
-					type: SOCKET_ACTIONS.start,
-					payload: { chunk: event.data },
-				});
+				socketState.emit({type: SOCKET_ACTIONS.start, payload: {chunk: event.data}})
 			};
+
 			return wait().then(() => {
-				mediaRecorderLocal.start(250);
-				setMediaRecorder(mediaRecorderLocal);
-				return mediaRecorderLocal;
-			});
+				if (!isCancel.current) {
+					mediaRecorderLocal.start(RECORDING_INTERVAL);
+					mediaRecorder.current = mediaRecorderLocal
+					socketState.setStatus(RECORDING_STATUS.recording);
+					socketState.setIsRecording(true)
+					return mediaRecorderLocal;
+				} else {
+					mediaRecorderLocal.stream.getTracks().forEach((track) => {
+						track.stop();
+					});
+				}
+			})
 		} catch (e) {
-			console.log(e);
-			setStatus(RECORDING_STATUS.error);
-			pauseTimer();
-			resetTimer();
+			console.log(e)
+			socketState.setStatus(RECORDING_STATUS.error);
 		}
-	};
+	}
 
-	const startRecording = async () => {
+
+	const startRecording = useCallback(
+		async () => {
+			try {
+				isCancel.current = false
+				setCounterBeforeStart(DEFAULT_COUNTER)
+				await requestMediaStream()
+			} catch (e) {
+				console.log('Socket Connect:' + e)
+				socketState.setStatus(RECORDING_STATUS.error);
+			}
+		},
+		[status],
+	);
+
+	const toggleMicrophone = useEvent(() => {
+		setIsMicrophoneOn((prevValue) => {
+			const newValue = !prevValue;
+			if (mediaRecorder.current) {
+				mediaRecorder.current.stream.getAudioTracks()[0].enabled = newValue
+			}
+			return newValue
+		})
+	});
+
+	function onCancelPreview() {
+		isCancel.current = true
+		socketState.setStatus(RECORDING_STATUS.permission_requested);
+	}
+
+
+	const onNavigateToVideoPage = (video: { id: string }) => {
+		navigate(VIDEO_ROUTES.VIDEO.generate(video?.id), {
+			state: PAGE_TITLES[location.pathname]
+				? {
+					from: location.pathname + location.search,
+					title: PAGE_TITLES[location.pathname].title,
+				}
+				: undefined,
+		})
+	}
+
+	const onStopMediaRecording = () => {
 		try {
-			await requestMediaStream();
+			mediaRecorder.current?.stop();
+			mediaRecorder.current?.stream.getTracks().forEach((track) => {
+				track.stop();
+			});
+			mediaRecorder.current = null
+			socketState.setStatus(RECORDING_STATUS.stopped);
+			socketState.setIsRecording(false)
 		} catch (e) {
-			console.log('Socket Connect:' + e);
-			setStatus(RECORDING_STATUS.error);
+			console.error('Stop Media Recording error' + e)
 		}
-	};
+	}
+	const onVideoSaved = useEvent(
+		async () => {
+			try {
+				onStopMediaRecording()
+				socketState.save(SOCKET_ACTIONS.save, onNavigateToVideoPage)
+			} catch (e) {
+				console.log('Stop Recording: ' + e)
+				socketState.setStatus(RECORDING_STATUS.error);
+			}
+		});
 
-	const pauseRecording = () => {
-		mediaRecorder?.pause();
-		setStatus(RECORDING_STATUS.paused);
-		pauseTimer();
-	};
-
-	const resumeRecording = () => {
-		mediaRecorder?.resume();
-		setStatus('recording');
-		startTimer();
-	};
-
-	const resetRecording = async () => {
-		setStatus(RECORDING_STATUS.idle);
-		resetTimer();
-		mediaRecorder?.stop();
-		mediaRecorder?.stream.getTracks().map((track) => {
+	const resetRecording = () => {
+		mediaRecorder.current?.stop();
+		mediaRecorder.current?.stream.getTracks().forEach((track) => {
 			track.stop();
 		});
-		socketState.emit({ type: SOCKET_ACTIONS.reset });
-		setMediaRecorder(null);
-	};
+		socketState.emit({type: SOCKET_ACTIONS.reset})
+
+		socketState.setStatus(RECORDING_STATUS.reset)
+		socketState.setIsRecording(false)
+
+	}
+	const pauseRecording = useEvent(
+		() => {
+			socketState.setStatus(RECORDING_STATUS.paused);
+			mediaRecorder.current?.pause();
+		});
+
+
+	const resumeRecording = useEvent(
+		() => {
+			socketState.setStatus(RECORDING_STATUS.recording);
+			mediaRecorder.current?.resume();
+		});
+
 
 	return {
-		models: { timeRecording: time, recordStatus: status, isMicrophoneOn },
+		models: {isMicrophoneOn, isCancel, counterBeforeStart},
 		command: {
+			onCancelPreview,
 			toggleMicrophone,
 			pauseRecording,
 			resetRecording,
 			resumeRecording,
-			startRecording,
-			stopRecording,
+			startRecording, onVideoSaved
 		},
-	};
+	}
 };
+
+
