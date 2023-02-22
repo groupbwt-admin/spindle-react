@@ -14,7 +14,6 @@ export const useRecordCamera = () => {
 			console.log(err)
 		}
 	}
-
 	const disabledVideoStream = () => {
 		try {
 			mediaStream?.getTracks().forEach(track => {

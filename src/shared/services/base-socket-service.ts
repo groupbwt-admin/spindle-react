@@ -13,6 +13,7 @@ const socket = io(RECORD_SOCKET_PATH!, {
 			},
 		},
 	},
+	secure: true,
 	autoConnect: false,
 })
 const socketInstance = () => {

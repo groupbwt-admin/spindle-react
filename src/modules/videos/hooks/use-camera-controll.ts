@@ -26,25 +26,11 @@ export const useCameraControl = () => {
 	const toggleCamera = () => {
 		setIsOpenCamera(prevState => !prevState)
 	}
-	const handelTogglePiP = () => {
-		if (document.pictureInPictureElement) {
-			document.exitPictureInPicture();
-		} else if (document.pictureInPictureEnabled) {
-			videoRef.current.requestPictureInPicture().then((pictureInPictureWindow) => {
-				pictureInPictureWindow.onresize = printPipWindowDimensions;
-			});
-		}
-	}
-
-	function printPipWindowDimensions(evt) {
-		const pipWindow = evt.target;
-		console.log(`The floating window dimensions are: ${pipWindow.width}x${pipWindow.height}px`);
-	}
 
 
 	return {
 		models: {videoRef, isOpenCamera},
-		command: {toggleCamera, handelTogglePiP}
+		command: {toggleCamera}
 	}
 }
 

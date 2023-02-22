@@ -14,6 +14,8 @@ const VideoCamera = styled.video`
 	transition: filter 0.3s ease-out;
 	-webkit-transform: scaleX(-1);
 	transform: scaleX(-1);
+	border-radius: 50%;
+	margin-left: 20px;
 
 	&:hover {
 		filter: brightness(60%);
@@ -28,14 +30,14 @@ interface ICamera {
 export const Camera: React.FC<ICamera> = ({isShowCamera, videoRef}) => {
 	if (!isShowCamera) return null
 	return (
-		<WrapperCamera>
+		// <WrapperCamera>
 			<VideoCamera
 				ref={videoRef}
 				autoPlay
 				playsInline
 				muted
 			/>
-		</WrapperCamera>
+		// </WrapperCamera>
 
 
 	);

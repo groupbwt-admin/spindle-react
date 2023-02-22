@@ -12,7 +12,6 @@ const ControllerStopWatch = styled.p`
 	color: #FFFFFF;
 	padding: 12px 0;
 	margin: 0;
-	border-top: 1px solid #FFFFFF;
 `;
 export const StopWatch = () => {
 	const {

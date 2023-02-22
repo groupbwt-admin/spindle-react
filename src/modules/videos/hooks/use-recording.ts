@@ -35,7 +35,7 @@ export const useRecording = () => {
 		socketState.onConnectListener()
 		socketState.onDisconnectedListener(() => {
 				if (mediaRecorder.current) {
-					onVideoSaved()
+					onStopMediaRecording()
 				}
 			}
 		)
@@ -51,10 +51,21 @@ export const useRecording = () => {
 	useEffect(() => {
 		window.addEventListener('storage', (event) => {
 			if (event.key === 'token') {
-				onVideoSaved()
+				onStopMediaRecording()
 			}
 		})
 	}, []);
+
+	useEffect(() => {
+		window.addEventListener('offline', (e) => {
+			socketState.setIsOnline(false)
+		});
+		window.addEventListener('online', (e) => {
+			socketState.setIsOnline(true)
+		});
+
+	}, []);
+
 
 	const wait = () => new Promise<void>((resolve) => {
 		const myInterval = setInterval(() => setCounterBeforeStart((prevState) => prevState - 1), 1000)
@@ -82,7 +93,7 @@ export const useRecording = () => {
 			const stream: MediaStream = new MediaStream(tracks);
 
 			stream.getVideoTracks()[0].onended = () => {
-				stream.getTracks().map((track) => {
+				stream.getTracks().forEach((track) => {
 					track.stop();
 				});
 				isCancel.current ? onCancelPreview() : onVideoSaved()
@@ -107,7 +118,7 @@ export const useRecording = () => {
 					socketState.setIsRecording(true)
 					return mediaRecorderLocal;
 				} else {
-					mediaRecorderLocal.stream.getTracks().map((track) => {
+					mediaRecorderLocal.stream.getTracks().forEach((track) => {
 						track.stop();
 					});
 				}
@@ -162,28 +173,33 @@ export const useRecording = () => {
 		}
 	}
 
-	const onVideoSaved = useCallback(
+	const onStopMediaRecording = () => {
+		try {
+			mediaRecorder.current?.stop();
+			mediaRecorder.current?.stream.getTracks().forEach((track) => {
+				track.stop();
+			});
+			mediaRecorder.current = null
+			socketState.setStatus(RECORDING_STATUS.stopped);
+			socketState.setIsRecording(false)
+		} catch (e) {
+			console.error('Stop Media Recording error' + e)
+		}
+	}
+	const onVideoSaved = useEvent(
 		async () => {
 			try {
-				mediaRecorder.current?.stop();
-				mediaRecorder.current?.stream.getTracks().map((track) => {
-					track.stop();
-				});
-				socketState.setStatus(RECORDING_STATUS.stopped);
+				onStopMediaRecording()
 				socketState.save(SOCKET_ACTIONS.save, onNavigateToVideoPage)
-				socketState.setIsRecording(false)
-				mediaRecorder.current = null
 			} catch (e) {
 				console.log('Stop Recording: ' + e)
 				socketState.setStatus(RECORDING_STATUS.error);
 			}
-		},
-		[status],
-	);
+		});
 
 	const resetRecording = () => {
 		mediaRecorder.current?.stop();
-		mediaRecorder.current?.stream.getTracks().map((track) => {
+		mediaRecorder.current?.stream.getTracks().forEach((track) => {
 			track.stop();
 		});
 		socketState.emit({type: SOCKET_ACTIONS.reset})

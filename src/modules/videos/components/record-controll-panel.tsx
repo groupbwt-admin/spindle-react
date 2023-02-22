@@ -3,21 +3,29 @@ import styled from "@emotion/styled/macro";
 
 import {Icon} from "../../../shared/components/icon/icon";
 import {ICON_COLLECTION} from "../../../shared/components/icon/icon-list";
+import {useDragWrapperContext} from "../context/drag-wrapper-context";
 
-import {StopWatch} from "./stop-watch";
 
 const ControllerButton = styled.button`
 	background: transparent;
-	padding: 12px 4px;
+	padding: 0px 14px;
 	border: 1px solid transparent;
 	cursor: pointer;
 	transition: all 0.1s ease-out;
-
 	&:hover {
 		transform: translateY(-2px);
 	}
 `;
 
+const DragController = styled(ControllerButton)`
+  &:hover {
+    cursor: grab;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+`
 
 interface IRecordControlPanel {
 	onVideoSaved: () => void,
@@ -42,8 +50,16 @@ const RecordControlPanelComponent: React.FC<IRecordControlPanel> = ({
 																																			isShowCamera,
 																																			isPaused,
 																																		}) => {
+
+	const {handelMouseDown, handelMouseUp} = useDragWrapperContext()
+
 	return (
 		<>
+			<DragController
+				onMouseDown={handelMouseDown}
+				onMouseUp={handelMouseUp}
+			><Icon
+				icon={ICON_COLLECTION.drag_indicator}/></DragController>
 			<ControllerButton onClick={onVideoSaved}><Icon icon={ICON_COLLECTION.stop}/></ControllerButton>
 			{
 				isPaused ?
