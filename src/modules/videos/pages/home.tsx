@@ -57,14 +57,14 @@ export const HomePage = () => {
 
 	const {models, commands} = useHome();
 
-	const {isRecording, startRecording, isOnline} = useRecordContext()
+	const {isRecording, startRecording, isConnected} = useRecordContext()
 
 	return (
 		<>
 			<HeaderContainer>
 				<Title variant="h1">My videos</Title>
 
-				<StartRecordButton isRecording={isRecording} onStartRecording={startRecording} isOnline={isOnline}/>
+				<StartRecordButton isRecording={isRecording} onStartRecording={startRecording} isConnected={isConnected}/>
 
 
 			</HeaderContainer>

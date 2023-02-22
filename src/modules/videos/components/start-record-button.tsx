@@ -6,6 +6,7 @@ import {styled} from '@mui/material/styles';
 import {ReactComponent as IconOffline} from 'shared/components/icon/collection/offline.svg';
 import {ReactComponent as IconRecord} from 'shared/components/icon/collection/record.svg';
 
+import {selectIsConnect} from "../../../app/store/record-socket/selects";
 import {Button} from "../../../shared/components/button/button";
 
 interface IRecordButton {
@@ -23,18 +24,19 @@ const RecordButton = styled(Button)<IRecordButton>`
 
 interface IStartRecordButton {
 	isRecording: boolean,
-	isOnline: boolean,
+	isConnected: boolean,
 	onStartRecording: () => void
 }
 
-const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({isRecording, onStartRecording, isOnline}) => {
+const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({isRecording, onStartRecording, isConnected}) => {
+
 	return (
 		<RecordButton
 			isRecording={isRecording}
 			label={isRecording ? "Recording" : "Start Recording"}
-			startIcon={isOnline ? <IconRecord/> : <IconOffline/>}
+			startIcon={(!isConnected) ? <IconOffline/> : <IconRecord/>}
 			onClick={!isRecording ? onStartRecording : undefined}
-			disabled={!isOnline}
+			disabled={!isConnected}
 		/>
 
 	)
