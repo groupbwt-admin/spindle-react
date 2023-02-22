@@ -1,43 +1,53 @@
-import socketIOClient, { Socket } from 'socket.io-client';
+import {io, Socket} from 'socket.io-client';
 
-import { RECORD_SOCKET_PATH } from 'shared/config/variables';
+import {RECORD_SOCKET_PATH} from 'shared/config/variables';
 
-import { LocalStorageService } from './local-storage-service';
+import {LocalStorageService} from './local-storage-service';
 
-class _SocketService {
-	private _socket: Socket = socketIOClient(RECORD_SOCKET_PATH!, {
-		transportOptions: {
-			polling: {
-				extraHeaders: {
-					Authorization: `Bearer ${LocalStorageService.get('token')}`,
-				},
+
+const socket = io(RECORD_SOCKET_PATH!, {
+	transportOptions: {
+		polling: {
+			extraHeaders: {
+				Authorization: `Bearer ${LocalStorageService.get('token')}`,
 			},
 		},
-		autoConnect: false,
-	});
-	get socket(): Socket {
-		return this._socket;
+	},
+	secure: true,
+	autoConnect: false,
+})
+const socketInstance = () => {
+	// eslint-disable-next-line
+	// @ts-ignore
+	socket.io.opts.transportOptions.polling.extraHeaders = {
+		Authorization: `Bearer ${LocalStorageService.get('token')}`,
 	}
+	return socket
+}
 
-	set socket(value: Socket) {
-		this._socket = value;
+class _SocketService {
+	private _socket: () => Socket = socketInstance
+
+	get socket(): Socket {
+		return this._socket();
 	}
 
 	emit(type: string, payload?: object | void) {
-		this.socket.emit(type, payload && payload);
+		this._socket().emit(type, payload && payload);
 	}
 
-	save(type, fn) {
-		this.socket.emit(type, fn);
+	save(type: string, fn: (video: { id: string }) => void) {
+		this._socket().emit(type, fn);
 	}
 
-	on(type: string, fn) {
-		this.socket.on(type, fn);
+	on(type: string, fn: () => void) {
+		this._socket().on(type, fn);
 	}
 
 	off(type: string) {
-		this.socket.off(type);
+		this._socket().off(type);
 	}
 }
 
 export const SocketService = new _SocketService();
+
