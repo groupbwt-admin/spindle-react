@@ -17,7 +17,7 @@ const AppInput = styled(InputBase)`
 			color: ${({ theme }) => theme.palette.text.secondary};
 		}
 
-		&:focus {
+		&:focus:not(.MuiInputBase-readOnly) {
 			border-color: ${({ theme }) => theme.palette.primary.main};
 		}
 	}
@@ -56,6 +56,7 @@ export interface InputProps {
 	className?: string;
 	type?: InputHTMLAttributes<HTMLInputElement>['type'];
 	autoComplete?: InputHTMLAttributes<HTMLInputElement>['autoComplete'];
+	readOnly?: InputHTMLAttributes<HTMLInputElement>['readOnly'];
 	label?: string;
 	placeholder?: InputHTMLAttributes<HTMLInputElement>['placeholder'];
 	error?: InputBaseProps['error'];
