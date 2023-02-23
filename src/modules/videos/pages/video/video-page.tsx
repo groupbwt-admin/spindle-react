@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled/macro';
 import { format } from 'date-fns';
 import { useVideo } from 'modules/videos/pages/video/use-video';
+import { BoundaryError } from 'shared/models/custom-errors';
 
 import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
@@ -12,6 +13,7 @@ import { EditInputField } from 'shared/components/edit-input-field/edit-input-fi
 import { ReactComponent as IconRecord } from 'shared/components/icon/collection/record.svg';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
+import { SpinnerOverlay } from 'shared/components/spinner-overlay/spinner-overlay';
 import { TagsAutocomplete } from 'shared/components/tags-autocomplete/tags-autocomplete';
 import { Typography } from 'shared/components/typography/typography';
 import { ActionMenu } from 'shared/components/video-card/action-menu';
@@ -21,6 +23,15 @@ const VideoPageContainer = styled.div`
 	flex-direction: column;
 	min-height: 100%;
 	margin: 0 auto 40px;
+	position: relative;
+
+	.MuiBackdrop-root {
+		z-index: 5;
+		opacity: 0.6 !important;
+		background-color: ${({ theme }) => theme.palette.background.default};
+		color: ${({ theme }) => theme.palette.primary.main};
+		position: absolute;
+	}
 `;
 
 const HeaderContainer = styled.div`
@@ -105,76 +116,84 @@ const StyledButtonIcon = styled(Icon)`
 export const VideoPage: React.FC = () => {
 	const { models, commands } = useVideo();
 
-	if (!models.videoUrl.data?.url || !models.video) return <></>;
-
 	return (
 		<VideoPageContainer>
-			<HeaderContainer>
-				<StyledIconButton onClick={commands.handleBack}>
-					<Icon icon={ICON_COLLECTION.arrow_left} />
-				</StyledIconButton>
-				<Title variant="h1">{models.pageTitle}</Title>
-				<RecordButton label="Start Recording" startIcon={<IconRecord />} />
-			</HeaderContainer>
-			<StyledVideo
-				controls
-				src={models.videoUrl.data.url}
-				controlsList="nodownload"
-			/>
-			<EditInputField
-				value={models.video.title}
-				onSubmit={(value) => commands.handleUpdateVideo({ title: value })}
-			/>
-			<ActionsContainer>
-				<ViewsCount variant="body1">
-					{models.video.viewsCount === 1
-						? `${models.video.viewsCount} view`
-						: `${models.video.viewsCount} views`}
-				</ViewsCount>
-				<Button
-					label={models.isLinkCopied ? 'Copied' : 'Copy link'}
-					color="secondary"
-					variant="outlined"
-					endIcon={<StyledButtonIcon icon={ICON_COLLECTION.copy_link} />}
-					onClick={commands.handleCopyLink}
-				/>
-				<Button
-					label="Download"
-					color="secondary"
-					variant="outlined"
-					endIcon={<StyledButtonIcon icon={ICON_COLLECTION.download} />}
-					onClick={commands.handleDownload}
-				/>
-				<ActionMenu
-					isLinkCopied={false}
-					onDownload={commands.handleDownload}
-					onCopyLink={commands.handleCopyLink}
-					onDelete={commands.handleDeleteVideo}
-					onChangeSettings={commands.handleChangeVideoSettings}
-				/>
-			</ActionsContainer>
-			<DetailedInfoContainer>
-				<StyledAvatar
-					src={
-						models.video.user.avatar
-							? getUserAvatarURL(models.video.user.avatar)
-							: undefined
-					}
-				/>
-				<div>
-					<Typography variant="body1">
-						{models.video.user.firstName + models.video.user.lastName}
-					</Typography>
-					<StyledCaption variant="subtitle2">
-						{format(new Date(models.video.createdAt), 'MMMM d, yyyy')}
-					</StyledCaption>
-				</div>
-				<TagsAutocomplete
-					options={models.tags}
-					initialTags={models.video.tags}
-					onUpdateTags={(value) => commands.handleUpdateVideo({ tags: value })}
-				/>
-			</DetailedInfoContainer>
+			<SpinnerOverlay open={models.isVideoDataLoading} />
+			{models.user && (
+				<HeaderContainer>
+					<StyledIconButton onClick={commands.handleBack}>
+						<Icon icon={ICON_COLLECTION.arrow_left} />
+					</StyledIconButton>
+					<Title variant="h1">{models.pageTitle}</Title>
+					<RecordButton label="Start Recording" startIcon={<IconRecord />} />
+				</HeaderContainer>
+			)}
+			{models.videoError instanceof BoundaryError && models.videoError.message}
+			{models.videoUrl && models.video && (
+				<>
+					<StyledVideo
+						controls
+						src={models.videoUrl?.data?.url}
+						controlsList="nodownload"
+					/>
+					<EditInputField
+						value={models.video.title}
+						onSubmit={(value) => commands.handleUpdateVideo({ title: value })}
+					/>
+					<ActionsContainer>
+						<ViewsCount variant="body1">
+							{models.video.viewsCount === 1
+								? `${models.video.viewsCount} view`
+								: `${models.video.viewsCount} views`}
+						</ViewsCount>
+						<Button
+							label={models.isLinkCopied ? 'Copied' : 'Copy link'}
+							color="secondary"
+							variant="outlined"
+							endIcon={<StyledButtonIcon icon={ICON_COLLECTION.copy_link} />}
+							onClick={commands.handleCopyLink}
+						/>
+						<Button
+							label="Download"
+							color="secondary"
+							variant="outlined"
+							endIcon={<StyledButtonIcon icon={ICON_COLLECTION.download} />}
+							onClick={commands.handleDownload}
+						/>
+						<ActionMenu
+							isLinkCopied={false}
+							onDownload={commands.handleDownload}
+							onCopyLink={commands.handleCopyLink}
+							onDelete={commands.handleDeleteVideo}
+							onChangeSettings={commands.handleChangeVideoSettings}
+						/>
+					</ActionsContainer>
+					<DetailedInfoContainer>
+						<StyledAvatar
+							src={
+								models.video.user.avatar
+									? getUserAvatarURL(models.video.user.avatar)
+									: undefined
+							}
+						/>
+						<div>
+							<Typography variant="body1">
+								{models.video.user.firstName + models.video.user.lastName}
+							</Typography>
+							<StyledCaption variant="subtitle2">
+								{format(new Date(models.video.createdAt), 'MMMM d, yyyy')}
+							</StyledCaption>
+						</div>
+						<TagsAutocomplete
+							options={models.tags}
+							initialTags={models.video.tags}
+							onUpdateTags={(value) =>
+								commands.handleUpdateVideo({ tags: value })
+							}
+						/>
+					</DetailedInfoContainer>
+				</>
+			)}
 			{models.deleteVideoModal}
 			{models.accessSettingsModal}
 		</VideoPageContainer>

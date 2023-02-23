@@ -19,17 +19,21 @@ export function useVideo() {
 	const location = useLocation();
 	const user = selectUserData();
 
+	const {
+		data: video,
+		isLoading: isVideoDataLoading,
+		error: videoError,
+	} = useQuery({
+		queryKey: [VIDEO_QUERY_KEYS.video, urlParams.id],
+		queryFn: () => VideoApi.getVideoInfoById({ id: urlParams.id! }),
+		enabled: !!urlParams.id,
+		retry: 1,
+	});
+
 	const videoUrl = useQuery({
 		queryKey: [VIDEO_QUERY_KEYS.video_stream_url, urlParams.id],
 		queryFn: () => VideoApi.getVideoUrl({ id: urlParams.id! }),
-		enabled: !!urlParams.id,
-	});
-
-	const { data: video } = useQuery({
-		queryKey: [VIDEO_QUERY_KEYS.video, urlParams.id],
-		queryFn: () => VideoApi.getVideoInfoById({ id: urlParams.id! }),
-		useErrorBoundary: true,
-		enabled: !!urlParams.id,
+		enabled: !!video,
 	});
 
 	const tags = useQuery({
@@ -86,13 +90,16 @@ export function useVideo() {
 
 	return {
 		models: {
+			user,
 			pageTitle: location.state?.title || 'My videos',
 			deleteVideoModal,
 			accessSettingsModal,
 			videoUrl,
 			video,
+			videoError,
 			tags: tagsArray,
 			isLinkCopied,
+			isVideoDataLoading,
 		},
 		commands: {
 			handleCopyLink,

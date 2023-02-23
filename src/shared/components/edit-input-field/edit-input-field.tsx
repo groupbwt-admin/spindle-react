@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 
@@ -55,10 +55,11 @@ const StyledIconButton = styled(IconButton)`
 	height: 45px;
 `;
 
-const RootEditInputField: React.ForwardRefRenderFunction<
-	HTMLInputElement,
-	EditInputFieldProps
-> = ({ value, className, onSubmit }) => {
+export const EditInputField: React.FC<EditInputFieldProps> = ({
+	value,
+	className,
+	onSubmit,
+}) => {
 	const [inputVal, setInputVal] = useState(value);
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -109,5 +110,3 @@ const RootEditInputField: React.ForwardRefRenderFunction<
 		/>
 	);
 };
-
-export const EditInputField = forwardRef(RootEditInputField);
