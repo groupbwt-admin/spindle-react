@@ -138,6 +138,7 @@ export const VideoPage: React.FC = () => {
 					/>
 					<EditInputField
 						value={models.video.title}
+						isEditable={models.isEditable}
 						onSubmit={(value) => commands.handleUpdateVideo({ title: value })}
 					/>
 					<ActionsContainer>
@@ -160,13 +161,15 @@ export const VideoPage: React.FC = () => {
 							endIcon={<StyledButtonIcon icon={ICON_COLLECTION.download} />}
 							onClick={commands.handleDownload}
 						/>
-						<ActionMenu
-							isLinkCopied={false}
-							onDownload={commands.handleDownload}
-							onCopyLink={commands.handleCopyLink}
-							onDelete={commands.handleDeleteVideo}
-							onChangeSettings={commands.handleChangeVideoSettings}
-						/>
+						{models.isEditable && (
+							<ActionMenu
+								isLinkCopied={false}
+								onDownload={commands.handleDownload}
+								onCopyLink={commands.handleCopyLink}
+								onDelete={commands.handleDeleteVideo}
+								onChangeSettings={commands.handleChangeVideoSettings}
+							/>
+						)}
 					</ActionsContainer>
 					<DetailedInfoContainer>
 						<StyledAvatar
@@ -187,6 +190,7 @@ export const VideoPage: React.FC = () => {
 						<TagsAutocomplete
 							options={models.tags}
 							initialTags={models.video.tags}
+							isEditable={models.isEditable}
 							onUpdateTags={(value) =>
 								commands.handleUpdateVideo({ tags: value })
 							}

@@ -81,7 +81,6 @@ export function useVideo() {
 	};
 
 	const handleBack = () => {
-		console.log(location.state?.from);
 		nav(location.state?.from || VIDEO_ROUTES.MY_VIDEOS.path);
 	};
 
@@ -101,6 +100,7 @@ export function useVideo() {
 			tags: tagsArray,
 			isLinkCopied,
 			isVideoDataLoading,
+			isEditable: user?.id === video?.user.id,
 		},
 		commands: {
 			handleCopyLink,

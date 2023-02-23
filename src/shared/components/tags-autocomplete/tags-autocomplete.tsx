@@ -81,6 +81,12 @@ const FormControl = styled.div`
 		margin: 14px 0;
 		width: 100%;
 	}
+
+	&:not(.isEditable) {
+		.MuiChip-deleteIcon {
+			display: none;
+		}
+	}
 `;
 
 const StyledChip = styled(Chip)`
@@ -96,15 +102,12 @@ const StyledChip = styled(Chip)`
 	.MuiChip-deleteIcon {
 		color: ${({ theme }) => theme.palette.common.white};
 		transition: opacity 0.3s ease;
+		margin-left: 16px;
 
 		&:hover {
 			color: ${({ theme }) => theme.palette.common.white};
 			opacity: 0.6;
 		}
-	}
-
-	.MuiChip-label {
-		margin-right: 16px;
 	}
 `;
 
@@ -117,12 +120,14 @@ interface TagsAutocompleteProps {
 	className?: string;
 	options?: string[];
 	initialTags: string[];
+	isEditable?: boolean;
 	onUpdateTags: (payload: string[]) => void;
 }
 
 export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 	className,
 	options,
+	isEditable = false,
 	initialTags,
 	onUpdateTags,
 }) => {
@@ -132,6 +137,7 @@ export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 	const [isFocused, setIsFocused] = useState(false);
 
 	const toggleEditMode = (e, state) => {
+		if (!isEditable) return;
 		e.stopPropagation();
 		setIsEditMode(state);
 	};
@@ -183,6 +189,7 @@ export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 				className,
 				isEditMode && 'editMode',
 				isFocused && 'isFocused',
+				isEditable && 'isEditable',
 			)}
 			onClick={(e) => toggleEditMode(e, true)}
 		>
@@ -194,14 +201,17 @@ export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 				defaultValue={tagsList}
 				onChange={handleChange}
 				disablePortal
-				readOnly={isLoading}
+				readOnly={isLoading || !isEditable}
 				freeSolo
 				filterSelectedOptions
 				fullWidth
 				clearIcon={false}
 				renderTags={handleRenderTags}
 				renderInput={(params) => (
-					<StyledInput {...params} placeholder="Tap to add tag" />
+					<StyledInput
+						{...params}
+						placeholder={isEditable ? 'Tap to add tag' : undefined}
+					/>
 				)}
 				onFocus={() => setIsFocused(true)}
 				onBlur={() => setIsFocused(false)}

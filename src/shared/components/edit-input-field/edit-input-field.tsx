@@ -9,10 +9,6 @@ import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { Input, InputProps } from 'shared/components/input/input';
 
-interface EditInputFieldProps extends InputProps {
-	onSubmit: (val: string) => Promise<void>;
-}
-
 const StyledInputAdornment = styled(InputAdornment)`
 	position: absolute;
 	right: 12px;
@@ -23,6 +19,12 @@ const StyledInput = styled(Input)`
 		border-color: transparent;
 	}
 
+	&:not(.isEditable) {
+		&:hover {
+			border-color: ${({ theme }) => theme.palette.primary.main};
+		}
+	}
+
 	input {
 		font-size: 32px;
 		line-height: 52px;
@@ -30,10 +32,6 @@ const StyledInput = styled(Input)`
 		color: #231d2c;
 		transition: border-color 0.3s
 			${({ theme }) => theme.transitions.easing.easeIn};
-
-		&:hover {
-			border-color: ${({ theme }) => theme.palette.primary.main};
-		}
 	}
 
 	&:not(.editMode) {
@@ -55,8 +53,14 @@ const StyledIconButton = styled(IconButton)`
 	height: 45px;
 `;
 
+interface EditInputFieldProps extends InputProps {
+	onSubmit: (val: string) => Promise<void>;
+	isEditable?: boolean;
+}
+
 export const EditInputField: React.FC<EditInputFieldProps> = ({
 	value,
+	isEditable = false,
 	className,
 	onSubmit,
 }) => {
@@ -80,7 +84,7 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 
 	const handleInputClick = (e) => {
 		e.stopPropagation();
-		if (isEditMode) return;
+		if (isEditMode || !isEditable) return;
 		toggleEditMode(e, true);
 	};
 
@@ -92,8 +96,13 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 	return (
 		<StyledInput
 			value={inputVal}
+			readOnly={!isEditable}
 			onChange={handleChange}
-			className={clsx(className, isEditMode && 'editMode')}
+			className={clsx(
+				className,
+				isEditMode && 'editMode',
+				isEditable && 'isEditable',
+			)}
 			onClick={handleInputClick}
 			endAdornment={
 				<StyledInputAdornment position="end">
