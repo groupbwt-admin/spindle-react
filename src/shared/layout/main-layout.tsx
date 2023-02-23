@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {useEffect} from "react";
 import {AppMenu} from 'shared/layout/components/app-menu';
 
 import {Container} from '@mui/material';

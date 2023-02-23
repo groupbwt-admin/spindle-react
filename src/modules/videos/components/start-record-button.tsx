@@ -1,12 +1,10 @@
 import React, {memo} from 'react';
-import {isDisabled} from "@testing-library/user-event/utils/misc/isDisabled";
 
 import {styled} from '@mui/material/styles';
 
 import {ReactComponent as IconOffline} from 'shared/components/icon/collection/offline.svg';
 import {ReactComponent as IconRecord} from 'shared/components/icon/collection/record.svg';
 
-import {selectIsConnect} from "../../../app/store/record-socket/selects";
 import {Button} from "../../../shared/components/button/button";
 
 interface IRecordButton {

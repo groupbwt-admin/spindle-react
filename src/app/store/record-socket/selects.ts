@@ -7,5 +7,5 @@ export const selectStatus = () => useSnapshot(socketState).recordStatus;
 // eslint-disable-next-line react-hooks/rules-of-hooks
 export const selectIsRecording = () => useSnapshot(socketState).isRecording;
 // eslint-disable-next-line react-hooks/rules-of-hooks
-export const selectIsConnect = () => useSnapshot(socketState).isConnected;
+export const selectIsConnected = () => useSnapshot(socketState).isConnected;
 
