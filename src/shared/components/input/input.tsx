@@ -7,7 +7,7 @@ import { css, styled } from '@mui/material/styles';
 const AppInput = styled(InputBase)`
 	input {
 		background-color: ${({ theme }) => theme.palette.common.white};
-		border: 1px solid ${({ theme }) => theme.palette.text.secondary};
+		border: 1px solid ${({ theme }) => theme.palette.secondary.main};
 		border-radius: 10px;
 		padding: 14px 12px;
 		transition: border-color 0.3s

@@ -47,7 +47,7 @@ const ActionsContainer = styled.div`
 
 	.MuiButtonBase-root {
 		background: ${({ theme }) => theme.palette.common.white};
-		border: 1px solid ${({ theme }) => theme.palette.text.secondary};
+		border: 1px solid ${({ theme }) => theme.palette.secondary.main};
 		border-radius: 10px;
 		padding: 16px 24px;
 	}
@@ -73,7 +73,7 @@ const StyledVideo = styled.video`
 
 const StyledIconButton = styled(IconButton)`
 	background: ${({ theme }) => theme.palette.common.white};
-	border: 1px solid ${({ theme }) => theme.palette.text.secondary};
+	border: 1px solid ${({ theme }) => theme.palette.secondary.main};
 	border-radius: 10px;
 	padding: 15px 24px;
 	margin-right: 12px;

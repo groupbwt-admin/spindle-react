@@ -77,7 +77,7 @@ export function useProfile() {
 			...rest,
 		};
 	});
-	const [searchParams, setSearchParams] = useSearchParams();
+	const [, setSearchParams] = useSearchParams();
 	const [isLinksCopied, setIsLinksCopied] = useState(false);
 	const copyLinkTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 	const user = selectUserData();
