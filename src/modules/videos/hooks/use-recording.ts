@@ -60,10 +60,10 @@ export const useRecording = () => {
 
 	useEffect(() => {
 		window.addEventListener('offline', (e) => {
-			socketState.setIsOnline(false)
+			socketState.setIsConnected(false)
 		});
 		window.addEventListener('online', (e) => {
-			socketState.setIsOnline(true)
+			socketState.setIsConnected(true)
 		});
 
 	}, []);

@@ -1,13 +1,14 @@
-import React, { memo } from 'react';
+import React, {memo} from 'react';
 
-import { styled } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 
-import { Button } from 'shared/components/button/button';
-import { ReactComponent as IconOffline } from 'shared/components/icon/collection/offline.svg';
-import { ReactComponent as IconRecord } from 'shared/components/icon/collection/record.svg';
+import {ReactComponent as IconOffline} from 'shared/components/icon/collection/offline.svg';
+import {ReactComponent as IconRecord} from 'shared/components/icon/collection/record.svg';
+
+import {Button} from "../../../shared/components/button/button";
 
 interface IRecordButton {
-	isRecording: boolean;
+	isRecording: boolean
 }
 
 const RecordButton = styled(Button)<IRecordButton>`
@@ -15,29 +16,28 @@ const RecordButton = styled(Button)<IRecordButton>`
 	color: #fff;
 
 	span svg circle {
-		stroke: ${(props) => props.isRecording && '#FF5656'};
+		stroke: ${props => props.isRecording && '#FF5656'};
 	}
 `;
 
 interface IStartRecordButton {
-	isRecording: boolean;
-	isOnline: boolean;
-	onStartRecording: () => void;
+	isRecording: boolean,
+	isConnected: boolean,
+	onStartRecording: () => void
 }
 
-const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({
-	isRecording,
-	onStartRecording,
-	isOnline,
-}) => {
+const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({isRecording, onStartRecording, isConnected}) => {
+
 	return (
 		<RecordButton
 			isRecording={isRecording}
-			label={isRecording ? 'Recording' : 'Start Recording'}
-			startIcon={isOnline ? <IconRecord /> : <IconOffline />}
+			label={isRecording ? "Recording" : "Start Recording"}
+			startIcon={(!isConnected) ? <IconOffline/> : <IconRecord/>}
 			onClick={!isRecording ? onStartRecording : undefined}
-			disabled={!isOnline}
+			disabled={!isConnected}
 		/>
-	);
+
+	)
+		;
 };
-export const StartRecordButton = memo(StartRecordButtonComponent);
+export const StartRecordButton = memo(StartRecordButtonComponent)
