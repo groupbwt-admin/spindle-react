@@ -81,7 +81,8 @@ export function useVideo() {
 	};
 
 	const handleBack = () => {
-		nav(location.state?.from || VIDEO_ROUTES.MY_VIDEOS);
+		console.log(location.state?.from);
+		nav(location.state?.from || VIDEO_ROUTES.MY_VIDEOS.path);
 	};
 
 	const tagsArray = useMemo(() => {
