@@ -39,7 +39,7 @@ const CardText = styled(Typography)`
 `;
 
 export const EmptyVideoList = () => {
-	const {isRecording, startRecording, isOnline} = useRecordContext()
+	const {isRecording, startRecording, isConnected} = useRecordContext()
 
 	return (
 		<>
@@ -48,7 +48,7 @@ export const EmptyVideoList = () => {
 					<img src={image} alt="empty list"/>
 				</CardImage>
 				<CardText variant="body2">You don’t have any recordings yet.</CardText>
-				<StartRecordButton isRecording={isRecording} onStartRecording={startRecording} isOnline={isOnline}/>
+				<StartRecordButton isRecording={isRecording} onStartRecording={startRecording} isConnected={isConnected}/>
 			</EmptyCard>
 		</>
 	);

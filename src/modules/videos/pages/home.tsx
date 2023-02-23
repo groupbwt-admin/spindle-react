@@ -58,7 +58,7 @@ const Title = styled(Typography)`
 export const HomePage = () => {
 	const { models, commands } = useHome();
 
-	const { isRecording, startRecording, isOnline } = useRecordContext();
+	const { isRecording, isConnected, startRecording } = useRecordContext();
 
 	return (
 		<>
@@ -68,7 +68,7 @@ export const HomePage = () => {
 				<StartRecordButton
 					isRecording={isRecording}
 					onStartRecording={startRecording}
-					isOnline={isOnline}
+					isConnected={isConnected}
 				/>
 			</HeaderContainer>
 			<ContentContainer>

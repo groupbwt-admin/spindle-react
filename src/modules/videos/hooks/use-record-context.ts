@@ -1,20 +1,19 @@
 import { useContext } from 'react';
 
 import {
-	selectIsOnline,
+	selectIsConnected,
 	selectIsRecording,
-} from 'app/store/record-socket/selects';
-
+} from '../../../app/store/record-socket/selects';
 import { RecordContext } from '../context/record-context';
 
 export const useRecordContext = () => {
 	const { startRecording } = useContext(RecordContext);
 	const isRecording = selectIsRecording();
-	const isOnline = selectIsOnline();
+	const isConnected = selectIsConnected();
 
 	return {
 		isRecording,
-		isOnline,
+		isConnected,
 		startRecording,
 	};
 };
