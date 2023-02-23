@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useRecordContext } from 'modules/videos/hooks/use-record-context';
 
 import { VideoApi } from 'app/api/video-api/video-api';
 
@@ -18,6 +19,8 @@ export function useVideo() {
 	const nav = useNavigate();
 	const location = useLocation();
 	const user = selectUserData();
+
+	const recordContext = useRecordContext();
 
 	const {
 		data: video,
@@ -91,6 +94,7 @@ export function useVideo() {
 	return {
 		models: {
 			user,
+			recordContext,
 			pageTitle: location.state?.title || 'My videos',
 			deleteVideoModal,
 			accessSettingsModal,

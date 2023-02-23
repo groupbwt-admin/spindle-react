@@ -1,14 +1,13 @@
-import React, {memo} from 'react';
+import React, { memo } from 'react';
 
-import {styled} from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
-import {ReactComponent as IconOffline} from 'shared/components/icon/collection/offline.svg';
-import {ReactComponent as IconRecord} from 'shared/components/icon/collection/record.svg';
-
-import {Button} from "../../../shared/components/button/button";
+import { Button } from 'shared/components/button/button';
+import { ReactComponent as IconOffline } from 'shared/components/icon/collection/offline.svg';
+import { ReactComponent as IconRecord } from 'shared/components/icon/collection/record.svg';
 
 interface IRecordButton {
-	isRecording: boolean
+	isRecording: boolean;
 }
 
 const RecordButton = styled(Button)<IRecordButton>`
@@ -16,28 +15,32 @@ const RecordButton = styled(Button)<IRecordButton>`
 	color: #fff;
 
 	span svg circle {
-		stroke: ${props => props.isRecording && '#FF5656'};
+		stroke: ${(props) => props.isRecording && '#FF5656'};
 	}
 `;
 
 interface IStartRecordButton {
-	isRecording: boolean,
-	isConnected: boolean,
-	onStartRecording: () => void
+	className?: string;
+	isRecording: boolean;
+	isConnected: boolean;
+	onStartRecording: () => void;
 }
 
-const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({isRecording, onStartRecording, isConnected}) => {
-
+const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({
+	isRecording,
+	className,
+	onStartRecording,
+	isConnected,
+}) => {
 	return (
 		<RecordButton
+			className={className}
 			isRecording={isRecording}
-			label={isRecording ? "Recording" : "Start Recording"}
-			startIcon={(!isConnected) ? <IconOffline/> : <IconRecord/>}
-			onClick={!isRecording ? onStartRecording : undefined}
+			label={isRecording ? 'Recording' : 'Start Recording'}
+			startIcon={!isConnected ? <IconOffline /> : <IconRecord />}
 			disabled={!isConnected}
+			onClick={!isRecording ? onStartRecording : undefined}
 		/>
-
-	)
-		;
+	);
 };
-export const StartRecordButton = memo(StartRecordButtonComponent)
+export const StartRecordButton = memo(StartRecordButtonComponent);

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
 import { format } from 'date-fns';
+import { StartRecordButton } from 'modules/videos/components/start-record-button';
 import { useVideo } from 'modules/videos/pages/video/use-video';
 import { BoundaryError } from 'shared/models/custom-errors';
 
@@ -10,7 +11,6 @@ import { Avatar } from 'shared/components/avatar/avatar';
 import { Button } from 'shared/components/button/button';
 import { IconButton } from 'shared/components/button/icon-button';
 import { EditInputField } from 'shared/components/edit-input-field/edit-input-field';
-import { ReactComponent as IconRecord } from 'shared/components/icon/collection/record.svg';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { SpinnerOverlay } from 'shared/components/spinner-overlay/spinner-overlay';
@@ -100,10 +100,7 @@ const StyledCaption = styled(Typography)`
 	color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
-const RecordButton = styled(Button)`
-	max-width: 190px;
-	color: ${({ theme }) => theme.palette.common.white};
-	justify-self: flex-start;
+const StyledRecordButton = styled(StartRecordButton)`
 	margin-left: auto;
 `;
 
@@ -125,7 +122,11 @@ export const VideoPage: React.FC = () => {
 						<Icon icon={ICON_COLLECTION.arrow_left} />
 					</StyledIconButton>
 					<Title variant="h1">{models.pageTitle}</Title>
-					<RecordButton label="Start Recording" startIcon={<IconRecord />} />
+					<StyledRecordButton
+						isRecording={models.recordContext.isRecording}
+						onStartRecording={models.recordContext.startRecording}
+						isConnected={models.recordContext.isConnected}
+					/>
 				</HeaderContainer>
 			)}
 			{models.videoError instanceof BoundaryError && models.videoError.message}
