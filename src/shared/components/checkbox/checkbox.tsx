@@ -10,7 +10,7 @@ const StyledCheckbox = styled(ExternalCheckbox)`
 	margin-right: 12px;
 	width: 16px;
 	height: 16px;
-	color: #eeeff1;
+	color: ${({ theme }) => theme.palette.text.secondary};
 	border-radius: 4px;
 
 	input {

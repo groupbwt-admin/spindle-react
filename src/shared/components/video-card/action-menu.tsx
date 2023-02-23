@@ -61,6 +61,7 @@ export interface VideoActionMenuProps {
 	onDownload: (event: React.MouseEvent<HTMLLIElement>) => void;
 	onCopyLink: (event: React.MouseEvent<HTMLLIElement>) => void;
 	onDelete: (event: React.MouseEvent<HTMLLIElement>) => void;
+	onChangeSettings: (event: React.MouseEvent<HTMLLIElement>) => void;
 }
 
 export const ActionMenu: React.FC<VideoActionMenuProps> = ({
@@ -73,6 +74,7 @@ export const ActionMenu: React.FC<VideoActionMenuProps> = ({
 		delete: true,
 	},
 	onDownload,
+	onChangeSettings,
 	onDelete,
 	onCopyLink,
 }) => {
@@ -132,7 +134,7 @@ export const ActionMenu: React.FC<VideoActionMenuProps> = ({
 					</StyledMenuItem>
 				)}
 				{activeActions.settings && (
-					<StyledMenuItem>
+					<StyledMenuItem onClick={(e) => onChangeSettings(e)}>
 						<StyledMenuIcon icon={ICON_COLLECTION.settings} />
 						<span>Settings</span>
 					</StyledMenuItem>

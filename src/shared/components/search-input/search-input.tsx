@@ -3,8 +3,7 @@ import { useId, useRef } from 'react';
 import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 
-import { InputAdornment, InputBase } from '@mui/material';
-import { css } from '@mui/material/styles';
+import { CircularProgress, InputAdornment, InputBase } from '@mui/material';
 
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
@@ -13,8 +12,10 @@ import { InputProps } from 'shared/components/input/input';
 const StyledInputAdornment = styled(InputAdornment)`
 	position: absolute;
 	left: 20px;
-	top: 50%;
+	top: calc(50% - 12px);
 	transition: opacity 0.3s ease;
+	height: auto;
+	margin-right: 0;
 
 	svg {
 		width: 19px;
@@ -31,73 +32,65 @@ const StyledClearInputAdornment = styled(InputAdornment)`
 	cursor: pointer;
 `;
 
-const AppInput = styled(InputBase)(
-	({ theme }) => css`
-		display: flex;
-		position: relative;
+const AppInput = styled(InputBase)`
+	display: flex;
+	position: relative;
 
-		input {
-			max-width: 100%;
-			background-color: #ffffff;
-			border: 1px solid #eeeff1;
-			border-radius: 10px;
-			padding: 14px 12px 14px 46px;
-			transition: border-color 0.3s ${theme.transitions.easing.easeIn};
+	input {
+		max-width: 100%;
+		background-color: #ffffff;
+		border: 1px solid ${({ theme }) => theme.palette.text.secondary};
+		border-radius: 10px;
+		padding: 14px 12px 14px 46px;
+		transition: border-color 0.3s
+			${({ theme }) => theme.transitions.easing.easeIn};
 
-			&::placeholder {
-				color: ${theme.palette.text.secondary};
-			}
-
-			&:focus {
-				border-color: ${theme.palette.primary.main};
-			}
+		&::placeholder {
+			color: ${({ theme }) => theme.palette.text.secondary};
 		}
 
-		&.Mui-error input {
-			border-color: ${theme.palette.error.main};
+		&:focus {
+			border-color: ${({ theme }) => theme.palette.primary.main};
 		}
+	}
 
-		&.MuiInputBase-root {
-			transition: width 0.3s ease;
-			width: 54px;
-			max-width: 400px;
+	&.Mui-error input {
+		border-color: ${({ theme }) => theme.palette.error.main};
+	}
+
+	&.MuiInputBase-root {
+		transition: width 0.3s ease;
+		width: 54px;
+		max-width: 400px;
+	}
+
+	&.Mui-focused,
+	&.hasValue {
+		transition: width 0.3s ease;
+		width: 100%;
+	}
+
+	&.hasValue {
+		${StyledClearInputAdornment} {
+			display: block;
 		}
-
-		&.Mui-focused,
-		&.hasValue {
-			transition: width 0.3s ease;
-			width: 100%;
-
-			${StyledInputAdornment} {
-				opacity: 0;
-			}
-
-			input {
-				padding-left: 12px;
-			}
-		}
-
-		&.hasValue {
-			${StyledClearInputAdornment} {
-				display: block;
-			}
-		}
-	`,
-);
+	}
+`;
 
 interface SearchInputProps extends InputProps {
 	value: string;
+	isLoading?: boolean;
 	onClear: () => void;
 }
 
 export const SearchInput: React.ForwardRefRenderFunction<
 	HTMLInputElement,
 	SearchInputProps
-> = ({ value, className, onClear, ...props }) => {
+> = ({ value, isLoading, className, onClear, ...props }) => {
 	const id = useId();
 	const inputEl = useRef<HTMLInputElement | null>(null);
 
-	const handleClear = (e) => {
+	const handleClear = () => {
 		onClear();
 		inputEl.current && inputEl.current.focus();
 	};
@@ -106,12 +99,18 @@ export const SearchInput: React.ForwardRefRenderFunction<
 		<AppInput
 			value={value}
 			inputRef={inputEl}
+			type="search"
+			autoComplete="off"
 			id={id}
 			className={clsx(className, value && 'hasValue')}
 			{...props}
 			startAdornment={
 				<StyledInputAdornment position="start">
-					<Icon icon={ICON_COLLECTION.search} />
+					{!isLoading ? (
+						<Icon icon={ICON_COLLECTION.search} />
+					) : (
+						<CircularProgress color="primary" size={24} />
+					)}
 				</StyledInputAdornment>
 			}
 			endAdornment={

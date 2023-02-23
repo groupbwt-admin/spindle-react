@@ -4,29 +4,28 @@ import { forwardRef, InputHTMLAttributes, useId } from 'react';
 import { InputBase, InputBaseProps, InputLabel } from '@mui/material';
 import { css, styled } from '@mui/material/styles';
 
-const AppInput = styled(InputBase)(
-	({ theme }) => css`
-		input {
-			background-color: #ffffff;
-			border: 1px solid #eeeff1;
-			border-radius: 10px;
-			padding: 14px 12px;
-			transition: border-color 0.3s ${theme.transitions.easing.easeIn};
+const AppInput = styled(InputBase)`
+	input {
+		background-color: ${({ theme }) => theme.palette.common.white};
+		border: 1px solid ${({ theme }) => theme.palette.text.secondary};
+		border-radius: 10px;
+		padding: 14px 12px;
+		transition: border-color 0.3s
+			${({ theme }) => theme.transitions.easing.easeIn};
 
-			&::placeholder {
-				color: ${theme.palette.text.secondary};
-			}
-
-			&:focus {
-				border-color: ${theme.palette.primary.main};
-			}
+		&::placeholder {
+			color: ${({ theme }) => theme.palette.text.secondary};
 		}
 
-		&.Mui-error input {
-			border-color: ${theme.palette.error.main};
+		&:focus {
+			border-color: ${({ theme }) => theme.palette.primary.main};
 		}
-	`,
-);
+	}
+
+	&.Mui-error input {
+		border-color: ${({ theme }) => theme.palette.error.main};
+	}
+`;
 
 const AppLabel = styled(InputLabel)(
 	({ theme }) => css`

@@ -1,19 +1,19 @@
 import * as React from 'react';
 import styled from '@emotion/styled/macro';
 
-import {EmptyVideoList} from 'shared/components/empty-video-llist/empty-video-list';
-import {Filter} from 'shared/components/filter/filter';
-import {SearchInput} from 'shared/components/search-input/search-input';
-import {SortDropdown} from 'shared/components/sort-dropdown/sort-dropdown';
-import {ActionPanel} from 'shared/components/table/action-panel';
-import {VideoList} from 'shared/components/table/video-list';
-import {Typography} from 'shared/components/typography/typography';
-import {VideoListSkeleton} from 'shared/components/video-list-skeleton/video-list-skeleton';
+import { EmptyVideoList } from 'shared/components/empty-video-llist/empty-video-list';
+import { Filter } from 'shared/components/filter/filter';
+import { SearchInput } from 'shared/components/search-input/search-input';
+import { SortDropdown } from 'shared/components/sort-dropdown/sort-dropdown';
+import { ActionPanel } from 'shared/components/table/action-panel';
+import { VideoList } from 'shared/components/table/video-list';
+import { Typography } from 'shared/components/typography/typography';
+import { VideoListSkeleton } from 'shared/components/video-list-skeleton/video-list-skeleton';
 
-import {StartRecordButton} from "../components/start-record-button";
-import {useRecordContext} from "../hooks/use-record-context";
+import { StartRecordButton } from '../components/start-record-button';
+import { useRecordContext } from '../hooks/use-record-context';
 
-import {useHome} from './use-home';
+import { useHome } from './use-home';
 
 const VideoContainer = styled.div`
 	padding-top: 48px;
@@ -45,33 +45,37 @@ const HeaderContainer = styled.div`
 	justify-content: space-between;
 `;
 
-const ContentContainer = styled.div``;
+const ContentContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+`;
 
 const Title = styled(Typography)`
 	flex-shrink: 0;
 `;
 
-
 export const HomePage = () => {
-	const [value, setValue] = React.useState(0);
+	const { models, commands } = useHome();
 
-	const {models, commands} = useHome();
-
-	const {isRecording, startRecording, isConnected} = useRecordContext()
+	const { isRecording, isConnected, startRecording } = useRecordContext();
 
 	return (
 		<>
 			<HeaderContainer>
 				<Title variant="h1">My videos</Title>
 
-				<StartRecordButton isRecording={isRecording} onStartRecording={startRecording} isConnected={isConnected}/>
-
-
+				<StartRecordButton
+					isRecording={isRecording}
+					onStartRecording={startRecording}
+					isConnected={isConnected}
+				/>
 			</HeaderContainer>
 			<ContentContainer>
 				<FiltersPanel>
 					<SearchInput
 						value={models.searchQuery}
+						isLoading={models.isSearching}
 						onChange={commands.handleSearch}
 						onClear={commands.handleClearSearch}
 					/>
@@ -103,8 +107,8 @@ export const HomePage = () => {
 							onChecked={commands.handleCheckVideo}
 						/>
 					)}
-					{models.isInitialLoading && <VideoListSkeleton/>}
-					{models.isListEmpty && <EmptyVideoList/>}
+					{models.isInitialLoading && <VideoListSkeleton />}
+					{models.isListEmpty && <EmptyVideoList />}
 				</VideoContainer>
 				{models.isSelectMode && (
 					<StyledActionPanel

@@ -1,5 +1,6 @@
 export interface IUser {
 	id?: string;
+	countVideo: number;
 	email: string;
 	firstName: string;
 	lastName: string;

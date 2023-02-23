@@ -95,6 +95,7 @@ export const ProfilePage = () => {
 			<FiltersPanel>
 				<SearchInput
 					value={models.searchQuery}
+					isLoading={models.isSearching}
 					onChange={commands.handleSearch}
 					onClear={commands.handleClearSearch}
 				/>
@@ -121,6 +122,7 @@ export const ProfilePage = () => {
 						loadNextPage={commands.loadNextPage}
 						onChecked={commands.handleCheckVideo}
 						onDeleteVideo={commands.handleDeleteVideo}
+						onChangeSettings={commands.handleChangeVideoSettings}
 					/>
 				)}
 				{models.isInitialLoading && <VideoListSkeleton />}
@@ -137,6 +139,7 @@ export const ProfilePage = () => {
 				/>
 			)}
 			{models.deleteVideoModal}
+			{models.accessSettingsModal}
 		</ProfileContainer>
 	);
 };

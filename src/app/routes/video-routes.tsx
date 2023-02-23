@@ -6,6 +6,8 @@ import { ProfilePage } from 'modules/user/pages/profile/profile';
 
 import { VIDEO_ROUTES } from 'shared/config/routes';
 
+import { ErrorBoundary } from 'shared/components/error-boundary/error-boundary';
+
 const VideoPage = loadable(
 	() => import('modules/videos/pages/video/video-page'),
 	{
@@ -20,7 +22,11 @@ const HomePage = loadable(() => import('modules/videos/pages/home'), {
 export const videoRoutes: RouteObject[] = [
 	{
 		path: VIDEO_ROUTES.VIDEO.path,
-		element: <VideoPage />,
+		element: (
+			<ErrorBoundary>
+				<VideoPage />
+			</ErrorBoundary>
+		),
 	},
 	{
 		path: VIDEO_ROUTES.MY_VIDEOS.path,

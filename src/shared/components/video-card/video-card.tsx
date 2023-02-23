@@ -179,6 +179,7 @@ export interface VideoCardProps {
 	checked: boolean;
 	onChecked: (IVideo) => void;
 	onDelete?: (video: IVideo) => void;
+	onChangeSettings?: (video: IVideo) => void;
 }
 
 export const VideoCard: React.FC<VideoCardProps> = ({
@@ -189,6 +190,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 	className,
 	onChecked,
 	onDelete,
+	onChangeSettings,
 }) => {
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -231,6 +233,11 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 	const handleOpenDeleteModal = (e) => {
 		e.stopPropagation();
 		onDelete && onDelete(video);
+	};
+
+	const handleChangeSettings = (e) => {
+		e.stopPropagation();
+		onChangeSettings && onChangeSettings(video);
 	};
 
 	return (
@@ -288,6 +295,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 					onDownload={handleDownload}
 					onDelete={handleOpenDeleteModal}
 					onCopyLink={handleCopyLink}
+					onChangeSettings={handleChangeSettings}
 				/>
 			</CardActionArea>
 		</StyledCard>

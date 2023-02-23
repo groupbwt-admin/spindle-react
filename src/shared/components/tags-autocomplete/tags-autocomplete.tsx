@@ -27,8 +27,8 @@ const StyledInput = styled(TextField)`
 
 	position: relative;
 	border-radius: 10px;
-	background-color: #ffffff;
-	border: 1px solid #eeeff1;
+	background-color: ${({ theme }) => theme.palette.common.white};
+	border: 1px solid ${({ theme }) => theme.palette.text.secondary};
 	transition: border-color 0.3s
 		${({ theme }) => theme.transitions.easing.easeIn};
 	padding: 8px 40px 8px 6px;
