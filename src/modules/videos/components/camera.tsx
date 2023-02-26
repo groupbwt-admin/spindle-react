@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
 
-
 const VideoCamera = styled.video`
 	border-radius: 50%;
 	object-fit: cover;
@@ -13,26 +12,17 @@ const VideoCamera = styled.video`
 	-webkit-transform: scaleX(-1);
 	transform: scaleX(-1);
 	border-radius: 50%;
-	margin-left: 20px;
+	margin-right: 20px;
 
 	&:hover {
 		filter: brightness(60%);
 	}
-`
+`;
 
 interface ICamera {
-	videoRef: any,
+	videoRef: any;
 }
 
-export const Camera: React.FC<ICamera> = ({videoRef}) => {
-	return (
-		<VideoCamera
-			ref={videoRef}
-			autoPlay
-			playsInline
-			muted
-		/>
-
-	);
+export const Camera: React.FC<ICamera> = ({ videoRef }) => {
+	return <VideoCamera ref={videoRef} autoPlay playsInline muted />;
 };
-
