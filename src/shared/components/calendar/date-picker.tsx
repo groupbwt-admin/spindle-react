@@ -18,6 +18,10 @@ const StyledInput = styled(TextField)`
 		color: ${({ theme }) => theme.palette.text.secondary};
 	}
 
+	fieldset {
+		border-color: ${({ theme }) => theme.palette.secondary.main};
+	}
+
 	&::placeholder {
 		color: ${({ theme }) => theme.palette.text.secondary};
 	}

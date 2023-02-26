@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useRecordContext } from 'modules/videos/hooks/use-record-context';
 
 import { VideoApi } from 'app/api/video-api/video-api';
 
@@ -19,17 +20,23 @@ export function useVideo() {
 	const location = useLocation();
 	const user = selectUserData();
 
+	const recordContext = useRecordContext();
+
+	const {
+		data: video,
+		isLoading: isVideoDataLoading,
+		error: videoError,
+	} = useQuery({
+		queryKey: [VIDEO_QUERY_KEYS.video, urlParams.id],
+		queryFn: () => VideoApi.getVideoInfoById({ id: urlParams.id! }),
+		enabled: !!urlParams.id,
+		retry: 1,
+	});
+
 	const videoUrl = useQuery({
 		queryKey: [VIDEO_QUERY_KEYS.video_stream_url, urlParams.id],
 		queryFn: () => VideoApi.getVideoUrl({ id: urlParams.id! }),
-		enabled: !!urlParams.id,
-	});
-
-	const { data: video } = useQuery({
-		queryKey: [VIDEO_QUERY_KEYS.video, urlParams.id],
-		queryFn: () => VideoApi.getVideoInfoById({ id: urlParams.id! }),
-		useErrorBoundary: true,
-		enabled: !!urlParams.id,
+		enabled: !!video,
 	});
 
 	const tags = useQuery({
@@ -77,7 +84,7 @@ export function useVideo() {
 	};
 
 	const handleBack = () => {
-		nav(location.state?.from || VIDEO_ROUTES.MY_VIDEOS);
+		nav(location.state?.from || VIDEO_ROUTES.MY_VIDEOS.path);
 	};
 
 	const tagsArray = useMemo(() => {
@@ -86,13 +93,18 @@ export function useVideo() {
 
 	return {
 		models: {
+			user,
+			recordContext,
 			pageTitle: location.state?.title || 'My videos',
 			deleteVideoModal,
 			accessSettingsModal,
 			videoUrl,
 			video,
+			videoError,
 			tags: tagsArray,
 			isLinkCopied,
+			isVideoDataLoading,
+			isEditable: user?.id === video?.user.id,
 		},
 		commands: {
 			handleCopyLink,

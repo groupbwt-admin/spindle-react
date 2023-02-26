@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 
@@ -8,10 +8,6 @@ import { IconButton } from 'shared/components/button/icon-button';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { Input, InputProps } from 'shared/components/input/input';
-
-interface EditInputFieldProps extends InputProps {
-	onSubmit: (val: string) => Promise<void>;
-}
 
 const StyledInputAdornment = styled(InputAdornment)`
 	position: absolute;
@@ -23,6 +19,12 @@ const StyledInput = styled(Input)`
 		border-color: transparent;
 	}
 
+	&:not(.isEditable) {
+		&:hover {
+			border-color: ${({ theme }) => theme.palette.primary.main};
+		}
+	}
+
 	input {
 		font-size: 32px;
 		line-height: 52px;
@@ -30,10 +32,6 @@ const StyledInput = styled(Input)`
 		color: #231d2c;
 		transition: border-color 0.3s
 			${({ theme }) => theme.transitions.easing.easeIn};
-
-		&:hover {
-			border-color: ${({ theme }) => theme.palette.primary.main};
-		}
 	}
 
 	&:not(.editMode) {
@@ -55,10 +53,17 @@ const StyledIconButton = styled(IconButton)`
 	height: 45px;
 `;
 
-const RootEditInputField: React.ForwardRefRenderFunction<
-	HTMLInputElement,
-	EditInputFieldProps
-> = ({ value, className, onSubmit }) => {
+interface EditInputFieldProps extends InputProps {
+	onSubmit: (val: string) => Promise<void>;
+	isEditable?: boolean;
+}
+
+export const EditInputField: React.FC<EditInputFieldProps> = ({
+	value,
+	isEditable = false,
+	className,
+	onSubmit,
+}) => {
 	const [inputVal, setInputVal] = useState(value);
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -79,7 +84,7 @@ const RootEditInputField: React.ForwardRefRenderFunction<
 
 	const handleInputClick = (e) => {
 		e.stopPropagation();
-		if (isEditMode) return;
+		if (isEditMode || !isEditable) return;
 		toggleEditMode(e, true);
 	};
 
@@ -91,8 +96,13 @@ const RootEditInputField: React.ForwardRefRenderFunction<
 	return (
 		<StyledInput
 			value={inputVal}
+			readOnly={!isEditable}
 			onChange={handleChange}
-			className={clsx(className, isEditMode && 'editMode')}
+			className={clsx(
+				className,
+				isEditMode && 'editMode',
+				isEditable && 'isEditable',
+			)}
 			onClick={handleInputClick}
 			endAdornment={
 				<StyledInputAdornment position="end">
@@ -109,5 +119,3 @@ const RootEditInputField: React.ForwardRefRenderFunction<
 		/>
 	);
 };
-
-export const EditInputField = forwardRef(RootEditInputField);

@@ -70,7 +70,7 @@ const StyledCheckbox = styled(Checkbox)`
 
 const StyledButton = styled(Button)`
 	background: ${({ theme }) => theme.palette.common.white};
-	border: 1px solid ${({ theme }) => theme.palette.text.secondary};
+	border: 1px solid ${({ theme }) => theme.palette.secondary.main};
 	border-radius: 10px;
 	font-weight: 400;
 	margin-left: 12px;

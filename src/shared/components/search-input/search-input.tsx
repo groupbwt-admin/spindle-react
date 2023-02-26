@@ -39,7 +39,7 @@ const AppInput = styled(InputBase)`
 	input {
 		max-width: 100%;
 		background-color: #ffffff;
-		border: 1px solid ${({ theme }) => theme.palette.text.secondary};
+		border: 1px solid ${({ theme }) => theme.palette.secondary.main};
 		border-radius: 10px;
 		padding: 14px 12px 14px 46px;
 		transition: border-color 0.3s
