@@ -26,6 +26,12 @@ export class UserApiService implements UserApiInterface {
 		return payload.data;
 	};
 
+	getUserById = async ({ id: userId }): Promise<IUser> => {
+		const payload = await this.http.get(`/users/${userId}`);
+
+		return payload.data;
+	};
+
 	updateProfile = async (data: UpdateProfileDto): Promise<IUser> => {
 		const profileData = new FormData();
 		for (const field in data) {

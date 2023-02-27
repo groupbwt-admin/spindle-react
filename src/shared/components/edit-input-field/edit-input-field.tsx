@@ -82,6 +82,12 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 
 	const handleChange = (e) => setInputVal(e.target.value);
 
+	const handleBlur = (e) => {
+		if (value === inputVal) {
+			toggleEditMode(e, false);
+		}
+	};
+
 	const handleInputClick = (e) => {
 		e.stopPropagation();
 		if (isEditMode || !isEditable) return;
@@ -98,6 +104,7 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 			value={inputVal}
 			readOnly={!isEditable}
 			onChange={handleChange}
+			onBlur={handleBlur}
 			className={clsx(
 				className,
 				isEditMode && 'editMode',

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useMutation } from 'react-query';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 import { format } from 'date-fns';
@@ -166,7 +166,7 @@ const PAGE_TITLES = {
 	[VIDEO_ROUTES.MY_VIDEOS.path]: {
 		title: [VIDEO_ROUTES.MY_VIDEOS.title],
 	},
-	[VIDEO_ROUTES.PROFILE.path]: {
+	[VIDEO_ROUTES.MY_PROFILE.path]: {
 		title: [VIDEO_ROUTES.MY_VIDEOS.title],
 	},
 };
@@ -210,17 +210,9 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 
 	const handleCheckboxClick = (e) => e.stopPropagation();
 
-	const handleClick = () => {
-		if (!isSelectMode) {
-			navigate(VIDEO_ROUTES.VIDEO.generate(video.id), {
-				state: PAGE_TITLES[location.pathname]
-					? {
-							from: location.pathname + location.search,
-							title: PAGE_TITLES[location.pathname].title,
-					  }
-					: undefined,
-			});
-		} else {
+	const handleClick = (e) => {
+		if (isSelectMode) {
+			e.preventDefault();
 			onChecked({ video, checked: !checked });
 		}
 	};
@@ -241,11 +233,21 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 	};
 
 	return (
-		<StyledCard
-			onClick={handleClick}
-			className={clsx(className, isSelectMode && 'isSelectMode')}
-		>
-			<CardActionArea component="div" sx={{ height: '100%' }}>
+		<StyledCard className={clsx(className, isSelectMode && 'isSelectMode')}>
+			<CardActionArea
+				onClick={handleClick}
+				component={Link}
+				to={VIDEO_ROUTES.VIDEO.generate(video.id)}
+				state={
+					PAGE_TITLES[location.pathname]
+						? {
+								from: location.pathname + location.search,
+								title: PAGE_TITLES[location.pathname].title,
+						  }
+						: undefined
+				}
+				sx={{ height: '100%' }}
+			>
 				<CardMedia sx={{ height: 172, position: 'relative' }}>
 					<StyledPreview
 						loading="lazy"
