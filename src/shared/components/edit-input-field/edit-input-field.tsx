@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 
@@ -68,12 +68,17 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
+	const adornmentRef = useRef<HTMLDivElement>(null);
+
 	const toggleEditMode = (e, state) => {
 		setIsEditMode(state);
 	};
 
 	const submitHandler = async (e) => {
 		if (!inputVal) return;
+		if (value === inputVal) {
+			toggleEditMode(e, false);
+		}
 		setIsLoading(true);
 		await onSubmit(inputVal);
 		toggleEditMode(e, false);
@@ -82,7 +87,14 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 
 	const handleChange = (e) => setInputVal(e.target.value);
 
-	const handleBlur = (e) => {
+	const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+		e.stopPropagation();
+		if (
+			adornmentRef?.current &&
+			adornmentRef.current.contains(e.relatedTarget)
+		) {
+			return;
+		}
 		if (value === inputVal) {
 			toggleEditMode(e, false);
 		}
@@ -94,8 +106,10 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 		toggleEditMode(e, true);
 	};
 
-	const handleCancelEdit = (e) => {
+	const handleCancelEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.nativeEvent.stopImmediatePropagation();
 		e.stopPropagation();
+		setInputVal(value);
 		toggleEditMode(e, false);
 	};
 
@@ -112,7 +126,7 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 			)}
 			onClick={handleInputClick}
 			endAdornment={
-				<StyledInputAdornment position="end">
+				<StyledInputAdornment position="end" ref={adornmentRef}>
 					{!isLoading && (
 						<StyledIconButton onClick={handleCancelEdit}>
 							<Icon icon={ICON_COLLECTION.close} />

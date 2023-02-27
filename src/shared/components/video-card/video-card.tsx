@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useMutation } from 'react-query';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 import { format } from 'date-fns';
@@ -14,11 +14,12 @@ import {
 	CardMedia,
 } from '@mui/material';
 
+import { IUser } from 'shared/types/user';
 import { IVideo } from 'shared/types/video';
 
 import { VideoApi } from 'app/api/video-api/video-api';
 
-import { VIDEO_ROUTES } from 'shared/config/routes';
+import { USER_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import { useCopyLink } from 'shared/hooks/use-copy-link';
 import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
@@ -166,13 +167,17 @@ const PAGE_TITLES = {
 	[VIDEO_ROUTES.MY_VIDEOS.path]: {
 		title: [VIDEO_ROUTES.MY_VIDEOS.title],
 	},
-	[VIDEO_ROUTES.MY_PROFILE.path]: {
-		title: [VIDEO_ROUTES.MY_VIDEOS.title],
+	[USER_ROUTES.MY_PROFILE.path]: {
+		title: [USER_ROUTES.MY_PROFILE.title],
+	},
+	[USER_ROUTES.USER.path]: {
+		title: [USER_ROUTES.USER.title],
 	},
 };
 
 export interface VideoCardProps {
 	video: IVideo;
+	userId?: IUser['id'];
 	activeActions?: VideoActionMenuProps['activeActions'];
 	isSelectMode: boolean;
 	className?: string;
@@ -184,6 +189,7 @@ export interface VideoCardProps {
 
 export const VideoCard: React.FC<VideoCardProps> = ({
 	checked,
+	userId,
 	isSelectMode,
 	video,
 	activeActions,
@@ -192,7 +198,6 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 	onDelete,
 	onChangeSettings,
 }) => {
-	const navigate = useNavigate();
 	const location = useLocation();
 	const { isLinkCopied, handleCopyLink } = useCopyLink(video);
 	const copyLinkTimerRef = useRef<ReturnType<typeof setTimeout>>();
@@ -237,7 +242,11 @@ export const VideoCard: React.FC<VideoCardProps> = ({
 			<CardActionArea
 				onClick={handleClick}
 				component={Link}
-				to={VIDEO_ROUTES.VIDEO.generate(video.id)}
+				to={
+					userId
+						? `${VIDEO_ROUTES.VIDEO.generate(video.id)}?user=${userId}`
+						: VIDEO_ROUTES.VIDEO.generate(video.id)
+				}
 				state={
 					PAGE_TITLES[location.pathname]
 						? {

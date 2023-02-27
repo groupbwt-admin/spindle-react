@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled/macro';
 
-import { Menu, MenuItem } from '@mui/material';
+import { Menu } from '@mui/material';
 
 import { IUser } from 'shared/types/user';
 
@@ -33,14 +33,6 @@ const StyledMenu = styled(Menu)`
 	}
 `;
 
-const StyledMenuItem = styled(MenuItem)`
-	padding-bottom: 13px;
-	padding-top: 13px;
-	padding-left: 24px;
-	opacity: 1;
-	cursor: pointer;
-`;
-
 const UserInfo = styled.div`
 	max-width: calc(100% - 92px);
 
@@ -66,11 +58,12 @@ const MenuUserVideosInfo = styled(Typography)`
 
 type UserInfoHoverMenuProps = {
 	user: IUser;
+	isCurrentUser?: boolean;
 };
 
 export const UserInfoHoverMenu: React.FC<
 	PropsWithChildren<UserInfoHoverMenuProps>
-> = ({ user, children }) => {
+> = ({ user, isCurrentUser, children }) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 	const handleMouseEnter = (
@@ -137,7 +130,11 @@ export const UserInfoHoverMenu: React.FC<
 					label="View Profile"
 					fullWidth
 					component={Link}
-					to={USER_ROUTES.USER.generate(user.id as string)}
+					to={
+						isCurrentUser
+							? USER_ROUTES.MY_PROFILE.path
+							: USER_ROUTES.USER.generate(user.id as string)
+					}
 				/>
 			</StyledMenu>
 		</>

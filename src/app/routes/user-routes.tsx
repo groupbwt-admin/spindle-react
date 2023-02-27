@@ -15,7 +15,7 @@ const UserPage = loadable(
 const MyProfile = loadable(
 	() => import('modules/user/pages/my-profile/my-profile'),
 	{
-		resolveComponent: (components) => components.HomePage,
+		resolveComponent: (components) => components.MyProfilePage,
 	},
 );
 

@@ -53,6 +53,7 @@ export const USER_ROUTES = {
 		path: '/profile',
 	},
 	USER: {
+		title: 'Back to user',
 		path: '/users/:id',
 		generate: (id: string) => generatePath('/users/:id', { id }),
 		generateExternalPath: (id: string) =>

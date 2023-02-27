@@ -178,7 +178,10 @@ export const VideoPage: React.FC = () => {
 						)}
 					</ActionsContainer>
 					<DetailedInfoContainer>
-						<UserInfoHoverMenu user={models.video.user}>
+						<UserInfoHoverMenu
+							user={models.video.user}
+							isCurrentUser={models.isEditable}
+						>
 							<StyledAvatar
 								src={
 									models.video.user.avatar

@@ -4,11 +4,9 @@ import { useUserProfile } from 'modules/user/pages/user-profile/use-user-profile
 import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
 import { Avatar } from 'shared/components/avatar/avatar';
-import { Button } from 'shared/components/button/button';
 import { EmptyVideoList } from 'shared/components/empty-video-llist/empty-video-list';
 import { FetchLinearLoader } from 'shared/components/fetch-linear-loader/fetch-linear-loader';
 import { Filter } from 'shared/components/filter/filter';
-import { Icon } from 'shared/components/icon/icon';
 import { SearchInput } from 'shared/components/search-input/search-input';
 import { SortDropdown } from 'shared/components/sort-dropdown/sort-dropdown';
 import { ActionPanel } from 'shared/components/table/action-panel';
@@ -47,20 +45,6 @@ const ProfileInfo = styled.div`
 	align-items: center;
 `;
 
-const EditProfileButton = styled(Button)`
-	margin-left: auto;
-`;
-
-const StyledIcon = styled(Icon)`
-	width: 19px;
-	height: 19px;
-
-	svg {
-		width: 19px;
-		height: 19px;
-	}
-`;
-
 const FiltersPanel = styled.div`
 	display: flex;
 	justify-content: flex-end;
@@ -73,7 +57,7 @@ const StyledActionPanel = styled(ActionPanel)`
 	left: calc(50% - 240px);
 `;
 
-export const UserProfilePage = (props) => {
+export const UserProfilePage = () => {
 	const { models, commands } = useUserProfile();
 
 	return (
@@ -118,6 +102,7 @@ export const UserProfilePage = (props) => {
 							copy: true,
 							download: true,
 						}}
+						userId={models.user?.id}
 						list={models.videos}
 						selectedVideos={models.selectedVideos}
 						hasNextPage={models.meta?.hasNextPage}

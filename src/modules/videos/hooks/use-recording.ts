@@ -5,14 +5,13 @@ import { selectAuthUserData } from 'app/store/auth/selects';
 import { selectStatus } from 'app/store/record-socket/selects';
 import { socketState } from 'app/store/record-socket/state';
 
-import { VIDEO_ROUTES } from 'shared/config/routes';
+import { USER_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import {
 	RECORDING_STATUS,
 	SOCKET_ACTIONS,
 } from 'shared/constants/record-statuses';
+import { useEvent } from 'shared/hooks/use-event';
 import { SocketService } from 'shared/services/base-socket-service';
-
-import { useEvent } from '../../../shared/hooks/use-event';
 
 const DEFAULT_COUNTER = 3;
 const RECORDING_INTERVAL = 1000;
@@ -22,8 +21,8 @@ const PAGE_TITLES = {
 	[VIDEO_ROUTES.MY_VIDEOS.path]: {
 		title: [VIDEO_ROUTES.MY_VIDEOS.title],
 	},
-	[VIDEO_ROUTES.MY_PROFILE.path]: {
-		title: [VIDEO_ROUTES.MY_VIDEOS.title],
+	[USER_ROUTES.MY_PROFILE.path]: {
+		title: [USER_ROUTES.MY_PROFILE.title],
 	},
 };
 export const useRecording = () => {
@@ -61,10 +60,10 @@ export const useRecording = () => {
 	}, []);
 
 	useEffect(() => {
-		window.addEventListener('offline', (e) => {
+		window.addEventListener('offline', () => {
 			socketState.setIsConnected(false);
 		});
-		window.addEventListener('online', (e) => {
+		window.addEventListener('online', () => {
 			socketState.setIsConnected(true);
 		});
 	}, []);
