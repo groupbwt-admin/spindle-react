@@ -70,22 +70,23 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 
 	const adornmentRef = useRef<HTMLDivElement>(null);
 
-	const toggleEditMode = (e, state) => {
+	const toggleEditMode = (state) => {
 		setIsEditMode(state);
 	};
 
-	const submitHandler = async (e) => {
+	const submitHandler = async () => {
 		if (!inputVal) return;
 		if (value === inputVal) {
-			toggleEditMode(e, false);
+			toggleEditMode(false);
 		}
 		setIsLoading(true);
 		await onSubmit(inputVal);
-		toggleEditMode(e, false);
+		toggleEditMode(false);
 		setIsLoading(false);
 	};
 
-	const handleChange = (e) => setInputVal(e.target.value);
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+		setInputVal(e.target.value);
 
 	const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
 		e.stopPropagation();
@@ -96,21 +97,21 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 			return;
 		}
 		if (value === inputVal) {
-			toggleEditMode(e, false);
+			toggleEditMode(false);
 		}
 	};
 
-	const handleInputClick = (e) => {
+	const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
 		e.stopPropagation();
 		if (isEditMode || !isEditable) return;
-		toggleEditMode(e, true);
+		toggleEditMode(true);
 	};
 
 	const handleCancelEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.nativeEvent.stopImmediatePropagation();
 		e.stopPropagation();
 		setInputVal(value);
-		toggleEditMode(e, false);
+		toggleEditMode(false);
 	};
 
 	return (
