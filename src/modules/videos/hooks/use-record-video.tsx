@@ -43,7 +43,7 @@ export const useRecordVideo = () => {
 		command: { toggleCamera },
 	} = useCameraControl();
 
-	const recordControlPanel = !isRecording && (
+	const recordControlPanel = isRecording && (
 		<DragWrapperRecordController>
 			{isOpenCamera && <Camera videoRef={videoRef} />}
 			<WrapperController>
