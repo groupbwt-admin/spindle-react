@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { LegacyRef } from 'react';
 import styled from '@emotion/styled/macro';
 
 const VideoCamera = styled.video`
@@ -20,7 +20,7 @@ const VideoCamera = styled.video`
 `;
 
 interface ICamera {
-	videoRef: any;
+	videoRef: LegacyRef<HTMLVideoElement>;
 }
 
 export const Camera: React.FC<ICamera> = ({ videoRef }) => {

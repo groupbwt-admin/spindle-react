@@ -1,13 +1,9 @@
 import React, { createContext, useContext } from 'react';
 
 type ProviderProps = {
-	containerRef: React.RefObject<HTMLDivElement>;
+	containerRef: React.RefObject<HTMLDivElement> | null;
 };
+const DragContext = createContext<ProviderProps>({ containerRef: null });
+const useDragContext = () => useContext<ProviderProps>(DragContext);
 
-const DragContext = createContext<ProviderProps | undefined>(undefined);
-
-function useDragSelect() {
-	return useContext(DragContext);
-}
-
-export { DragContext, useDragSelect };
+export { DragContext, useDragContext };

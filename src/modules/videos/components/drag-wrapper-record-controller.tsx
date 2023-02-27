@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 
-import { useDragSelect } from '../context/drag-select-provider';
+import { useEvent } from '../../../shared/hooks/use-event';
+import { useDragContext } from '../context/drag-select-provider';
 import { DragWrapperContext } from '../context/drag-wrapper-context';
 
 interface IControllerWrapper {
@@ -42,42 +43,79 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 		CONDITION_RESIZE.withOutCamera,
 	);
 	const controllerRef = useRef<HTMLDivElement>(null);
-	// eslint-disable-next-line
-	// @ts-ignore
-	const { containerRef } = useDragSelect();
+	const { containerRef } = useDragContext();
+
+	const controllerOffsetLeft = controllerRef.current?.offsetLeft;
+	const controllerOffsetTop = controllerRef.current?.offsetTop;
+	const controllerHeight = controllerRef.current?.clientHeight;
+	const controllerWidth = controllerRef.current?.clientWidth;
+
+	const containerWidth = containerRef && containerRef.current?.clientWidth;
+	const containerHeight = containerRef && containerRef.current?.clientHeight;
+
+	const baseNegativeCondition =
+		!containerWidth ||
+		!containerHeight ||
+		!controllerOffsetLeft ||
+		!controllerOffsetTop ||
+		!controllerHeight ||
+		!controllerWidth;
 
 	useEffect(() => {
+		if (baseNegativeCondition) return;
 		isOpenCamera
 			? setСonditionCamera(CONDITION_RESIZE.withCamera)
 			: setСonditionCamera(CONDITION_RESIZE.withOutCamera);
-		if (controllerRef.current && isOpenCamera) {
-			controllerRef.current.offsetLeft + CONTROLLER_WIDTH >=
-				containerRef.current.clientWidth &&
+		if (isOpenCamera) {
+			controllerOffsetLeft + CONTROLLER_WIDTH >= containerWidth &&
 				setPosition((prevState) => {
 					return {
 						...prevState,
-						x: containerRef.current.clientWidth - CONTROLLER_WIDTH,
+						x: containerWidth - CONTROLLER_WIDTH,
 					};
 				});
-			controllerRef.current.offsetTop + CONTROLLER_HEIGHT >=
-				containerRef.current.clientHeight &&
+			controllerOffsetTop + CONTROLLER_HEIGHT >= containerHeight &&
 				setPosition((prevState) => {
 					return {
 						...prevState,
-						y:
-							containerRef.current.clientHeight -
-							controllerRef.current!.clientHeight,
+						y: containerHeight - CONDITION_RESIZE.withCamera.y,
 					};
 				});
 		}
 	}, [isOpenCamera]);
+
+	const examinationPosition = useEvent(() => {
+		if (baseNegativeCondition) return;
+		controllerOffsetLeft <= INDENT &&
+			setPosition((prevState) => {
+				return { ...prevState, x: INDENT };
+			});
+		controllerOffsetTop <= INDENT &&
+			setPosition((prevState) => {
+				return { ...prevState, y: INDENT };
+			});
+		controllerOffsetLeft + conditionCamera.x >= containerWidth &&
+			setPosition((prevState) => {
+				return {
+					...prevState,
+					x: containerWidth - (controllerWidth + INDENT),
+				};
+			});
+		controllerOffsetTop + conditionCamera.y >= containerHeight &&
+			setPosition((prevState) => {
+				return {
+					...prevState,
+					y: containerHeight - (controllerHeight + INDENT),
+				};
+			});
+	});
 
 	const handleMouseDown = (event: React.MouseEvent) => {
 		const startX = event.pageX;
 		const startY = event.pageY;
 		const handleMouseMove = (event: MouseEvent) => {
 			if (body) {
-				body.style.overflowY = 'hidden';
+				body.classList.add('scrollYLocked');
 			}
 			const offsetX = event.pageX - startX;
 			const offsetY = event.pageY - startY;
@@ -85,51 +123,17 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 				x: position.x + offsetX,
 				y: position.y + offsetY,
 			};
-			if (
-				containerRef.current &&
-				controllerRef.current &&
-				controllerRef.current.offsetLeft >= 0 &&
-				controllerRef.current.offsetTop >= 0
-			) {
+			if (containerRef && containerRef.current && controllerRef.current) {
 				setPosition(newPosition);
 			}
 		};
 		const handleMouseUp = () => {
-			if (controllerRef.current) {
-				controllerRef.current.offsetLeft <= 0 &&
-					setPosition((prevState) => {
-						return { ...prevState, x: INDENT };
-					});
-				controllerRef.current.offsetTop <= 0 &&
-					setPosition((prevState) => {
-						return { ...prevState, y: INDENT };
-					});
-				controllerRef.current.offsetLeft + conditionCamera.x >=
-					containerRef.current.clientWidth &&
-					setPosition((prevState) => {
-						return {
-							...prevState,
-							x:
-								containerRef.current.clientWidth -
-								(controllerRef.current!.clientWidth + INDENT),
-						};
-					});
-				controllerRef.current.offsetTop + conditionCamera.y >=
-					containerRef.current.clientHeight &&
-					setPosition((prevState) => {
-						return {
-							...prevState,
-							y:
-								containerRef.current.clientHeight -
-								(controllerRef.current!.clientHeight + INDENT),
-						};
-					});
+			examinationPosition();
+			if (body) {
+				body.classList.remove('scrollYLocked');
 			}
 			document.removeEventListener('mousemove', handleMouseMove);
 			document.removeEventListener('mouseup', handleMouseUp);
-			if (body) {
-				body.style.overflowY = 'auto';
-			}
 		};
 		document.addEventListener('mousemove', handleMouseMove);
 		document.addEventListener('mouseup', handleMouseUp);
