@@ -28,6 +28,10 @@ const CONDITION_RESIZE = {
 	withCamera: { x: 700, y: 230 },
 	withOutCamera: { x: 400, y: 70 },
 };
+const INDENT = 20;
+const CONTROLLER_WIDTH = 700;
+const CONTROLLER_HEIGHT = 500;
+
 const body = document.body;
 const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 	children,
@@ -47,12 +51,15 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 			? setСonditionCamera(CONDITION_RESIZE.withCamera)
 			: setСonditionCamera(CONDITION_RESIZE.withOutCamera);
 		if (controllerRef.current && isOpenCamera) {
-			controllerRef.current.offsetLeft + 700 >=
+			controllerRef.current.offsetLeft + CONTROLLER_WIDTH >=
 				containerRef.current.clientWidth &&
 				setPosition((prevState) => {
-					return { ...prevState, x: containerRef.current.clientWidth - 700 };
+					return {
+						...prevState,
+						x: containerRef.current.clientWidth - CONTROLLER_WIDTH,
+					};
 				});
-			controllerRef.current.offsetTop + 500 >=
+			controllerRef.current.offsetTop + CONTROLLER_HEIGHT >=
 				containerRef.current.clientHeight &&
 				setPosition((prevState) => {
 					return {
@@ -91,11 +98,11 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 			if (controllerRef.current) {
 				controllerRef.current.offsetLeft <= 0 &&
 					setPosition((prevState) => {
-						return { ...prevState, x: 10 };
+						return { ...prevState, x: INDENT };
 					});
 				controllerRef.current.offsetTop <= 0 &&
 					setPosition((prevState) => {
-						return { ...prevState, y: 10 };
+						return { ...prevState, y: INDENT };
 					});
 				controllerRef.current.offsetLeft + conditionCamera.x >=
 					containerRef.current.clientWidth &&
@@ -104,7 +111,7 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 							...prevState,
 							x:
 								containerRef.current.clientWidth -
-								(controllerRef.current!.clientWidth + 20),
+								(controllerRef.current!.clientWidth + INDENT),
 						};
 					});
 				controllerRef.current.offsetTop + conditionCamera.y >=
@@ -114,7 +121,7 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 							...prevState,
 							y:
 								containerRef.current.clientHeight -
-								(controllerRef.current!.clientHeight + 20),
+								(controllerRef.current!.clientHeight + INDENT),
 						};
 					});
 			}
