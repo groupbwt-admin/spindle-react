@@ -16,8 +16,8 @@ interface IWrapperRecordController {
 
 const ControllerWrapper = styled.div<IControllerWrapper>`
 	position: absolute;
-	top: 40%;
-	left: 150px;
+	top: 20px;
+	left: 33%;
 	display: flex;
 	flex-direction: row;
 	width: auto;
@@ -37,94 +37,88 @@ const body = document.body;
 const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 	children,
 }) => {
-	const [position, setPosition] = useState({ x: window.innerWidth / 3, y: 50 });
 	const [isOpenCamera, setIsOpenCamera] = useState(false);
-	const [conditionCamera, setСonditionCamera] = useState(
+	const [conditionCamera, setConditionCamera] = useState(
 		CONDITION_RESIZE.withOutCamera,
 	);
 	const controllerRef = useRef<HTMLDivElement>(null);
 	const { containerRef } = useDragContext();
 
-	const controllerOffsetLeft = controllerRef.current?.offsetLeft;
-	const controllerOffsetTop = controllerRef.current?.offsetTop;
-	const controllerHeight = controllerRef.current?.clientHeight;
-	const controllerWidth = controllerRef.current?.clientWidth;
-
-	const containerWidth = containerRef && containerRef.current?.clientWidth;
-	const containerHeight = containerRef && containerRef.current?.clientHeight;
-
-	const baseNegativeCondition =
-		!containerWidth ||
-		!containerHeight ||
-		!controllerOffsetLeft ||
-		!controllerOffsetTop ||
-		!controllerHeight ||
-		!controllerWidth;
-
 	useEffect(() => {
-		if (baseNegativeCondition) return;
 		isOpenCamera
-			? setСonditionCamera(CONDITION_RESIZE.withCamera)
-			: setСonditionCamera(CONDITION_RESIZE.withOutCamera);
-		if (isOpenCamera) {
-			controllerOffsetLeft + CONTROLLER_WIDTH >= containerWidth &&
-				setPosition((prevState) => {
-					return {
-						...prevState,
-						x: containerWidth - CONTROLLER_WIDTH,
-					};
-				});
-			controllerOffsetTop + CONTROLLER_HEIGHT >= containerHeight &&
-				setPosition((prevState) => {
-					return {
-						...prevState,
-						y: containerHeight - CONDITION_RESIZE.withCamera.y,
-					};
-				});
-		}
+			? setConditionCamera(CONDITION_RESIZE.withCamera)
+			: setConditionCamera(CONDITION_RESIZE.withOutCamera);
+
+		isOpenCamera && onControllerSizeChanged();
 	}, [isOpenCamera]);
+	const onUpdatePosition = (newPosition: { x?: number; y?: number }) => {
+		const controller = controllerRef.current;
+		if (!controller) return;
+		controller.style.top = `${
+			newPosition.y ? newPosition.y : controller.getBoundingClientRect().y
+		}px`;
+		controller.style.left = `${
+			newPosition.x ? newPosition.x : controller.getBoundingClientRect().x
+		}px`;
+	};
+
+	const onControllerSizeChanged = useEvent(() => {
+		const container = containerRef?.current;
+		const controller = controllerRef.current;
+		if (!controller || !container) return;
+		controller.getBoundingClientRect().x + CONTROLLER_WIDTH >=
+			container?.clientWidth &&
+			onUpdatePosition({
+				x: container?.clientWidth - CONTROLLER_WIDTH,
+			});
+
+		controller.getBoundingClientRect().y + CONTROLLER_HEIGHT >=
+			container?.clientHeight &&
+			onUpdatePosition({
+				y: container?.clientHeight - CONDITION_RESIZE.withCamera.y,
+			});
+	});
 
 	const examinationPosition = useEvent(() => {
-		if (baseNegativeCondition) return;
-		controllerOffsetLeft <= INDENT &&
-			setPosition((prevState) => {
-				return { ...prevState, x: INDENT };
+		const container = containerRef?.current;
+		const controller = controllerRef.current;
+		if (!container || !controller) return;
+		controller.getBoundingClientRect().x <= INDENT &&
+			onUpdatePosition({ x: INDENT });
+
+		controller.getBoundingClientRect().y <= INDENT &&
+			onUpdatePosition({ y: INDENT });
+
+		controller.getBoundingClientRect().x + conditionCamera.x >=
+			container.clientWidth &&
+			onUpdatePosition({
+				x: container.clientWidth - (controller.clientWidth + INDENT),
 			});
-		controllerOffsetTop <= INDENT &&
-			setPosition((prevState) => {
-				return { ...prevState, y: INDENT };
-			});
-		controllerOffsetLeft + conditionCamera.x >= containerWidth &&
-			setPosition((prevState) => {
-				return {
-					...prevState,
-					x: containerWidth - (controllerWidth + INDENT),
-				};
-			});
-		controllerOffsetTop + conditionCamera.y >= containerHeight &&
-			setPosition((prevState) => {
-				return {
-					...prevState,
-					y: containerHeight - (controllerHeight + INDENT),
-				};
+
+		controller.getBoundingClientRect().y + conditionCamera.y >=
+			container.clientHeight &&
+			onUpdatePosition({
+				y: container.clientHeight - (controller.clientHeight + INDENT),
 			});
 	});
 
 	const handleMouseDown = (event: React.MouseEvent) => {
 		const startX = event.pageX;
 		const startY = event.pageY;
+		const offsetY = controllerRef.current!.getBoundingClientRect().y - startY;
+		const offsetX = controllerRef.current!.getBoundingClientRect().x - startX;
 		const handleMouseMove = (event: MouseEvent) => {
 			if (body) {
 				body.classList.add('scrollYLocked');
 			}
-			const offsetX = event.pageX - startX;
-			const offsetY = event.pageY - startY;
-			const newPosition = {
-				x: position.x + offsetX,
-				y: position.y + offsetY,
-			};
-			if (containerRef && containerRef.current && controllerRef.current) {
-				setPosition(newPosition);
+			const container = containerRef?.current;
+			const controller = controllerRef.current;
+			if (container && controller) {
+				const newPosition = {
+					x: event.pageX + offsetX,
+					y: event.pageY + offsetY,
+				};
+				onUpdatePosition(newPosition);
 			}
 		};
 		const handleMouseUp = () => {
@@ -140,13 +134,7 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 	};
 
 	return (
-		<ControllerWrapper
-			style={{
-				top: position.y,
-				left: position.x,
-			}}
-			ref={controllerRef}
-		>
+		<ControllerWrapper ref={controllerRef}>
 			<DragWrapperContext.Provider
 				value={{ handelMouseDown: handleMouseDown, setIsOpenCamera }}
 			>
