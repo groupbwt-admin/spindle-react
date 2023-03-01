@@ -82,7 +82,7 @@ export const ActionMenu: React.FC<VideoActionMenuProps> = ({
 	const open = Boolean(anchorEl);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		event.stopPropagation();
+		event.preventDefault();
 		setAnchorEl(event.currentTarget);
 	};
 
