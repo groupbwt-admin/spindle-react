@@ -53,6 +53,7 @@ const UserInfoContainer = styled.div<{
 
 const UserAvatar = styled(Avatar)`
 	margin-right: 10px;
+	border: 2px solid ${({ theme }) => theme.palette.common.white};
 `;
 
 const StyledUserIcon = styled(Icon)<{

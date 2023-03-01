@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styled from '@emotion/styled/macro';
 
+import { IUser } from 'shared/types/user';
 import { IVideo } from 'shared/types/video';
 
 import { Button } from 'shared/components/button/button';
@@ -63,6 +64,7 @@ const BtnContainer = styled.div`
 
 interface VideoListProps {
 	list: IVideo[];
+	userId?: IUser['id'];
 	activeActions?: VideoCardProps['activeActions'];
 	selectedVideos: Record<IVideo['id'], IVideo>;
 	isVideoLoading?: boolean;
@@ -75,6 +77,7 @@ interface VideoListProps {
 }
 
 export const VideoList: React.FC<VideoListProps> = ({
+	userId,
 	isSelectMode,
 	isVideoLoading,
 	hasNextPage,
@@ -108,6 +111,7 @@ export const VideoList: React.FC<VideoListProps> = ({
 					<VideoCard
 						key={item.id}
 						video={item}
+						userId={userId}
 						checked={isCardChecked(item.id)}
 						activeActions={activeActions}
 						onChecked={onChecked}

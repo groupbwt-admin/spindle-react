@@ -2,12 +2,13 @@ import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useRecordContext } from 'modules/videos/hooks/use-record-context';
+import queryString from 'query-string';
 
 import { VideoApi } from 'app/api/video-api/video-api';
 
 import { selectUserData } from 'app/store/user/selects';
 
-import { VIDEO_ROUTES } from 'shared/config/routes';
+import { USER_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { useChangeAccessSettings } from 'shared/hooks/use-change-access-settings';
 import { useCopyLink } from 'shared/hooks/use-copy-link';
@@ -83,7 +84,17 @@ export function useVideo() {
 		client.setQueryData([VIDEO_QUERY_KEYS.video, video?.id], res);
 	};
 
+	const userId = useMemo(() => queryString.parse(location.search).user, []);
+
+	const pageTitle = useMemo(
+		() => location.state?.title || (userId ? 'Back to user' : 'My videos'),
+		[],
+	);
+
 	const handleBack = () => {
+		if (userId) {
+			return nav(USER_ROUTES.USER.generate(userId as string));
+		}
 		nav(location.state?.from || VIDEO_ROUTES.MY_VIDEOS.path);
 	};
 
@@ -95,7 +106,7 @@ export function useVideo() {
 		models: {
 			user,
 			recordContext,
-			pageTitle: location.state?.title || 'My videos',
+			pageTitle,
 			deleteVideoModal,
 			accessSettingsModal,
 			videoUrl,
