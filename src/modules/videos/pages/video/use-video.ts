@@ -44,6 +44,7 @@ export function useVideo() {
 		queryFn: () => VideoApi.getVideoTags({ userId: user?.id }),
 		enabled: !!user,
 	});
+	console.log(video);
 
 	const { isLinkCopied, handleCopyLink } = useCopyLink(video);
 

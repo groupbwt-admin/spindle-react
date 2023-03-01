@@ -18,6 +18,8 @@ import { TagsAutocomplete } from 'shared/components/tags-autocomplete/tags-autoc
 import { Typography } from 'shared/components/typography/typography';
 import { ActionMenu } from 'shared/components/video-card/action-menu';
 
+import { Comments } from '../../../comments/components/comments';
+
 const VideoPageContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -196,6 +198,7 @@ export const VideoPage: React.FC = () => {
 								commands.handleUpdateVideo({ tags: value })
 							}
 						/>
+						<Comments />
 					</DetailedInfoContainer>
 				</>
 			)}
