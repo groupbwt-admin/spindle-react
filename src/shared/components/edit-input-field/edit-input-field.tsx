@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 
@@ -68,29 +68,50 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const toggleEditMode = (e, state) => {
+	const adornmentRef = useRef<HTMLDivElement>(null);
+
+	const toggleEditMode = (state) => {
 		setIsEditMode(state);
 	};
 
-	const submitHandler = async (e) => {
+	const submitHandler = async () => {
 		if (!inputVal) return;
+		if (value === inputVal) {
+			toggleEditMode(false);
+		}
 		setIsLoading(true);
 		await onSubmit(inputVal);
-		toggleEditMode(e, false);
+		toggleEditMode(false);
 		setIsLoading(false);
 	};
 
-	const handleChange = (e) => setInputVal(e.target.value);
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+		setInputVal(e.target.value);
 
-	const handleInputClick = (e) => {
+	const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
 		e.stopPropagation();
-		if (isEditMode || !isEditable) return;
-		toggleEditMode(e, true);
+		if (
+			adornmentRef?.current &&
+			adornmentRef.current.contains(e.relatedTarget)
+		) {
+			return;
+		}
+		if (value === inputVal) {
+			toggleEditMode(false);
+		}
 	};
 
-	const handleCancelEdit = (e) => {
+	const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
 		e.stopPropagation();
-		toggleEditMode(e, false);
+		if (isEditMode || !isEditable) return;
+		toggleEditMode(true);
+	};
+
+	const handleCancelEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.nativeEvent.stopImmediatePropagation();
+		e.stopPropagation();
+		setInputVal(value);
+		toggleEditMode(false);
 	};
 
 	return (
@@ -98,6 +119,7 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 			value={inputVal}
 			readOnly={!isEditable}
 			onChange={handleChange}
+			onBlur={handleBlur}
 			className={clsx(
 				className,
 				isEditMode && 'editMode',
@@ -105,7 +127,7 @@ export const EditInputField: React.FC<EditInputFieldProps> = ({
 			)}
 			onClick={handleInputClick}
 			endAdornment={
-				<StyledInputAdornment position="end">
+				<StyledInputAdornment position="end" ref={adornmentRef}>
 					{!isLoading && (
 						<StyledIconButton onClick={handleCancelEdit}>
 							<Icon icon={ICON_COLLECTION.close} />

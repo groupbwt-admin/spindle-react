@@ -1,13 +1,12 @@
 import styled from '@emotion/styled/macro';
-import { useProfile } from 'modules/user/pages/profile/use-profile';
+import { useUserProfile } from 'modules/user/pages/user-profile/use-user-profile';
+
+import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
 import { Avatar } from 'shared/components/avatar/avatar';
-import { Button } from 'shared/components/button/button';
 import { EmptyVideoList } from 'shared/components/empty-video-llist/empty-video-list';
 import { FetchLinearLoader } from 'shared/components/fetch-linear-loader/fetch-linear-loader';
 import { Filter } from 'shared/components/filter/filter';
-import { Icon } from 'shared/components/icon/icon';
-import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { SearchInput } from 'shared/components/search-input/search-input';
 import { SortDropdown } from 'shared/components/sort-dropdown/sort-dropdown';
 import { ActionPanel } from 'shared/components/table/action-panel';
@@ -46,20 +45,6 @@ const ProfileInfo = styled.div`
 	align-items: center;
 `;
 
-const EditProfileButton = styled(Button)`
-	margin-left: auto;
-`;
-
-const StyledIcon = styled(Icon)`
-	width: 19px;
-	height: 19px;
-
-	svg {
-		width: 19px;
-		height: 19px;
-	}
-`;
-
 const FiltersPanel = styled.div`
 	display: flex;
 	justify-content: flex-end;
@@ -72,26 +57,25 @@ const StyledActionPanel = styled(ActionPanel)`
 	left: calc(50% - 240px);
 `;
 
-export const ProfilePage = () => {
-	const { models, commands } = useProfile();
+export const UserProfilePage = () => {
+	const { models, commands } = useUserProfile();
 
 	return (
 		<ProfileContainer>
 			{(models.isVideoLoading ||
 				models.isInitialLoading ||
 				models.isSearching) && <FetchLinearLoader />}
-			<ProfileInfo>
-				<ProfileAvatar src={models.user?.avatar} alt={models.user?.fullName} />
-				<div>
-					<Typography variant="h3">{models.user?.fullName}</Typography>
-				</div>
-				<EditProfileButton
-					label="Edit profile"
-					startIcon={<StyledIcon icon={ICON_COLLECTION.edit_profile} />}
-					size="small"
-					onClick={commands.handleOpen}
-				/>
-			</ProfileInfo>
+			{!!models.user && (
+				<ProfileInfo>
+					<ProfileAvatar
+						src={getUserAvatarURL(models.user.avatar)}
+						alt={`${models.user.firstName} ${models.user.lastName}`}
+					/>
+					<div>
+						<Typography variant="h3">{`${models.user.firstName} ${models.user.lastName}`}</Typography>
+					</div>
+				</ProfileInfo>
+			)}
 			<FiltersPanel>
 				<SearchInput
 					value={models.searchQuery}
@@ -114,6 +98,11 @@ export const ProfilePage = () => {
 			<VideoContainer>
 				{!!models.videos.length && (
 					<VideoList
+						activeActions={{
+							copy: true,
+							download: true,
+						}}
+						userId={models.user?.id}
 						list={models.videos}
 						selectedVideos={models.selectedVideos}
 						hasNextPage={models.meta?.hasNextPage}
@@ -121,25 +110,22 @@ export const ProfilePage = () => {
 						isSelectMode={models.isSelectMode}
 						loadNextPage={commands.loadNextPage}
 						onChecked={commands.handleCheckVideo}
-						onDeleteVideo={commands.handleDeleteVideo}
-						onChangeSettings={commands.handleChangeVideoSettings}
 					/>
 				)}
 				{models.isInitialLoading && <VideoListSkeleton />}
 				{models.isListEmpty && <EmptyVideoList />}
 			</VideoContainer>
-			{models.modal}
 			{models.isSelectMode && (
 				<StyledActionPanel
+					activeActions={{
+						copy: true,
+					}}
 					isLinksCopied={models.isLinksCopied}
 					selectedVideos={models.selectedVideosId}
 					cancelSelection={commands.handleCancelSelection}
-					onOpenDeleteVideoModal={commands.handleDeleteSelectedVideos}
 					onCopyLinks={commands.handleCopySelectedLinks}
 				/>
 			)}
-			{models.deleteVideoModal}
-			{models.accessSettingsModal}
 		</ProfileContainer>
 	);
 };

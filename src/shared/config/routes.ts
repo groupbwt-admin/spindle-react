@@ -41,8 +41,22 @@ export const VIDEO_ROUTES = {
 		generateExternalPath: (id: string) =>
 			window.location.origin + generatePath('/videos/:id', { id }),
 	},
-	PROFILE: {
+	MY_PROFILE: {
 		title: 'My profile',
 		path: '/profile',
+	},
+};
+
+export const USER_ROUTES = {
+	MY_PROFILE: {
+		title: 'My profile',
+		path: '/profile',
+	},
+	USER: {
+		title: 'Back to user',
+		path: '/users/:id',
+		generate: (id: string) => generatePath('/users/:id', { id }),
+		generateExternalPath: (id: string) =>
+			window.location.origin + generatePath('/users/:id', { id }),
 	},
 };

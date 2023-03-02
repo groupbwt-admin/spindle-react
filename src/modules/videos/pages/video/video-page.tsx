@@ -13,10 +13,11 @@ import { IconButton } from 'shared/components/button/icon-button';
 import { EditInputField } from 'shared/components/edit-input-field/edit-input-field';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
-import { SpinnerOverlay } from 'shared/components/spinner-overlay/spinner-overlay';
 import { TagsAutocomplete } from 'shared/components/tags-autocomplete/tags-autocomplete';
 import { Typography } from 'shared/components/typography/typography';
+import { UserInfoHoverMenu } from 'shared/components/user-info-hover-menu/user-info-hover-menu';
 import { ActionMenu } from 'shared/components/video-card/action-menu';
+import { VideoPageSkeleton } from 'shared/components/video-page-skeleton/video-page-skeleton';
 
 import { Comments } from '../../../comments/components/comments';
 
@@ -95,7 +96,7 @@ const StyledIconButton = styled(IconButton)`
 const StyledAvatar = styled(Avatar)`
 	width: 42px;
 	height: 42px;
-	border: none;
+	margin-right: 16px;
 `;
 
 const StyledCaption = styled(Typography)`
@@ -117,7 +118,6 @@ export const VideoPage: React.FC = () => {
 
 	return (
 		<VideoPageContainer>
-			<SpinnerOverlay open={models.isVideoDataLoading} />
 			{models.user && (
 				<HeaderContainer>
 					<StyledIconButton onClick={commands.handleBack}>
@@ -131,6 +131,7 @@ export const VideoPage: React.FC = () => {
 					/>
 				</HeaderContainer>
 			)}
+			{models.isVideoDataLoading && <VideoPageSkeleton />}
 			{models.videoError instanceof BoundaryError && models.videoError.message}
 			{models.videoUrl && models.video && (
 				<>
@@ -166,7 +167,11 @@ export const VideoPage: React.FC = () => {
 						/>
 						{models.isEditable && (
 							<ActionMenu
-								isLinkCopied={false}
+								activeActions={{
+									delete: true,
+									settings: true,
+								}}
+								isLinkCopied={models.isLinkCopied}
 								onDownload={commands.handleDownload}
 								onCopyLink={commands.handleCopyLink}
 								onDelete={commands.handleDeleteVideo}
@@ -175,21 +180,26 @@ export const VideoPage: React.FC = () => {
 						)}
 					</ActionsContainer>
 					<DetailedInfoContainer>
-						<StyledAvatar
-							src={
-								models.video.user.avatar
-									? getUserAvatarURL(models.video.user.avatar)
-									: undefined
-							}
-						/>
-						<div>
-							<Typography variant="body1">
-								{models.video.user.firstName + models.video.user.lastName}
-							</Typography>
-							<StyledCaption variant="subtitle2">
-								{format(new Date(models.video.createdAt), 'MMMM d, yyyy')}
-							</StyledCaption>
-						</div>
+						<UserInfoHoverMenu
+							user={models.video.user}
+							isCurrentUser={models.isEditable}
+						>
+							<StyledAvatar
+								src={
+									models.video.user.avatar
+										? getUserAvatarURL(models.video.user.avatar)
+										: undefined
+								}
+							/>
+							<div>
+								<Typography variant="body1">
+									{`${models.video.user.firstName} ${models.video.user.lastName}`}
+								</Typography>
+								<StyledCaption variant="subtitle2">
+									{format(new Date(models.video.createdAt), 'MMMM d, yyyy')}
+								</StyledCaption>
+							</div>
+						</UserInfoHoverMenu>
 						<TagsAutocomplete
 							options={models.tags}
 							initialTags={models.video.tags}
