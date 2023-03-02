@@ -3,3 +3,7 @@ export const VIDEO_QUERY_KEYS = {
 	video: 'video',
 	tags: 'tags',
 };
+
+export const USER_QUERY_KEYS = {
+	user: 'user',
+};

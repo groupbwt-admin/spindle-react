@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import styled from '@emotion/styled/macro';
 import update from 'immutability-helper';
-import { IFilterOptions } from 'modules/user/pages/profile/use-profile';
+import { IFilterOptions } from 'modules/user/pages/my-profile/use-profile';
 
 import { Divider, Drawer } from '@mui/material';
 
