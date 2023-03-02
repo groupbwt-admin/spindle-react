@@ -1,7 +1,7 @@
-import React, { LegacyRef } from 'react';
+import React, { forwardRef } from 'react';
 import styled from '@emotion/styled/macro';
 
-const VideoCamera = styled.video`
+const VideoCamera1 = styled.video`
 	border-radius: 50%;
 	object-fit: cover;
 	height: 200px;
@@ -19,10 +19,7 @@ const VideoCamera = styled.video`
 	}
 `;
 
-interface ICamera {
-	videoRef: LegacyRef<HTMLVideoElement>;
-}
-
-export const Camera: React.FC<ICamera> = ({ videoRef }) => {
-	return <VideoCamera ref={videoRef} autoPlay playsInline muted />;
-};
+export const Camera = forwardRef<HTMLVideoElement>((props, ref) => {
+	return <VideoCamera1 ref={ref} autoPlay playsInline muted />;
+});
+Camera.displayName = 'Camera';
