@@ -5,7 +5,7 @@ import { userRoutes } from 'app/routes/user-routes';
 import { videoRoutes } from 'app/routes/video-routes';
 
 export const AppRoutes: React.FC = () => {
-	const routes = useRoutes([
+	return useRoutes([
 		...authRoutes,
 		...videoRoutes,
 		...userRoutes,
@@ -14,6 +14,4 @@ export const AppRoutes: React.FC = () => {
 			element: <p>Not Found</p>,
 		},
 	]);
-
-	return routes;
 };

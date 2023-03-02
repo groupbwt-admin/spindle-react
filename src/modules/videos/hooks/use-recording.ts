@@ -75,7 +75,8 @@ export const useRecording = () => {
 				INTERVAL_COUNT_START,
 			);
 			setTimeout(() => {
-				resolve(clearInterval(myInterval));
+				clearInterval(myInterval);
+				resolve();
 			}, COUNTDOWN_TIME);
 		});
 
