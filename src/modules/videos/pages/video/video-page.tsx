@@ -124,12 +124,18 @@ export const VideoPage: React.FC = () => {
 					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
 				/>
 				<meta
+					property="og:title"
+					content="Spindle | Video Name"
+					data-rh="true"
+				/>
+				<meta
+					property="og:description"
+					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
+					data-rh="true"
+				/>
+				<meta
 					property="og:image"
-					content={
-						models.video?.image
-							? getUserAvatarURL(models.video?.image)
-							: 'https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif'
-					}
+					content=" https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif"
 					data-rh="true"
 				/>
 			</Helmet>
