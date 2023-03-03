@@ -1,0 +1,68 @@
+---
+subject: My Drip Email Template Subject
+---
+
+<container class="letter-body round" style="border-radius: 15px">
+	<wrapper class="letter-wrapper" style="border-radius: 15px">
+		<spacer size="16"></spacer>
+
+		<container class="header">
+			<row class="collapse">
+				<columns>
+					<img alt="spindle logo" src="../assets/img/spindle-logo.jpg">
+				</columns>
+			</row>
+		</container>
+
+		<spacer size="16"></spacer>
+
+		<h-line></h-line>
+
+		<container>
+			<spacer size="32"></spacer>
+
+			<row>
+				<columns>
+					<p><strong>Hey, {user.firstName}</strong></p>
+				</columns>
+			</row>
+
+			<spacer size="24"></spacer>
+
+			<row>
+				<columns>
+					<p>Thank you for joining Spindle! To finish signing up, please click the button below to
+						confirm your email address <strong>email@gmail.com</strong> and activate your account.</p>
+					<spacer size="32"></spacer>
+					<center>
+						<button class="expanded rounded" href="#">Confirm Email</button>
+					</center>
+				</columns>
+			</row>
+
+			<spacer size="16"></spacer>
+
+			<row>
+				<columns>
+					<p><small>
+						If you didn’t sign up for this account, you can ignore this email and the account will
+						be
+						deleted.
+					</small></p>
+				</columns>
+			</row>
+
+			<h-line></h-line>
+
+			<spacer size="32"></spacer>
+
+			<row class="collapsed footer">
+				<columns>
+					<p>Best,</p>
+					<p><strong>Spindle Team</strong></p>
+				</columns>
+			</row>
+
+		</container>
+	</wrapper>
+</container>
