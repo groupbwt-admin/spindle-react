@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
 import { format } from 'date-fns';
+import * as module from 'module';
 import { StartRecordButton } from 'modules/videos/components/start-record-button';
 import { useVideo } from 'modules/videos/pages/video/use-video';
 import { BoundaryError } from 'shared/models/custom-errors';
@@ -208,7 +209,7 @@ export const VideoPage: React.FC = () => {
 								commands.handleUpdateVideo({ tags: value })
 							}
 						/>
-						<Comments />
+						{models.video && <Comments videoId={models.video.id} />}
 					</DetailedInfoContainer>
 				</>
 			)}
