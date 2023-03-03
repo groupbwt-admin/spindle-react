@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
+import { HelmetProvider } from 'react-helmet-async';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter } from 'react-router-dom';
@@ -180,17 +181,21 @@ const queryClient = new QueryClient({
 	}
 })();
 
+const helmetContext = {};
+
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
 	<StrictMode>
-		<ThemeProvider theme={theme}>
-			<QueryClientProvider client={queryClient}>
-				<BrowserRouter>
-					<App />
-					<ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-				</BrowserRouter>
-			</QueryClientProvider>
-		</ThemeProvider>
+		<HelmetProvider context={helmetContext}>
+			<ThemeProvider theme={theme}>
+				<QueryClientProvider client={queryClient}>
+					<BrowserRouter>
+						<App />
+						<ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+					</BrowserRouter>
+				</QueryClientProvider>
+			</ThemeProvider>
+		</HelmetProvider>
 	</StrictMode>,
 );
 
