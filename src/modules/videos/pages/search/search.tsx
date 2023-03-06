@@ -128,7 +128,7 @@ export const SearchPage = (props) => {
 											key={tag.tag}
 											{...props}
 											label={tag.tag}
-											onClick={() => commands.handleSearchByTag(tag)}
+											handleClick={() => commands.handleSearchByTag(tag)}
 										/>
 									))}
 								</Stack>
@@ -185,10 +185,11 @@ export const SearchPage = (props) => {
 						)}
 					</SearchResultsContainer>
 				) : (
-					(!models.isSearching || !models.isInitialLoading) && (
+					(!models.isSearching || !models.isInitialLoading) &&
+					models.searchResults && (
 						<NoResultsList
-							text={`No results for ${
-								models.query || `#${models.tags[0]?.tag}`
+							text={`No results for ${models.query} ${
+								models.tags[0]?.tag ? `by tag #${models.tags[0]?.tag}` : ''
 							}. Try something else`}
 						/>
 					)
