@@ -1,15 +1,13 @@
 import * as React from 'react';
 import styled from '@emotion/styled/macro';
-import { StartRecordButton } from 'modules/videos/components/start-record-button';
-import { useRecordContext } from 'modules/videos/hooks/use-record-context';
 import image from 'shared/assets/images/empty-state.svg';
 
+import { Button } from 'shared/components/button/button';
 import { Typography } from 'shared/components/typography/typography';
 
 const EmptyCard = styled.div`
 	width: 364px;
 	max-width: 100%;
-	height: 350px;
 	background: white;
 	border-radius: 15px;
 	padding: 24px;
@@ -36,21 +34,23 @@ const CardText = styled(Typography)`
 	padding: 16px 0;
 `;
 
-export const EmptyVideoList = () => {
-	const { isRecording, startRecording, isConnected } = useRecordContext();
+interface NoResultsListProps {
+	text: string;
+	onReset?: () => void;
+}
 
+export const NoResultsList: React.FC<NoResultsListProps> = ({
+	text,
+	onReset,
+}) => {
 	return (
 		<>
 			<EmptyCard>
 				<CardImage>
 					<img src={image} alt="empty list" />
 				</CardImage>
-				<CardText variant="body2">You don’t have any recordings yet.</CardText>
-				<StartRecordButton
-					isRecording={isRecording}
-					onStartRecording={startRecording}
-					isConnected={isConnected}
-				/>
+				<CardText variant="body2">{text}</CardText>
+				{onReset && <Button label="Reset" onClick={onReset} />}
 			</EmptyCard>
 		</>
 	);

@@ -100,6 +100,7 @@ export function useHome() {
 			return VideoApi.getVideosByUserId(getFindVideosParams(params));
 		},
 	});
+
 	const [selectedVideos, setSelectedVideos] = useState<
 		Record<IVideo['id'], IVideo>
 	>({});

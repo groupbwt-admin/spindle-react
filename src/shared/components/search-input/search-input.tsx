@@ -58,7 +58,7 @@ const AppInput = styled(InputBase)`
 		border-color: ${({ theme }) => theme.palette.error.main};
 	}
 
-	&.MuiInputBase-root {
+	&.MuiInputBase-root:not(.fullWidth) {
 		transition: width 0.3s ease;
 		width: 54px;
 		max-width: 400px;
@@ -79,6 +79,7 @@ const AppInput = styled(InputBase)`
 
 interface SearchInputProps extends InputProps {
 	value: string;
+	fullWidth?: boolean;
 	isLoading?: boolean;
 	onClear: () => void;
 }
@@ -86,7 +87,7 @@ interface SearchInputProps extends InputProps {
 export const SearchInput: React.ForwardRefRenderFunction<
 	HTMLInputElement,
 	SearchInputProps
-> = ({ value, isLoading, className, onClear, ...props }) => {
+> = ({ value, fullWidth, isLoading, className, onClear, ...props }) => {
 	const id = useId();
 	const inputEl = useRef<HTMLInputElement | null>(null);
 
@@ -98,11 +99,12 @@ export const SearchInput: React.ForwardRefRenderFunction<
 	return (
 		<AppInput
 			value={value}
+			fullWidth={fullWidth}
 			inputRef={inputEl}
 			type="search"
 			autoComplete="off"
 			id={id}
-			className={clsx(className, value && 'hasValue')}
+			className={clsx(className, value && 'hasValue', fullWidth && 'fullWidth')}
 			{...props}
 			startAdornment={
 				<StyledInputAdornment position="start">

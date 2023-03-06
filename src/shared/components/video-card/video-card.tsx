@@ -91,6 +91,7 @@ const StyledCard = styled(Card)`
 	background-color: ${({ theme }) => theme.palette.common.white};
 	box-shadow: none;
 	height: 100%;
+	width: 100%;
 	transition: box-shadow 0.3s ease;
 
 	&.isSelectMode {
