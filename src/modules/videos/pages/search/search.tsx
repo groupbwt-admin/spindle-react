@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import styled from '@emotion/styled/macro';
 import { useSearch } from 'modules/videos/pages/search/use-search';
 
-import { Chip, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 
 import { USER_ROUTES } from 'shared/config/routes';
 import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
+import { AppChip } from 'shared/components/app-chip/app-chip';
 import { Avatar } from 'shared/components/avatar/avatar';
 import { NoResultsList } from 'shared/components/no-results-list/no-results-list';
 import { SearchInputExtended } from 'shared/components/search-input/search-input-extended';
@@ -45,17 +46,6 @@ const SearchContentContainer = styled.div`
 
 const StyledTypography = styled(Typography)`
 	font-weight: 700;
-`;
-
-const StyledChip = styled(Chip)`
-	padding: 4px 8px;
-	color: ${({ theme }) => theme.palette.common.white};
-	background-color: ${({ theme }) => theme.palette.primary.main};
-	border-radius: 6px;
-	font-weight: 700;
-	font-size: 14px;
-	line-height: 23px;
-	margin: 0 !important;
 `;
 
 const StyledAvatar = styled(Avatar)`
@@ -134,7 +124,7 @@ export const SearchPage = (props) => {
 								<Typography variant="h4">Tags</Typography>
 								<Stack direction="row" gap={1} marginTop={3} flexWrap="wrap">
 									{models.searchResults?.tags.map((tag) => (
-										<StyledChip
+										<AppChip
 											key={tag.tag}
 											{...props}
 											label={tag.tag}
