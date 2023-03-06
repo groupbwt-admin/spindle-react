@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Helmet } from 'react-helmet-async';
 import styled from '@emotion/styled/macro';
 
 import { EmptyVideoList } from 'shared/components/empty-video-llist/empty-video-list';
@@ -62,6 +63,18 @@ export const HomePage = () => {
 
 	return (
 		<>
+			<Helmet>
+				<title>My videos</title>
+				<meta
+					name="description"
+					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
+				/>
+				<meta
+					property="og:image"
+					content="https://miro.medium.com/max/812/1*1xhuVp8f2WFUGUByHS8VTg.png"
+					data-rh="true"
+				/>
+			</Helmet>
 			<HeaderContainer>
 				<Title variant="h1">My videos</Title>
 

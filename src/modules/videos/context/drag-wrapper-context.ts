@@ -1,20 +1,19 @@
-import {createContext, useContext} from "react";
+import { createContext, useContext } from 'react';
 
 interface IDragWrapperContext {
-	handelMouseDown: () => void,
-	handelMouseUp: () => void,
+	handelMouseDown: (event: React.MouseEvent) => void;
+	setIsOpenCamera: (isOpen: boolean) => void;
 }
 
 export const DragWrapperContext = createContext<IDragWrapperContext>({
-	handelMouseDown: () => {
-	},
-	handelMouseUp: () => {
-	}
+	handelMouseDown: () => {},
+	setIsOpenCamera: () => {},
 });
 
 export const useDragWrapperContext = () => {
-	const {handelMouseDown, handelMouseUp} = useContext(DragWrapperContext);
+	const { handelMouseDown, setIsOpenCamera } = useContext(DragWrapperContext);
 	return {
-		handelMouseDown, handelMouseUp
-	}
-}
+		handelMouseDown,
+		setIsOpenCamera,
+	};
+};
