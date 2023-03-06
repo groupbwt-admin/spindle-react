@@ -19,10 +19,12 @@ import { ReactComponent as EditProfile } from 'shared/components/icon/collection
 import { ReactComponent as EmptyCheckbox } from 'shared/components/icon/collection/empty-checkbox.svg';
 import { ReactComponent as Filter } from 'shared/components/icon/collection/filter.svg';
 import { ReactComponent as Globe } from 'shared/components/icon/collection/globe.svg';
+import { ReactComponent as HideMenu } from 'shared/components/icon/collection/hide-menu.svg';
 import { ReactComponent as Logout } from 'shared/components/icon/collection/logout.svg';
 import { ReactComponent as Microphone } from 'shared/components/icon/collection/microphone.svg';
 import { ReactComponent as MicrophoneOff } from 'shared/components/icon/collection/microphone-off.svg';
 import { ReactComponent as OpenNew } from 'shared/components/icon/collection/open_new.svg';
+import { ReactComponent as OpenMenu } from 'shared/components/icon/collection/open-menu.svg';
 import { ReactComponent as Pause } from 'shared/components/icon/collection/pause.svg';
 import { ReactComponent as QuoteIcon } from 'shared/components/icon/collection/quote.svg';
 import { ReactComponent as Reset } from 'shared/components/icon/collection/reset.svg';
@@ -72,6 +74,8 @@ export const ICON_COLLECTION = {
 	camera_off: CameraOff,
 	drag_pan: DragPan,
 	open_new: OpenNew,
+	open_menu: OpenMenu,
+	hide_menu: HideMenu,
 };
 
 type Keys = keyof typeof ICON_COLLECTION;
