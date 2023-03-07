@@ -66,12 +66,12 @@ interface VideoListProps {
 	list: IVideo[];
 	userId?: IUser['id'];
 	activeActions?: VideoCardProps['activeActions'];
-	selectedVideos: Record<IVideo['id'], IVideo>;
+	selectedVideos?: Record<IVideo['id'], IVideo>;
 	isVideoLoading?: boolean;
 	hasNextPage?: boolean;
 	isSelectMode: boolean;
-	loadNextPage: () => void;
-	onChecked: (IVideo) => void;
+	loadNextPage?: () => void;
+	onChecked?: (IVideo) => void;
 	onDeleteVideo?: (video: IVideo) => void;
 	onChangeSettings?: (video: IVideo) => void;
 }
@@ -90,14 +90,14 @@ export const VideoList: React.FC<VideoListProps> = ({
 	onChangeSettings,
 }) => {
 	const isCardChecked = (cardId) => {
-		return !!selectedVideos[cardId];
+		return selectedVideos ? !!selectedVideos[cardId] : false;
 	};
 
 	return (
 		<>
 			<VideoContainer
 				dataLength={list.length}
-				next={loadNextPage}
+				next={loadNextPage || (() => {})}
 				hasMore={hasNextPage || false}
 				loader={<LoadingMessage>Loading...</LoadingMessage>}
 				scrollableTarget={document.querySelector(' main') as ReactNode}
@@ -114,7 +114,7 @@ export const VideoList: React.FC<VideoListProps> = ({
 						userId={userId}
 						checked={isCardChecked(item.id)}
 						activeActions={activeActions}
-						onChecked={onChecked}
+						onChecked={onChecked || (() => {})}
 						isSelectMode={isSelectMode}
 						onDelete={onDeleteVideo}
 						onChangeSettings={onChangeSettings}

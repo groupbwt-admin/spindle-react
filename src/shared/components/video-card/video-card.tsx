@@ -91,6 +91,7 @@ const StyledCard = styled(Card)`
 	background-color: ${({ theme }) => theme.palette.common.white};
 	box-shadow: none;
 	height: 100%;
+	width: 100%;
 	transition: box-shadow 0.3s ease;
 
 	&.isSelectMode {
@@ -166,6 +167,9 @@ const StyledBadgeIcon = styled(Icon)`
 const PAGE_TITLES = {
 	[VIDEO_ROUTES.MY_VIDEOS.path]: {
 		title: [VIDEO_ROUTES.MY_VIDEOS.title],
+	},
+	[VIDEO_ROUTES.SEARCH.path]: {
+		title: [VIDEO_ROUTES.SEARCH.title],
 	},
 	[USER_ROUTES.MY_PROFILE.path]: {
 		title: [USER_ROUTES.MY_PROFILE.title],

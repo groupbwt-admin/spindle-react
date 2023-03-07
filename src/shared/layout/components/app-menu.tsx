@@ -7,12 +7,12 @@ import { UserMenu } from 'shared/layout/components/user-menu';
 
 import { css } from '@mui/material/styles';
 
-import { ReactComponent as IconNotification } from 'shared/components/icon/collection/notification.svg';
+import { IconButton } from 'shared/components/button/icon-button';
 import { ReactComponent as IconProfile } from 'shared/components/icon/collection/profile.svg';
 import { ReactComponent as IconSearch } from 'shared/components/icon/collection/search.svg';
-import { ReactComponent as IconSettings } from 'shared/components/icon/collection/setting.svg';
 import { ReactComponent as IconVideos } from 'shared/components/icon/collection/video.svg';
 import { Icon } from 'shared/components/icon/icon';
+import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { Typography } from 'shared/components/typography/typography';
 
 const StyledLinkTitle = styled(Typography)`
@@ -23,17 +23,41 @@ const StyledLinkTitle = styled(Typography)`
 		transform 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
 `;
 
+const StyledLogo = styled(Logo)`
+	path:last-of-type {
+		opacity: 0;
+		transition: opacity 0.3s
+			${({ theme }) => theme.transitions.easing.easeInOut};
+	}
+`;
+
+const StyledToggleMenuBtn = styled(IconButton)`
+	padding: 15px 16px;
+	background: #576cd9 !important;
+	border-radius: 10px;
+	position: absolute;
+	z-index: 5;
+	left: 0;
+	top: 0;
+	opacity: 0;
+	transition: opacity 0.3s ${({ theme }) => theme.transitions.easing.sharp};
+
+	svg {
+		color: ${({ theme }) => theme.palette.common.white};
+	}
+`;
+
 const LogoWrapper = styled('div')<{ isDisabled: boolean }>`
 	width: 158px;
 	cursor: ${(props) => (props.isDisabled ? 'not-allowed' : 'pointer')};
+	position: relative;
 
-	svg {
-		path:last-of-type {
-			opacity: 0;
-			transition: opacity 0.3s
-				${({ theme }) => theme.transitions.easing.easeInOut};
+	&:hover {
+		${StyledToggleMenuBtn} {
+			opacity: 1;
 		}
 	}
+}
 `;
 
 const StyledNavIcon = styled(Icon)`
@@ -66,6 +90,12 @@ const MenuContainer = styled.aside<{
 	overflow: hidden;
 	transition: width 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
 
+	&:hover {
+		${StyledToggleMenuBtn} {
+			opacity: 1;
+		}
+	}
+
 	${({ open }) =>
 		open &&
 		css`
@@ -77,7 +107,7 @@ const MenuContainer = styled.aside<{
 			}
 
 			${LogoWrapper} {
-				svg {
+				${StyledLogo} {
 					path:last-of-type {
 						opacity: 1;
 					}
@@ -107,10 +137,6 @@ const NavContainer = styled('nav')`
 
 	li {
 		margin-bottom: 24px;
-	}
-
-	li:last-child {
-		margin-top: auto;
 	}
 `;
 
@@ -146,7 +172,12 @@ export const AppMenu = () => {
 				onClick={isRecording ? undefined : toggleDrawer}
 				isDisabled={isRecording}
 			>
-				<Logo />
+				<StyledLogo />
+				<StyledToggleMenuBtn>
+					<Icon
+						icon={open ? ICON_COLLECTION.hide_menu : ICON_COLLECTION.open_menu}
+					/>
+				</StyledToggleMenuBtn>
 			</LogoWrapper>
 			<NavContainer>
 				<ul>
@@ -166,18 +197,6 @@ export const AppMenu = () => {
 						<StyledNavLink to="profile">
 							<StyledNavIcon icon={IconProfile} />
 							<StyledLinkTitle variant="h3">My Profile</StyledLinkTitle>
-						</StyledNavLink>
-					</li>
-					<li>
-						<StyledNavLink to="settings">
-							<StyledNavIcon icon={IconSettings} />
-							<StyledLinkTitle variant="h3">Settings</StyledLinkTitle>
-						</StyledNavLink>
-					</li>
-					<li>
-						<StyledNavLink to="notifications">
-							<StyledNavIcon icon={IconNotification} />
-							<StyledLinkTitle variant="h3">Notifications</StyledLinkTitle>
 						</StyledNavLink>
 					</li>
 				</ul>

@@ -7,6 +7,7 @@ import {
 	UnauthorisedVideoBoundaryError,
 } from 'shared/models/custom-errors';
 
+import { IUser } from 'shared/types/user';
 import { ITag, IVideo, IVideoSign } from 'shared/types/video';
 
 import { RequestSortType } from 'shared/constants/request-sort-type';
@@ -39,6 +40,30 @@ export interface VideoListParamsDto {
 	search?: string;
 	signal?: AbortSignal;
 	criteriaTags?: string[];
+}
+
+export interface SearchParamsDto {
+	search?: string;
+	signal?: AbortSignal;
+	searchByTag?: boolean;
+	criteriaTags?: string[];
+	meta?: {
+		tags?: { page?: number; take?: number };
+		users?: { page?: number; take?: number };
+		videos?: { page?: number; take?: number };
+	};
+}
+
+export interface SearchResponseDto {
+	tags: ITag[];
+	users: IUser[];
+	videos: IVideo[];
+	data: IVideo[];
+	meta: {
+		tags: VideoListResponseDto['meta'];
+		users: VideoListResponseDto['meta'];
+		videos: VideoListResponseDto['meta'];
+	};
 }
 
 interface UserVideoListParamsDto extends VideoListParamsDto {
@@ -103,7 +128,7 @@ export class VideoApiService implements VideoApiInterface {
 	getVideos = async ({
 		signal,
 		...params
-	}: VideoListParamsDto): Promise<VideoListResponseDto> => {
+	}: VideoListParamsDto): Promise<SearchResponseDto> => {
 		const payload = await this.http.get(`/videos`, { params: params, signal });
 		return payload.data;
 	};
@@ -141,6 +166,18 @@ export class VideoApiService implements VideoApiInterface {
 	changeVideoPermissions = async ({ id, viewAccess }): Promise<IVideo> => {
 		const payload = await this.http.patch(`/videos/${id}/change-permission`, {
 			viewAccess,
+		});
+		return payload.data;
+	};
+
+	search = async ({
+		signal,
+		search,
+		meta = {},
+	}: SearchParamsDto): Promise<SearchResponseDto> => {
+		const payload = await this.http.post(`/search`, meta, {
+			params: { search },
+			signal,
 		});
 		return payload.data;
 	};

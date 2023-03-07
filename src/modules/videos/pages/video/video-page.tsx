@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import styled from '@emotion/styled/macro';
 import { format } from 'date-fns';
 import * as module from 'module';
@@ -119,6 +120,28 @@ export const VideoPage: React.FC = () => {
 
 	return (
 		<VideoPageContainer>
+			<Helmet>
+				<title>{models.video?.title}</title>
+				<meta
+					name="description"
+					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
+				/>
+				<meta
+					property="og:title"
+					content="Spindle | Video Name"
+					data-rh="true"
+				/>
+				<meta
+					property="og:description"
+					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
+					data-rh="true"
+				/>
+				<meta
+					property="og:image"
+					content=" https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif"
+					data-rh="true"
+				/>
+			</Helmet>
 			{models.user && (
 				<HeaderContainer>
 					<StyledIconButton onClick={commands.handleBack}>
