@@ -1,11 +1,11 @@
-import {useSnapshot} from 'valtio';
+import { useRecordSocketState } from 'app/store/record-socket/state';
 
-import {socketState} from 'app/store/record-socket/state';
-
-// eslint-disable-next-line react-hooks/rules-of-hooks
-export const selectStatus = () => useSnapshot(socketState).recordStatus;
-// eslint-disable-next-line react-hooks/rules-of-hooks
-export const selectIsRecording = () => useSnapshot(socketState).isRecording;
-// eslint-disable-next-line react-hooks/rules-of-hooks
-export const selectIsConnected = () => useSnapshot(socketState).isConnected;
-
+export const selectStatus = () =>
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	useRecordSocketState((state) => state.recordStatus);
+export const selectIsConnected = () =>
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	useRecordSocketState((state) => state.isConnected);
+export const selectIsRecording = () =>
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	useRecordSocketState((state) => state.isRecording);
