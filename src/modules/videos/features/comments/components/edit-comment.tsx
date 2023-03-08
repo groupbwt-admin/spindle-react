@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled/macro';
-import { format } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
+import CommentMenu from 'modules/videos/features/comments/components/comment-menu';
 
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 
-import { Avatar } from '../../../shared/components/avatar/avatar';
-import { Button } from '../../../shared/components/button/button';
-import { Typography } from '../../../shared/components/typography/typography';
+import { IComment } from 'shared/types/video';
 
-import CommentMenu from './comment-menu';
+import {
+	CreateCommentDto,
+	EditCommentDto,
+} from 'app/api/comments-api/comments-api';
+
+import { getUserAvatarURL } from 'shared/utils/get-file-url';
+
+import { Avatar } from 'shared/components/avatar/avatar';
+import { Button } from 'shared/components/button/button';
+import { Typography } from 'shared/components/typography/typography';
 
 const StyledAvatar = styled(Avatar)`
 	margin-right: 12px;
@@ -16,11 +24,13 @@ const StyledAvatar = styled(Avatar)`
 	height: 42px;
 	border: none;
 `;
+
 const StyledParentComment = styled.div`
 	display: flex;
 	align-items: flex-start;
 	margin-top: 16px;
 `;
+
 const InputLineWrapper = styled.div`
 	display: flex;
 	align-items: flex-start;
@@ -62,29 +72,36 @@ const StyledButtonWrap = styled.div`
 		margin-left: 12px;
 	}
 `;
+
 const StyledButton = styled(Button)`
 	border-radius: 10px;
 `;
+
 const StyleTextAreaWrapper = styled.div`
 	width: 100%;
 `;
+
 const StyledTypography = styled(Typography)`
 	font-weight: 600;
 `;
+
 const CommentHead = styled.div`
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
 `;
+
 const CommentBottom = styled.div`
 	display: flex;
 	align-items: flex-end;
 `;
+
 const StyledCaption = styled(Typography)`
 	color: ${({ theme }) => theme.palette.text.secondary};
 	font-size: ${({ theme }) => theme.typography.h4.fontSize};
 	margin-right: 10px;
 `;
+
 const ReplyButton = styled.button`
 	border: none;
 	padding: 0 6px;
@@ -99,47 +116,78 @@ const ReplyButton = styled.button`
 	}
 `;
 
-interface ICommentUser {
-	id: string;
-	avatar: string;
-	lastName: string;
-	firstName: string;
-}
-
-interface IEditComment {
+interface EditCommentProps {
 	id: string;
 	body: string;
-	user: ICommentUser;
-	subComments?: Array<IEditComment>;
+	user: IComment['user'];
+	creationDate: string;
+	subComments?: Array<IComment>;
+	onAddReply: (payload: Partial<CreateCommentDto>) => void;
+	onEditComment: (payload: EditCommentDto) => void;
+	onDeleteComment: (id: IComment['id']) => void;
 }
 
-export const EditComment: React.FC<IEditComment> = ({
+export const EditComment: React.FC<EditCommentProps> = ({
 	id,
 	body,
+	creationDate,
 	user,
 	subComments,
+	onAddReply,
+	onEditComment,
+	onDeleteComment,
 }) => {
 	const [isOpenComment, setIsOpenComment] = useState(false);
 	const [isReplyOpen, setIsReplyOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [comment, setComment] = useState(body);
 	const [reply, setReply] = useState('');
+	const [isReplySaving, setIsReplySaving] = useState(false);
+	const [isEditSaving, setIsEditSaving] = useState(false);
 	const open = Boolean(anchorEl);
+
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
 		setAnchorEl(event.currentTarget);
 	};
+
 	const handleClose = (event) => {
 		event.stopPropagation();
 		setAnchorEl(null);
 	};
+
 	const handleEdit = () => {
 		setIsOpenComment(true);
 		setAnchorEl(null);
 	};
+
+	const handleSaveEdits = async () => {
+		setIsEditSaving(true);
+		await onEditComment({ id: id, body: comment });
+		setIsOpenComment(false);
+		setIsEditSaving(false);
+	};
+
+	const handleSaveReply = (
+		e: React.MouseEvent<HTMLButtonElement>,
+		id: IComment['id'],
+	) => {
+		setIsReplySaving(true);
+		e.stopPropagation();
+		onAddReply({ parentCommentId: id, body: reply });
+		setReply('');
+		setIsReplyOpen(false);
+		setIsReplySaving(false);
+	};
+
+	const handleDeleteComment = () => {
+		onDeleteComment(id);
+		setAnchorEl(null);
+	};
+
 	return (
 		<StyledParentComment>
-			<StyledAvatar src={user.avatar} />
+			<StyledAvatar src={getUserAvatarURL(user.avatar)} />
 			<StyleTextAreaWrapper>
 				<CommentHead>
 					<StyledTypography variant="body1">
@@ -152,6 +200,7 @@ export const EditComment: React.FC<IEditComment> = ({
 							handleClick={handleClick}
 							handleClose={handleClose}
 							handleEdit={handleEdit}
+							onDelete={handleDeleteComment}
 						/>
 					)}
 				</CommentHead>
@@ -173,13 +222,14 @@ export const EditComment: React.FC<IEditComment> = ({
 						/>
 						<StyledButton
 							label="Save"
-							onClick={() => setIsOpenComment(false)}
+							onClick={handleSaveEdits}
+							isLoading={isEditSaving}
 						/>
 					</StyledButtonWrap>
 				)}
 				{!isOpenComment && (
 					<CommentBottom>
-						<StyledCaption variant="subtitle2">3 minutes ago</StyledCaption>
+						<StyledCaption variant="subtitle2">{creationDate}</StyledCaption>
 						{!isReplyOpen && (
 							<ReplyButton onClick={() => setIsReplyOpen(true)}>
 								Reply
@@ -190,22 +240,13 @@ export const EditComment: React.FC<IEditComment> = ({
 
 				{isReplyOpen || reply.length ? (
 					<StyledParentComment>
-						<StyledAvatar src={user.avatar} />
+						<StyledAvatar src={getUserAvatarURL(user.avatar)} />
 
 						<StyleTextAreaWrapper>
-							<CommentHead>
-								{/*<StyledTypography variant="body1">Your Name</StyledTypography>*/}
-								{/*{!isOpenComment && <CommentMenu*/}
-								{/*	open={open}*/}
-								{/*	anchorEl={anchorEl}*/}
-								{/*	handleClick={handleClick}*/}
-								{/*	handleClose={handleClose}*/}
-								{/*	handleEdit={handleEdit}*/}
-								{/*/>}*/}
-							</CommentHead>
 							<StyledInput
 								placeholder={'Type your comment here'}
 								disabled={!isReplyOpen}
+								autoFocus
 								value={reply}
 								onChange={(e) => setReply(e.target.value)}
 							/>
@@ -218,7 +259,8 @@ export const EditComment: React.FC<IEditComment> = ({
 									/>
 									<StyledButton
 										label="Save"
-										onClick={() => setIsReplyOpen(false)}
+										onClick={(e) => handleSaveReply(e, id)}
+										isLoading={isReplySaving}
 									/>
 								</StyledButtonWrap>
 							)}
@@ -231,9 +273,13 @@ export const EditComment: React.FC<IEditComment> = ({
 							<EditComment
 								key={comment.id}
 								subComments={comment.subComments}
+								creationDate={formatDistanceToNow(new Date(comment.createdAt))}
 								user={comment.user}
 								body={comment.body}
-								id={comment.id}
+								id={id}
+								onAddReply={onAddReply}
+								onEditComment={onEditComment}
+								onDeleteComment={onDeleteComment}
 							/>
 					  ))
 					: null}

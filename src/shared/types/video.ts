@@ -16,6 +16,21 @@ export interface IVideo {
 	viewAccess: VideoPermissionsEnum;
 }
 
+export interface IComment {
+	id: string;
+	user: ICommentUser;
+	body: string;
+	countReplies: number;
+	subComments: IComment[];
+	updatedAt: string;
+	createdAt: string;
+}
+
+type ICommentUser = Pick<
+	IUser,
+	'avatar' | 'email' | 'firstName' | 'lastName' | 'id' | 'role'
+>;
+
 export interface IVideoSign {
 	expirationDate: string;
 	url: string;

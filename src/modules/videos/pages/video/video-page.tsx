@@ -2,7 +2,6 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import styled from '@emotion/styled/macro';
 import { format } from 'date-fns';
-import * as module from 'module';
 import { StartRecordButton } from 'modules/videos/components/start-record-button';
 import { useVideo } from 'modules/videos/pages/video/use-video';
 import { DeleteVideo } from 'shared/features/delete-video';
@@ -22,7 +21,7 @@ import { UserInfoHoverMenu } from 'shared/components/user-info-hover-menu/user-i
 import { ActionMenu } from 'shared/components/video-card/action-menu';
 import { VideoPageSkeleton } from 'shared/components/video-page-skeleton/video-page-skeleton';
 
-import { Comments } from '../../../comments/components/comments';
+import { Comments } from '../../features/comments/components/comments';
 
 const VideoPageContainer = styled.div`
 	display: flex;
@@ -234,7 +233,7 @@ export const VideoPage: React.FC = () => {
 								commands.handleUpdateVideo({ tags: value })
 							}
 						/>
-						{models.video && <Comments videoId={models.video.id} />}
+						{models.video.isComments && <Comments video={models.video} />}
 					</DetailedInfoContainer>
 				</>
 			)}

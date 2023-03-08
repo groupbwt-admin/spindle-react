@@ -3,12 +3,13 @@ import styled from '@emotion/styled/macro';
 
 import { Menu, MenuItem } from '@mui/material';
 
-import { IconButton } from '../../../shared/components/button/icon-button';
-import { Icon } from '../../../shared/components/icon/icon';
-import { ICON_COLLECTION } from '../../../shared/components/icon/icon-list';
+import { IconButton } from 'shared/components/button/icon-button';
+import { Icon } from 'shared/components/icon/icon';
+import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 
 const StyledMenuButton = styled(IconButton)`
 	padding: 0px;
+
 	&.open {
 		opacity: 1 !important;
 	}
@@ -22,6 +23,7 @@ const StyledMenu = styled(Menu)`
 		border-radius: 10px;
 	}
 `;
+
 const StyledMenuItem = styled(MenuItem)`
 	padding-bottom: 13px;
 	padding-top: 13px;
@@ -47,19 +49,21 @@ const StyledMenuIcon = styled(Icon)`
 `;
 
 interface ICommentMenu {
+	open: boolean;
+	anchorEl: null | HTMLElement;
 	handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	handleEdit: () => void;
-	open: boolean;
-	anchorEl: null | HTMLElement;
+	onDelete: () => void;
 }
 
 const CommentMenu: React.FC<ICommentMenu> = ({
+	anchorEl,
+	open,
 	handleClick,
 	handleClose,
 	handleEdit,
-	anchorEl,
-	open,
+	onDelete,
 }) => {
 	return (
 		<>
@@ -98,7 +102,7 @@ const CommentMenu: React.FC<ICommentMenu> = ({
 					<StyledMenuIcon icon={ICON_COLLECTION.edit} />
 					<span>Edit</span>
 				</StyledMenuItem>
-				<StyledMenuItem>
+				<StyledMenuItem onClick={onDelete}>
 					<StyledMenuIcon icon={ICON_COLLECTION.delete} />
 					<span>Delete</span>
 				</StyledMenuItem>
