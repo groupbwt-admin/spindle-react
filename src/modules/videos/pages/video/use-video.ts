@@ -3,16 +3,17 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useRecordContext } from 'modules/videos/hooks/use-record-context';
 import queryString from 'query-string';
+import { useModalManager } from 'shared/context/modal-manager';
 
 import { VideoApi } from 'app/api/video-api/video-api';
 
 import { selectUserData } from 'app/store/user/selects';
 
 import { USER_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
+import { VIDEO_MODALS_NAMES } from 'shared/constants/modal-names';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { useChangeAccessSettings } from 'shared/hooks/use-change-access-settings';
 import { useCopyLink } from 'shared/hooks/use-copy-link';
-import { useDeleteVideo } from 'shared/hooks/use-delete-video';
 
 export function useVideo() {
 	const urlParams = useParams<{ id: string }>();
@@ -20,6 +21,7 @@ export function useVideo() {
 	const nav = useNavigate();
 	const location = useLocation();
 	const user = selectUserData();
+	const modalManager = useModalManager();
 
 	const recordContext = useRecordContext();
 
@@ -52,13 +54,9 @@ export function useVideo() {
 
 	const updateVideoMutation = useMutation(VideoApi.updateVideoById);
 
-	const onVideosDeleted = async () => {
+	const handleDeleteVideoSuccess = async () => {
 		nav(location.state?.from || VIDEO_ROUTES.MY_VIDEOS);
 	};
-
-	const { modal: deleteVideoModal, startDeleteVideos } = useDeleteVideo({
-		onVideosDeleted,
-	});
 
 	const handleDownload = (e) => {
 		e.stopPropagation();
@@ -66,7 +64,7 @@ export function useVideo() {
 	};
 
 	const handleDeleteVideo = () => {
-		startDeleteVideos([video]);
+		modalManager.open(VIDEO_MODALS_NAMES.delete_video, [video]);
 	};
 
 	const { modal: accessSettingsModal, startChangeSettings } =
@@ -107,7 +105,6 @@ export function useVideo() {
 			user,
 			recordContext,
 			pageTitle,
-			deleteVideoModal,
 			accessSettingsModal,
 			videoUrl,
 			video,
@@ -124,6 +121,7 @@ export function useVideo() {
 			handleUpdateVideo,
 			handleBack,
 			handleChangeVideoSettings,
+			handleDeleteVideoSuccess,
 		},
 	};
 }

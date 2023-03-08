@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import * as module from 'module';
 import { StartRecordButton } from 'modules/videos/components/start-record-button';
 import { useVideo } from 'modules/videos/pages/video/use-video';
+import { DeleteVideo } from 'shared/features/delete-video';
 import { BoundaryError } from 'shared/models/custom-errors';
 
 import { getUserAvatarURL } from 'shared/utils/get-file-url';
@@ -142,6 +143,7 @@ export const VideoPage: React.FC = () => {
 					data-rh="true"
 				/>
 			</Helmet>
+			<DeleteVideo onVideosDeleted={commands.handleDeleteVideoSuccess} />
 			{models.user && (
 				<HeaderContainer>
 					<StyledIconButton onClick={commands.handleBack}>
@@ -236,7 +238,6 @@ export const VideoPage: React.FC = () => {
 					</DetailedInfoContainer>
 				</>
 			)}
-			{models.deleteVideoModal}
 			{models.accessSettingsModal}
 		</VideoPageContainer>
 	);

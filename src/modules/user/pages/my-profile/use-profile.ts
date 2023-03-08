@@ -4,6 +4,7 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import { Dayjs } from 'dayjs';
 import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
 import queryString from 'query-string';
+import { useModalManager } from 'shared/context/modal-manager';
 
 import { IVideo } from 'shared/types/video';
 
@@ -16,10 +17,10 @@ import {
 import { selectUserData } from 'app/store/user/selects';
 
 import { VIDEO_ROUTES } from 'shared/config/routes';
+import { VIDEO_MODALS_NAMES } from 'shared/constants/modal-names';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { RequestSortType } from 'shared/constants/request-sort-type';
 import { useChangeAccessSettings } from 'shared/hooks/use-change-access-settings';
-import { useDeleteVideo } from 'shared/hooks/use-delete-video';
 import { useEffectAfterMount } from 'shared/hooks/use-effect-after-mount';
 import { useFilterRequest } from 'shared/hooks/use-filter-request';
 
@@ -51,6 +52,8 @@ export function useProfile() {
 		useChangeAccessSettings();
 
 	const location = useLocation();
+
+	const modalManager = useModalManager();
 
 	const [meta, setMeta] = useState<VideoListResponseDto['meta']>(() => {
 		const params = queryString.parse(location.search);
@@ -88,7 +91,7 @@ export function useProfile() {
 		};
 	}, []);
 
-	const onVideosDeleted = async () => {
+	const handleDeleteVideoSuccess = async () => {
 		setMeta((prevState) => ({ ...prevState, page: 1 }));
 		refetchVideos({ page: 1 }).then((data) => {
 			updateState(() => {
@@ -100,10 +103,6 @@ export function useProfile() {
 		});
 		handleCancelSelection();
 	};
-
-	const { modal: deleteVideoModal, startDeleteVideos } = useDeleteVideo({
-		onVideosDeleted,
-	});
 
 	const {
 		data: videosData,
@@ -289,7 +288,7 @@ export function useProfile() {
 	};
 
 	const handleDeleteVideo = (video: IVideo) => {
-		startDeleteVideos([video]);
+		modalManager.open(VIDEO_MODALS_NAMES.delete_video, [video]);
 	};
 
 	const handleChangeVideoSettings = (video: IVideo) => {
@@ -297,7 +296,7 @@ export function useProfile() {
 	};
 
 	const handleDeleteSelectedVideos = () => {
-		startDeleteVideos(selectedVideosArray);
+		modalManager.open(VIDEO_MODALS_NAMES.delete_video, selectedVideosArray);
 	};
 
 	const handleCopySelectedLinks = async () => {
@@ -316,7 +315,6 @@ export function useProfile() {
 	return {
 		models: {
 			modal,
-			deleteVideoModal,
 			accessSettingsModal,
 			user,
 			videos: videosData?.data ?? [],
@@ -347,6 +345,7 @@ export function useProfile() {
 			handleChangeVideoSettings,
 			handleDeleteSelectedVideos,
 			handleCopySelectedLinks,
+			handleDeleteVideoSuccess,
 		},
 	};
 }

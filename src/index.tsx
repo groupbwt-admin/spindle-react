@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter } from 'react-router-dom';
 import { isPast } from 'date-fns';
 import jwtDecode from 'jwt-decode';
+import { ModalManager } from 'shared/context/modal-manager';
 
 import { createTheme, ThemeProvider } from '@mui/material';
 
@@ -186,16 +187,21 @@ const helmetContext = {};
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
 	<StrictMode>
-		<HelmetProvider context={helmetContext}>
-			<ThemeProvider theme={theme}>
-				<QueryClientProvider client={queryClient}>
-					<BrowserRouter>
-						<App />
-						<ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-					</BrowserRouter>
-				</QueryClientProvider>
-			</ThemeProvider>
-		</HelmetProvider>
+		<ModalManager.Provider>
+			<HelmetProvider context={helmetContext}>
+				<ThemeProvider theme={theme}>
+					<QueryClientProvider client={queryClient}>
+						<BrowserRouter>
+							<App />
+							<ReactQueryDevtools
+								initialIsOpen={false}
+								position="bottom-right"
+							/>
+						</BrowserRouter>
+					</QueryClientProvider>
+				</ThemeProvider>
+			</HelmetProvider>
+		</ModalManager.Provider>
 	</StrictMode>,
 );
 
