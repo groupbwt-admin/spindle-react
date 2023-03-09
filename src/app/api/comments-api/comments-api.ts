@@ -60,7 +60,7 @@ export class CommentsApiService implements CommentsApiInterface {
 		...params
 	}: CommentsListParamsDto) => {
 		const payload = await this.http.get(`/comments/${videoId}`, {
-			params: { order: 'DESC', take: 50, ...params },
+			params: { order: 'DESC', take: 10, ...params },
 			signal,
 		});
 

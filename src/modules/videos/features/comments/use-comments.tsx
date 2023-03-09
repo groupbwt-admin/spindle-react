@@ -77,6 +77,23 @@ export function useComments(video) {
 		modalManager.open(VIDEO_MODALS_NAMES.delete_comment, commentId);
 	};
 
+	const loadNextPage = () => {
+		const newPage = comments?.meta.page ? comments?.meta.page + 1 : 1;
+
+		setTimeout(
+			() =>
+				refetchData({ page: newPage }).then((data) => {
+					updateState((prevState) => {
+						return {
+							data: prevState?.data.concat(data.data) ?? data.data,
+							meta: data.meta,
+						};
+					});
+				}),
+			0,
+		);
+	};
+
 	return {
 		models: {
 			comments,
@@ -84,6 +101,7 @@ export function useComments(video) {
 			currentUserAvatar: user?.avatar && getUserAvatarURL(user.avatar),
 		},
 		commands: {
+			loadNextPage,
 			handleCreateComment,
 			handleEditComment,
 			handleCommentDeletedSuccess,

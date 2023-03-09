@@ -229,7 +229,9 @@ export const EditComment: React.FC<EditCommentProps> = ({
 				)}
 				{!isOpenComment && (
 					<CommentBottom>
-						<StyledCaption variant="subtitle2">{creationDate}</StyledCaption>
+						<StyledCaption variant="subtitle2">
+							{creationDate} ago
+						</StyledCaption>
 						{!isReplyOpen && (
 							<ReplyButton onClick={() => setIsReplyOpen(true)}>
 								Reply
