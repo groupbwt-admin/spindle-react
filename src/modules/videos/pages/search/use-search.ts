@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import queryString from 'query-string';
 
@@ -35,6 +35,8 @@ export function useSearch() {
 	const {
 		data: searchResults,
 		searchData,
+		fetchData,
+		updateState,
 		isInitialLoading,
 		isSearching,
 	} = useFilterRequest<SearchResponseDto, SearchParamsDto, SearchParamsDto>({
@@ -51,10 +53,22 @@ export function useSearch() {
 			if (searchByTag) return VideoApi.getVideos(params);
 			return VideoApi.search({ ...params, meta });
 		},
+		manualTriggering: true,
 	});
+
+	useEffect(() => {
+		if (!query && !tags.length) return;
+		fetchData().then((res) => {
+			updateState(res);
+		});
+	}, []);
 
 	useEffectAfterMount(() => {
 		if (searchByTag) return;
+		if (!query.trim()) {
+			updateState(undefined);
+			return;
+		}
 		searchData(
 			() => ({ search: query }),
 			() => {
@@ -114,6 +128,11 @@ export function useSearch() {
 	const handleDeleteTag = () => {
 		setTags([]);
 		setSearchByTag(false);
+		if (!query) {
+			updateState(undefined);
+			return setSearchParams({});
+		}
+
 		searchData(
 			() => ({ search: query }),
 			() => {
@@ -133,19 +152,8 @@ export function useSearch() {
 		setSearchByTag(false);
 		setTags([]);
 		setQuery('');
-		searchData(
-			() => ({ search: query }),
-			() => {
-				setSearchParams(() => {
-					return queryString.stringify(
-						{
-							search: query,
-						},
-						{ skipNull: true, skipEmptyString: true },
-					);
-				});
-			},
-		);
+		updateState(undefined);
+		setSearchParams({});
 	};
 
 	const hasResults = useMemo((): {

@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
-import { proxy } from 'valtio';
-import { devtools } from 'valtio/utils';
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 import { IToken } from 'shared/types/token';
 
@@ -9,27 +9,23 @@ import { LocalStorageService } from 'shared/services/local-storage-service';
 interface IAuthState {
 	user: IToken | null;
 	setUser: (token: string | null) => void;
-	isLoggedIn: boolean;
 }
 
-export const authState = proxy<IAuthState>({
-	user: null,
-	setUser(token: string | null) {
-		if (!token) {
-			LocalStorageService.remove('token');
-			this.user = null;
-
-			return;
-		}
-
-		const userData: IToken = jwtDecode(token);
-		LocalStorageService.set('token', token);
-
-		this.user = userData;
-	},
-	get isLoggedIn() {
-		return !!this.user;
-	},
-});
-
-devtools(authState, { name: 'authState', enabled: true });
+export const useAuthState = create<IAuthState>()(
+	devtools(
+		(set) => ({
+			user: null,
+			setUser(token: string | null) {
+				if (!token) {
+					LocalStorageService.remove('token');
+					set({ user: null });
+					return;
+				}
+				const userData: IToken = jwtDecode(token);
+				LocalStorageService.set('token', token);
+				set({ user: userData });
+			},
+		}),
+		{ name: 'useAuthState', store: 'useAuthState' },
+	),
+);

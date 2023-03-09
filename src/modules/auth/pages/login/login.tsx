@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 
 import { AuthApi, LoginDataDto } from 'app/api/auth-api/auth-api';
 
-import { authState } from 'app/store/auth/state';
+import { useAuthState } from 'app/store/auth/state';
 
 import { AUTH_ROUTES } from 'shared/config/routes';
 
@@ -33,13 +33,15 @@ const Footer = styled(Typography)`
 `;
 
 export const LoginPage = () => {
+	const { setUser } = useAuthState();
+
 	const loginMutation = useMutation<
 		{ accessToken: string },
 		AxiosError<{ message: string }>,
 		LoginDataDto
 	>(AuthApi.login, {
 		onSuccess: async (data) => {
-			authState.setUser(data.accessToken);
+			setUser(data.accessToken);
 		},
 	});
 

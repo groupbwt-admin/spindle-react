@@ -168,6 +168,9 @@ const PAGE_TITLES = {
 	[VIDEO_ROUTES.MY_VIDEOS.path]: {
 		title: [VIDEO_ROUTES.MY_VIDEOS.title],
 	},
+	[VIDEO_ROUTES.SEARCH.path]: {
+		title: [VIDEO_ROUTES.SEARCH.title],
+	},
 	[USER_ROUTES.MY_PROFILE.path]: {
 		title: [USER_ROUTES.MY_PROFILE.title],
 	},
