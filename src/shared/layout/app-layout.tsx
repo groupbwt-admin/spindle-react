@@ -7,11 +7,8 @@ import { CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import { selectIsLoggedIn } from 'app/store/auth/selects';
-import {
-	selectIsLoadingUserData,
-	selectUserData,
-} from 'app/store/user/selects';
-import { userState } from 'app/store/user/state';
+import { selectIsLoadingUserData } from 'app/store/user/selects';
+import { useUserState } from 'app/store/user/state';
 
 import { AUTH_ROUTES } from 'shared/config/routes';
 
@@ -26,13 +23,14 @@ const SpinnerContainer = styled('div')`
 export const AppLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const location = useLocation();
 	const isUserAuth = selectIsLoggedIn();
-	const user = selectUserData();
+	const { getProfile } = useUserState();
+
 	const isAuthLayout = location.pathname.startsWith(AUTH_ROUTES.ROOT.path);
 	const isUserDataLoading = selectIsLoadingUserData();
 
 	useEffect(() => {
 		if (isUserAuth) {
-			userState.getProfile();
+			getProfile();
 		}
 	}, [isUserAuth]);
 

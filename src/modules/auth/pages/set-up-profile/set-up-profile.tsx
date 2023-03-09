@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 
 import { UserApi } from 'app/api/user-api/user-api';
 
-import { userState } from 'app/store/user/state';
+import { useUserState } from 'app/store/user/state';
 
 import { VIDEO_ROUTES } from 'shared/config/routes';
 import { useLogout } from 'shared/hooks/use-logout';
@@ -22,9 +22,11 @@ const ProfileContainer = styled('div')`
 export const SetUpProfilePage = () => {
 	const navigate = useNavigate();
 	const logoutHook = useLogout();
+	const { setProfile } = useUserState();
+
 	const setUpProfileMutation = useMutation(UserApi.updateProfile, {
 		onSuccess: async (userData) => {
-			userState.setProfile(userData);
+			setProfile(userData);
 			navigate(VIDEO_ROUTES.MY_VIDEOS.path);
 		},
 		onError: async (error) => {

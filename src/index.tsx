@@ -11,7 +11,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 
 import { IToken } from 'shared/types/token';
 
-import { authState } from 'app/store/auth/state';
+import { useAuthState } from 'app/store/auth/state';
 
 import { LocalStorageService } from 'shared/services/local-storage-service';
 
@@ -172,7 +172,7 @@ const queryClient = new QueryClient({
 		const isExpired = isPast(decodedJwtToken.exp * 1000);
 
 		if (!isExpired) {
-			authState.setUser(savedToken);
+			useAuthState.getState().setUser(savedToken);
 		}
 
 		if (isExpired) {

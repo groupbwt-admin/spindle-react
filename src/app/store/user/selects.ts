@@ -1,8 +1,23 @@
-import { useSnapshot } from 'valtio';
+/* eslint-disable react-hooks/rules-of-hooks */
+import { shallow } from 'zustand/shallow';
 
-import { userState } from 'app/store/user/state';
+import { useUserState } from 'app/store/user/state';
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
-export const selectUserData = () => useSnapshot(userState).user;
-// eslint-disable-next-line react-hooks/rules-of-hooks
-export const selectIsLoadingUserData = () => useSnapshot(userState).isLoading;
+import { getUserAvatarURL } from '../../../shared/utils/get-file-url';
+
+export const selectUserData = () =>
+	useUserState(
+		(state) =>
+			state.userData
+				? {
+						...state.userData,
+						fullName: `${state.userData?.firstName} ${state.userData?.lastName}`,
+						avatar: state.userData?.avatar
+							? getUserAvatarURL(state.userData!.avatar)
+							: state.userData?.avatar,
+				  }
+				: null,
+		shallow,
+	);
+export const selectIsLoadingUserData = () =>
+	useUserState((state) => state.isLoading);
