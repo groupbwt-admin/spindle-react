@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import styled from '@emotion/styled/macro';
-
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 import { CreateCommentDto } from 'app/api/comments-api/comments-api';
 
 import { Avatar } from 'shared/components/avatar/avatar';
 import { Button } from 'shared/components/button/button';
+import { Input } from 'shared/components/input/input';
 
 const InputLineWrapper = styled.div`
 	display: flex;
@@ -14,7 +16,7 @@ const InputLineWrapper = styled.div`
 	width: 100%;
 `;
 
-const StyledInput = styled(TextareaAutosize)`
+const StyledInput = styled(Input)`
 	position: relative;
 	border-radius: 10px;
 	background-color: ${({ theme }) => theme.palette.common.white};
@@ -30,6 +32,10 @@ const StyledInput = styled(TextareaAutosize)`
 	&:focus {
 		outline: none;
 		border-color: ${({ theme }) => theme.palette.primary.main};
+	}
+
+	.errorText {
+		padding-left: 0;
 	}
 `;
 
@@ -58,6 +64,12 @@ const StyledButton = styled(Button)`
 	border-radius: 10px;
 `;
 
+const schema = yup
+	.object({
+		comment: yup.string().trim().max(7680).required(),
+	})
+	.defined();
+
 interface IComment {
 	avatar?: string;
 	onCreateComment: (payload: Partial<CreateCommentDto>) => void;
@@ -70,15 +82,25 @@ export const BaseCommentInput: React.FC<IComment> = ({
 	onCreateComment,
 }) => {
 	const [isOpenComment, setIsOpenComment] = useState(false);
-	const [inputVal, setInputVal] = useState('');
 
-	const handleSubmit = async () => {
-		await onCreateComment({ body: inputVal });
-		setInputVal('');
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		reset,
+	} = useForm<{ comment: string }>({
+		resolver: yupResolver(schema),
+	});
+
+	const onSubmit = async (data) => {
+		await onCreateComment({ body: data.comment });
+		setIsOpenComment(false);
+		reset({ comment: '' });
 	};
 
-	const handleChange = (e) => {
-		setInputVal(e.target.value);
+	const handleCancel = () => {
+		setIsOpenComment(false);
+		reset({ comment: '' });
 	};
 
 	return (
@@ -86,21 +108,19 @@ export const BaseCommentInput: React.FC<IComment> = ({
 			<InputLineWrapper onClick={() => setIsOpenComment(true)}>
 				<StyledAvatar src={avatar} />
 				<StyledInput
+					multiline
 					placeholder={'Type your comment here'}
-					value={inputVal}
-					onChange={handleChange}
+					error={!!errors?.comment}
+					errorText={errors?.comment?.message}
+					{...register('comment')}
 				/>
 			</InputLineWrapper>
 			{isOpenComment && (
 				<StyledButtonWrap>
-					<StyledButton
-						label="Cancel"
-						color="info"
-						onClick={() => setIsOpenComment(false)}
-					/>
+					<StyledButton label="Cancel" color="info" onClick={handleCancel} />
 					<StyledButton
 						label="Comment"
-						onClick={handleSubmit}
+						onClick={handleSubmit(onSubmit)}
 						isLoading={isLoading}
 					/>
 				</StyledButtonWrap>

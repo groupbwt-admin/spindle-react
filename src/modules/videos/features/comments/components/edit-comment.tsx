@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import styled from '@emotion/styled/macro';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { formatDistanceToNow } from 'date-fns';
 import CommentMenu from 'modules/videos/features/comments/components/comment-menu';
-
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+import * as yup from 'yup';
 
 import { IComment } from 'shared/types/video';
 
@@ -16,6 +17,7 @@ import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
 import { Avatar } from 'shared/components/avatar/avatar';
 import { Button } from 'shared/components/button/button';
+import { Input } from 'shared/components/input/input';
 import { Typography } from 'shared/components/typography/typography';
 
 const StyledAvatar = styled(Avatar)`
@@ -37,7 +39,7 @@ const InputLineWrapper = styled.div`
 	width: 100%;
 `;
 
-const StyledInput = styled(TextareaAutosize)`
+const StyledInput = styled(Input)`
 	position: relative;
 	border-radius: 10px;
 	transition: all 0.1s ease-out;
@@ -50,16 +52,29 @@ const StyledInput = styled(TextareaAutosize)`
 	padding: 14px 30px 14px 12px;
 	margin-top: 8px;
 
+	&.hasError {
+		border: 1px solid ${({ theme }) => theme.palette.error.main};
+	}
+
 	&:focus {
 		outline: none;
 	}
 
-	&:disabled {
+	.errorText {
+		padding-left: 0;
+	}
+
+	&.isDisabled {
 		color: ${({ theme }) => theme.palette.text.primary};
 		border-color: transparent;
 		background-color: transparent;
 		margin-top: 0px;
 		padding: 0 30px 0 0;
+
+		.Mui-disabled {
+			color: ${({ theme }) => theme.palette.text.primary};
+			-webkit-text-fill-color: ${({ theme }) => theme.palette.text.primary};
+		}
 	}
 `;
 
@@ -116,6 +131,12 @@ const ReplyButton = styled.button`
 	}
 `;
 
+const schema = yup
+	.object({
+		comment: yup.string().trim().max(7680).required(),
+	})
+	.defined();
+
 interface EditCommentProps {
 	id: string;
 	body: string;
@@ -141,17 +162,43 @@ export const EditComment: React.FC<EditCommentProps> = ({
 	const [isReplyOpen, setIsReplyOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [comment, setComment] = useState(body);
-	const [reply, setReply] = useState('');
 	const [isReplySaving, setIsReplySaving] = useState(false);
 	const [isEditSaving, setIsEditSaving] = useState(false);
 	const open = Boolean(anchorEl);
+
+	const {
+		register: registerEdit,
+		handleSubmit: handleEditSubmit,
+		formState: { errors: editErrors },
+		reset: resetEdit,
+	} = useForm<{ comment: string }>({
+		resolver: yupResolver(schema),
+		defaultValues: {
+			comment: body,
+		},
+	});
+
+	const {
+		register: registerReply,
+		handleSubmit: handleReplySubmit,
+		formState: { errors: replyErrors },
+		getValues: getReplyValues,
+		reset: resetReply,
+	} = useForm<{ comment: string }>({
+		resolver: yupResolver(schema),
+		defaultValues: {
+			comment: '',
+		},
+	});
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
 		setAnchorEl(event.currentTarget);
 	};
 
-	const handleClose = (event) => {
+	const handleCloseCommentMenu = (
+		event: React.MouseEvent<HTMLButtonElement>,
+	) => {
 		event.stopPropagation();
 		setAnchorEl(null);
 	};
@@ -168,14 +215,10 @@ export const EditComment: React.FC<EditCommentProps> = ({
 		setIsEditSaving(false);
 	};
 
-	const handleSaveReply = (
-		e: React.MouseEvent<HTMLButtonElement>,
-		id: IComment['id'],
-	) => {
+	const handleSaveReply = (data) => {
 		setIsReplySaving(true);
-		e.stopPropagation();
-		onAddReply({ parentCommentId: id, body: reply });
-		setReply('');
+		onAddReply({ parentCommentId: id, body: data.comment });
+		resetReply({ comment: '' });
 		setIsReplyOpen(false);
 		setIsReplySaving(false);
 	};
@@ -183,6 +226,16 @@ export const EditComment: React.FC<EditCommentProps> = ({
 	const handleDeleteComment = () => {
 		onDeleteComment(id);
 		setAnchorEl(null);
+	};
+
+	const handleCancelEdit = () => {
+		setIsOpenComment(false);
+		resetEdit({ comment: body });
+	};
+
+	const handleCancelReply = () => {
+		setIsReplyOpen(false);
+		resetReply({ comment: '' });
 	};
 
 	return (
@@ -198,7 +251,7 @@ export const EditComment: React.FC<EditCommentProps> = ({
 							open={open}
 							anchorEl={anchorEl}
 							handleClick={handleClick}
-							handleClose={handleClose}
+							handleClose={handleCloseCommentMenu}
 							handleEdit={handleEdit}
 							onDelete={handleDeleteComment}
 						/>
@@ -207,10 +260,12 @@ export const EditComment: React.FC<EditCommentProps> = ({
 
 				<InputLineWrapper>
 					<StyledInput
+						multiline
 						placeholder={'Type your comment here'}
 						disabled={!isOpenComment}
-						value={comment}
-						onChange={(e) => setComment(e.target.value)}
+						error={!!editErrors.comment}
+						errorText={editErrors.comment?.message}
+						{...registerEdit('comment')}
 					/>
 				</InputLineWrapper>
 				{isOpenComment && (
@@ -218,11 +273,11 @@ export const EditComment: React.FC<EditCommentProps> = ({
 						<StyledButton
 							label="Cancel"
 							color="info"
-							onClick={() => setIsOpenComment(false)}
+							onClick={handleCancelEdit}
 						/>
 						<StyledButton
 							label="Save"
-							onClick={handleSaveEdits}
+							onClick={handleEditSubmit(handleSaveEdits)}
 							isLoading={isEditSaving}
 						/>
 					</StyledButtonWrap>
@@ -240,29 +295,30 @@ export const EditComment: React.FC<EditCommentProps> = ({
 					</CommentBottom>
 				)}
 
-				{isReplyOpen || reply.length ? (
+				{isReplyOpen || getReplyValues().comment.length ? (
 					<StyledParentComment>
 						<StyledAvatar src={getUserAvatarURL(user.avatar)} />
 
 						<StyleTextAreaWrapper>
 							<StyledInput
+								multiline
 								placeholder={'Type your comment here'}
-								disabled={!isReplyOpen}
 								autoFocus
-								value={reply}
-								onChange={(e) => setReply(e.target.value)}
+								error={!!replyErrors.comment}
+								errorText={replyErrors.comment?.message}
+								{...registerReply('comment')}
 							/>
 							{isReplyOpen && (
 								<StyledButtonWrap>
 									<StyledButton
 										label="Cancel"
 										color="info"
-										onClick={() => setIsReplyOpen(false)}
+										onClick={handleCancelReply}
 									/>
 									<StyledButton
 										label="Save"
-										onClick={(e) => handleSaveReply(e, id)}
 										isLoading={isReplySaving}
+										onClick={handleReplySubmit(handleSaveReply)}
 									/>
 								</StyledButtonWrap>
 							)}

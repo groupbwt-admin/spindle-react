@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { forwardRef, InputHTMLAttributes, useId } from 'react';
+import clsx from 'clsx';
 
 import { InputBase, InputBaseProps, InputLabel } from '@mui/material';
 import { css, styled } from '@mui/material/styles';
@@ -36,6 +37,10 @@ const AppLabel = styled(InputLabel)(
 
 const InputContainer = styled('label')`
 	display: block;
+
+	&.hasError {
+		border-color: ${({ theme }) => theme.palette.error.main};
+	}
 `;
 
 const HelperText = styled('div')`
@@ -53,6 +58,8 @@ const ErrorText = styled('div')(
 
 export interface InputProps {
 	value?: string;
+	multiline?: InputBaseProps['multiline'];
+	disabled?: InputBaseProps['disabled'];
 	className?: string;
 	type?: InputHTMLAttributes<HTMLInputElement>['type'];
 	autoComplete?: InputHTMLAttributes<HTMLInputElement>['autoComplete'];
@@ -77,17 +84,38 @@ const RootInput: React.ForwardRefRenderFunction<
 	HTMLInputElement,
 	InputProps
 > = (
-	{ value, className, label, helperText, error, errorText, ...props },
+	{
+		value,
+		disabled = false,
+		multiline = false,
+		className,
+		label,
+		helperText,
+		error,
+		errorText,
+		...props
+	},
 	ref,
 ) => {
 	const id = useId();
 
 	return (
-		<InputContainer className={className} htmlFor={id}>
+		<InputContainer
+			className={clsx(className, error && 'hasError', disabled && 'isDisabled')}
+			htmlFor={id}
+		>
 			{!!label && <AppLabel htmlFor={id}>{label}</AppLabel>}
-			<AppInput inputRef={ref} id={id} fullWidth value={value} {...props} />
+			<AppInput
+				inputRef={ref}
+				id={id}
+				multiline={multiline}
+				disabled={disabled}
+				fullWidth
+				value={value}
+				{...props}
+			/>
 			{helperText && <HelperText>{helperText}</HelperText>}
-			{error && <ErrorText>{errorText}</ErrorText>}
+			{error && <ErrorText className="errorText">{errorText}</ErrorText>}
 		</InputContainer>
 	);
 };

@@ -95,20 +95,6 @@ export const Comments: React.FC<CommentsProps> = ({ video }) => {
 				</BtnContainer>
 			)}
 
-			{/*{!!models.comments?.data.length &&*/}
-			{/*	models.comments.data.map((comment: IComment) => (*/}
-			{/*		<EditComment*/}
-			{/*			key={comment.id}*/}
-			{/*			subComments={comment.subComments}*/}
-			{/*			id={comment.id}*/}
-			{/*			body={comment.body}*/}
-			{/*			user={comment.user}*/}
-			{/*			creationDate={formatDistanceToNow(new Date(comment.createdAt))}*/}
-			{/*			onAddReply={commands.handleCreateComment}*/}
-			{/*			onEditComment={commands.handleEditComment}*/}
-			{/*			onDeleteComment={commands.handleStartDeleteComment}*/}
-			{/*		/>*/}
-			{/*	))}*/}
 			<DeleteCommentModal
 				onCommentDeleted={commands.handleCommentDeletedSuccess}
 			/>
