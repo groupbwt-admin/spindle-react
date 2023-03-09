@@ -1,8 +1,5 @@
-import { useSnapshot } from 'valtio';
-
-import { authState } from 'app/store/auth/state';
-
+import { useAuthState } from 'app/store/auth/state';
 // eslint-disable-next-line react-hooks/rules-of-hooks
-export const selectIsLoggedIn = () => useSnapshot(authState).isLoggedIn;
+export const selectIsLoggedIn = () => useAuthState((state) => !!state.user);
 // eslint-disable-next-line react-hooks/rules-of-hooks
-export const selectAuthUserData = () => useSnapshot(authState).user;
+export const selectAuthUserData = () => useAuthState((state) => state.user);

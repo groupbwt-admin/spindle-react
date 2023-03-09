@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 
 import { AuthApi, VerifyEmailDataDto } from 'app/api/auth-api/auth-api';
 
-import { authState } from 'app/store/auth/state';
+import { useAuthState } from 'app/store/auth/state';
 
 import { VIDEO_ROUTES } from 'shared/config/routes';
 
@@ -29,14 +29,14 @@ const Description = styled(Typography)`
 export const VerifyEmailPage = () => {
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
-
+	const { setUser } = useAuthState();
 	const verifyEmailMutation = useMutation<
 		{ accessToken: string },
 		AxiosError<{ message: string }>,
 		VerifyEmailDataDto
 	>(AuthApi.verifyEmail, {
 		onSuccess: async (res) => {
-			authState.setUser(res.accessToken);
+			setUser(res.accessToken);
 		},
 	});
 

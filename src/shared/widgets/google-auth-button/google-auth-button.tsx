@@ -4,7 +4,7 @@ import { useMutation } from 'react-query';
 
 import { AuthApi } from 'app/api/auth-api/auth-api';
 
-import { authState } from 'app/store/auth/state';
+import { useAuthState } from 'app/store/auth/state';
 
 import { GOOGLE_CLIENT_ID } from 'shared/config/variables';
 import { useGoogleLogin } from 'shared/hooks/use-google-login';
@@ -18,11 +18,12 @@ interface GoogleAuthButtonWidgetProps {
 export const GoogleAuthButtonWidget: React.FC<GoogleAuthButtonWidgetProps> = ({
 	label,
 }) => {
+	const { setUser } = useAuthState();
 	const refBtn = useRef<HTMLButtonElement | null>(null);
 
 	const googleAuthMutation = useMutation(AuthApi.googleAuth, {
 		onSuccess: (data) => {
-			authState.setUser(data.accessToken);
+			setUser(data.accessToken);
 		},
 	});
 
