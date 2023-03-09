@@ -31,54 +31,57 @@ interface IEmitProps {
 }
 
 export const useRecordSocketState = create<ISocket>()(
-	devtools((set, get) => ({
-		isLoading: true,
-		error: '',
-		isConnected: false,
-		recordStatus: RECORDING_STATUS.permission_requested,
-		isRecording: false,
-		emit(data) {
-			if (get().recordStatus !== RECORDING_STATUS.reset) {
-				SocketService.emit(data.type, data.payload);
-			}
-		},
-		save(type, fn) {
-			SocketService.save(type, fn);
-		},
-		connect() {
-			if (!SocketService.socket.connected) {
-				SocketService.socket.connect();
-			}
-		},
-		close() {
-			SocketService.socket.close();
-			set({ isConnected: false });
-		},
-		onConnectListener() {
-			SocketService.on(SOCKET_ACTIONS.connect, () => {
-				set({ isConnected: true });
-			});
-		},
-		onDisconnectedListener(stopRecording) {
-			SocketService.on(SOCKET_ACTIONS.disconnect, () => {
+	devtools(
+		(set, get) => ({
+			isLoading: true,
+			error: '',
+			isConnected: false,
+			recordStatus: RECORDING_STATUS.permission_requested,
+			isRecording: false,
+			emit(data) {
+				if (get().recordStatus !== RECORDING_STATUS.reset) {
+					SocketService.emit(data.type, data.payload);
+				}
+			},
+			save(type, fn) {
+				SocketService.save(type, fn);
+			},
+			connect() {
+				if (!SocketService.socket.connected) {
+					SocketService.socket.connect();
+				}
+			},
+			close() {
+				SocketService.socket.close();
 				set({ isConnected: false });
-				stopRecording();
-				SocketService.socket?.close();
-			});
-		},
-		unfollowListener(type) {
-			SocketService.off(type);
+			},
+			onConnectListener() {
+				SocketService.on(SOCKET_ACTIONS.connect, () => {
+					set({ isConnected: true });
+				});
+			},
+			onDisconnectedListener(stopRecording) {
+				SocketService.on(SOCKET_ACTIONS.disconnect, () => {
+					set({ isConnected: false });
+					stopRecording();
+					SocketService.socket?.close();
+				});
+			},
+			unfollowListener(type) {
+				SocketService.off(type);
 
-			get().isConnected && set({ isConnected: false });
-		},
-		setStatus(status) {
-			set({ recordStatus: status });
-		},
-		setIsRecording(isShow) {
-			set({ isRecording: isShow });
-		},
-		setIsConnected(isConnected) {
-			set({ isConnected: isConnected });
-		},
-	})),
+				get().isConnected && set({ isConnected: false });
+			},
+			setStatus(status) {
+				set({ recordStatus: status });
+			},
+			setIsRecording(isShow) {
+				set({ isRecording: isShow });
+			},
+			setIsConnected(isConnected) {
+				set({ isConnected: isConnected });
+			},
+		}),
+		{ name: 'useRecordSocketState', store: 'useRecordSocketState' },
+	),
 );

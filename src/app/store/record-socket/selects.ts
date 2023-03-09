@@ -1,11 +1,11 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+import { shallow } from 'zustand/shallow';
+
 import { useRecordSocketState } from 'app/store/record-socket/state';
 
 export const selectStatus = () =>
-	// eslint-disable-next-line react-hooks/rules-of-hooks
-	useRecordSocketState((state) => state.recordStatus);
+	useRecordSocketState((state) => state.recordStatus, shallow);
 export const selectIsConnected = () =>
-	// eslint-disable-next-line react-hooks/rules-of-hooks
-	useRecordSocketState((state) => state.isConnected);
+	useRecordSocketState((state) => state.isConnected, shallow);
 export const selectIsRecording = () =>
-	// eslint-disable-next-line react-hooks/rules-of-hooks
-	useRecordSocketState((state) => state.isRecording);
+	useRecordSocketState((state) => state.isRecording, shallow);

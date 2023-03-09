@@ -13,21 +13,24 @@ interface IUserState {
 }
 
 export const useUserState = create<IUserState>()(
-	devtools((set) => ({
-		userData: null,
-		isLoading: false,
-		getProfile: async function () {
-			try {
-				set({ isLoading: true });
-				const tempUserData = await UserApi.getProfile();
-				set({ userData: tempUserData });
-				set({ isLoading: false });
-			} catch (e) {
-				set({ isLoading: false });
-			}
-		},
-		setProfile(user: IUser | null) {
-			set({ userData: user });
-		},
-	})),
+	devtools(
+		(set) => ({
+			userData: null,
+			isLoading: false,
+			getProfile: async function () {
+				try {
+					set({ isLoading: true });
+					const tempUserData = await UserApi.getProfile();
+					set({ userData: tempUserData });
+					set({ isLoading: false });
+				} catch (e) {
+					set({ isLoading: false });
+				}
+			},
+			setProfile(user: IUser | null) {
+				set({ userData: user });
+			},
+		}),
+		{ name: 'useUserState', store: 'useUserState' },
+	),
 );

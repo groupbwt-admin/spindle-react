@@ -12,17 +12,20 @@ interface IAuthState {
 }
 
 export const useAuthState = create<IAuthState>()(
-	devtools((set) => ({
-		user: null,
-		setUser(token: string | null) {
-			if (!token) {
-				LocalStorageService.remove('token');
-				set({ user: null });
-				return;
-			}
-			const userData: IToken = jwtDecode(token);
-			LocalStorageService.set('token', token);
-			set({ user: userData });
-		},
-	})),
+	devtools(
+		(set) => ({
+			user: null,
+			setUser(token: string | null) {
+				if (!token) {
+					LocalStorageService.remove('token');
+					set({ user: null });
+					return;
+				}
+				const userData: IToken = jwtDecode(token);
+				LocalStorageService.set('token', token);
+				set({ user: userData });
+			},
+		}),
+		{ name: 'useAuthState', store: 'useAuthState' },
+	),
 );
