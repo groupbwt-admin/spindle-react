@@ -20,4 +20,4 @@ export const selectUserData = () =>
 		shallow,
 	);
 export const selectIsLoadingUserData = () =>
-	useUserState((state) => state.isLoading, shallow);
+	useUserState((state) => state.isLoading);

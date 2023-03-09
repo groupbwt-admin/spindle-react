@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { shallow } from 'zustand/shallow';
-
 import { useRecordSocketState } from 'app/store/record-socket/state';
 
 export const selectStatus = () =>
-	useRecordSocketState((state) => state.recordStatus, shallow);
+	useRecordSocketState((state) => state.recordStatus);
 export const selectIsConnected = () =>
-	useRecordSocketState((state) => state.isConnected, shallow);
+	useRecordSocketState((state) => state.isConnected);
 export const selectIsRecording = () =>
-	useRecordSocketState((state) => state.isRecording, shallow);
+	useRecordSocketState((state) => state.isRecording);
