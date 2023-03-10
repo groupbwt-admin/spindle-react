@@ -7,7 +7,7 @@ import { useDragWrapperContext } from '../context/drag-wrapper-context';
 
 const ControllerButton = styled.button`
 	background: transparent;
-	padding: 0px 14px;
+	padding: 0 14px;
 	border: 1px solid transparent;
 	cursor: pointer;
 	transition: all 0.1s ease-out;

@@ -13,6 +13,7 @@ export const useCameraControl = () => {
 				audio: false,
 				video: { facingMode: 'environment' },
 			});
+
 			setMediaStream(stream);
 		} catch (err) {
 			console.log(err);

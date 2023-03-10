@@ -1,5 +1,6 @@
 import styled from '@emotion/styled/macro';
 import { useProfile } from 'modules/user/pages/my-profile/use-profile';
+import { DeleteVideo } from 'shared/features/delete-video';
 
 import { Avatar } from 'shared/components/avatar/avatar';
 import { Button } from 'shared/components/button/button';
@@ -138,7 +139,7 @@ export const MyProfilePage = () => {
 					onCopyLinks={commands.handleCopySelectedLinks}
 				/>
 			)}
-			{models.deleteVideoModal}
+			<DeleteVideo onVideosDeleted={commands.handleDeleteVideoSuccess} />
 			{models.accessSettingsModal}
 		</ProfileContainer>
 	);
