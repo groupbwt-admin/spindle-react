@@ -58,12 +58,13 @@ const MenuUserVideosInfo = styled(Typography)`
 
 type UserInfoHoverMenuProps = {
 	user: IUser;
+	disabled?: boolean;
 	isCurrentUser?: boolean;
 };
 
 export const UserInfoHoverMenu: React.FC<
 	PropsWithChildren<UserInfoHoverMenuProps>
-> = ({ user, isCurrentUser, children }) => {
+> = ({ user, disabled, isCurrentUser, children }) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 	const handleMouseEnter = (
@@ -71,6 +72,7 @@ export const UserInfoHoverMenu: React.FC<
 			| React.MouseEvent<HTMLDivElement>
 			| React.MouseEvent<HTMLUListElement>,
 	) => {
+		if (disabled) return;
 		setAnchorEl(event.currentTarget);
 	};
 

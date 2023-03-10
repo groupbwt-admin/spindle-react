@@ -31,6 +31,7 @@ import { ReactComponent as Reset } from 'shared/components/icon/collection/reset
 import { ReactComponent as Resume } from 'shared/components/icon/collection/resume.svg';
 import { ReactComponent as Search } from 'shared/components/icon/collection/search.svg';
 import { ReactComponent as Settings } from 'shared/components/icon/collection/settings.svg';
+import { ReactComponent as SignIn } from 'shared/components/icon/collection/sign-in.svg';
 import { ReactComponent as SortArrowDown } from 'shared/components/icon/collection/sort-down-arrow.svg';
 import { ReactComponent as SortArrowUp } from 'shared/components/icon/collection/sort-up-arrow.svg';
 import { ReactComponent as Stop } from 'shared/components/icon/collection/stop.svg';
@@ -76,6 +77,7 @@ export const ICON_COLLECTION = {
 	open_new: OpenNew,
 	open_menu: OpenMenu,
 	hide_menu: HideMenu,
+	sign_in: SignIn,
 };
 
 type Keys = keyof typeof ICON_COLLECTION;

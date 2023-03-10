@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled/macro';
+import clsx from 'clsx';
 import { useRecordContext } from 'modules/videos/hooks/use-record-context';
 import { ReactComponent as Logo } from 'shared/assets/images/logo-reverse.svg';
 import { UserMenu } from 'shared/layout/components/user-menu';
 
 import { css } from '@mui/material/styles';
+
+import { selectUserData } from 'app/store/user/selects';
+
+import { AUTH_ROUTES } from 'shared/config/routes';
 
 import { IconButton } from 'shared/components/button/icon-button';
 import { ReactComponent as IconProfile } from 'shared/components/icon/collection/profile.svg';
@@ -52,9 +57,16 @@ const LogoWrapper = styled('div')<{ isDisabled: boolean }>`
 	cursor: ${(props) => (props.isDisabled ? 'not-allowed' : 'pointer')};
 	position: relative;
 
+
 	&:hover {
 		${StyledToggleMenuBtn} {
 			opacity: 1;
+		}
+	}
+
+	&.isUnauth {
+		${StyledToggleMenuBtn} {
+			opacity: 0;
 		}
 	}
 }
@@ -162,15 +174,24 @@ const StyledNavLink = styled(NavLink)(
 export const AppMenu = () => {
 	const [open, setOpen] = useState(false);
 	const { isRecording } = useRecordContext();
+	const nav = useNavigate();
+
 	const toggleDrawer = () => {
+		if (!user) {
+			nav(AUTH_ROUTES.LOGIN.path);
+			return;
+		}
 		setOpen((prev) => !prev);
 	};
+
+	const user = selectUserData();
 
 	return (
 		<MenuContainer open={open}>
 			<LogoWrapper
 				onClick={isRecording ? undefined : toggleDrawer}
 				isDisabled={isRecording}
+				className={clsx(!user && 'isUnauth')}
 			>
 				<StyledLogo />
 				<StyledToggleMenuBtn>
@@ -179,29 +200,31 @@ export const AppMenu = () => {
 					/>
 				</StyledToggleMenuBtn>
 			</LogoWrapper>
-			<NavContainer>
-				<ul>
-					<li>
-						<StyledNavLink to="search">
-							<StyledNavIcon icon={IconSearch} />
-							<StyledLinkTitle variant="h3">Search</StyledLinkTitle>
-						</StyledNavLink>
-					</li>
-					<li>
-						<StyledNavLink to="/">
-							<StyledNavIcon icon={IconVideos} />
-							<StyledLinkTitle variant="h3">My Videos</StyledLinkTitle>
-						</StyledNavLink>
-					</li>
-					<li>
-						<StyledNavLink to="profile">
-							<StyledNavIcon icon={IconProfile} />
-							<StyledLinkTitle variant="h3">My Profile</StyledLinkTitle>
-						</StyledNavLink>
-					</li>
-				</ul>
-			</NavContainer>
-			<UserMenu expanded={open} />
+			{!!user && (
+				<NavContainer>
+					<ul>
+						<li>
+							<StyledNavLink to="search">
+								<StyledNavIcon icon={IconSearch} />
+								<StyledLinkTitle variant="h3">Search</StyledLinkTitle>
+							</StyledNavLink>
+						</li>
+						<li>
+							<StyledNavLink to="/">
+								<StyledNavIcon icon={IconVideos} />
+								<StyledLinkTitle variant="h3">My Videos</StyledLinkTitle>
+							</StyledNavLink>
+						</li>
+						<li>
+							<StyledNavLink to="profile">
+								<StyledNavIcon icon={IconProfile} />
+								<StyledLinkTitle variant="h3">My Profile</StyledLinkTitle>
+							</StyledNavLink>
+						</li>
+					</ul>
+				</NavContainer>
+			)}
+			{!!user && <UserMenu expanded={open} />}
 		</MenuContainer>
 	);
 };

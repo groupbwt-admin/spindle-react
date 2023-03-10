@@ -25,6 +25,7 @@ const PAGE_TITLES = {
 		title: [USER_ROUTES.MY_PROFILE.title],
 	},
 };
+
 export const useRecording = () => {
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true);
 	const [counterBeforeStart, setCounterBeforeStart] = useState<number>(3);
@@ -87,6 +88,7 @@ export const useRecording = () => {
 				() => setCounterBeforeStart((prevState) => prevState - 1),
 				INTERVAL_COUNT_START,
 			);
+
 			setTimeout(() => {
 				clearInterval(myInterval);
 				resolve();
@@ -104,6 +106,7 @@ export const useRecording = () => {
 					sampleRate: 44100,
 				},
 			});
+
 			const tracks = [...displayMedia.getTracks(), ...userMedia.getTracks()];
 			if (tracks.length) {
 				setStatus(RECORDING_STATUS.idle);
@@ -201,6 +204,7 @@ export const useRecording = () => {
 			console.error('Stop Media Recording error' + e);
 		}
 	};
+
 	const onVideoSaved = useEvent(async () => {
 		try {
 			onStopMediaRecording();
@@ -221,6 +225,7 @@ export const useRecording = () => {
 		setStatus(RECORDING_STATUS.reset);
 		setIsRecording(false);
 	};
+
 	const pauseRecording = useEvent(() => {
 		setStatus(RECORDING_STATUS.paused);
 		mediaRecorder.current?.pause();

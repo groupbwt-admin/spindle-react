@@ -3,6 +3,8 @@ import { Helmet } from 'react-helmet-async';
 import styled from '@emotion/styled/macro';
 import { format } from 'date-fns';
 import { StartRecordButton } from 'modules/videos/components/start-record-button';
+import { UnauthorisedCommentView } from 'modules/videos/features/comments/video-comments/components/unauthorised-comment-view';
+import { VideoComments } from 'modules/videos/features/comments/video-comments/video-comments';
 import { useVideo } from 'modules/videos/pages/video/use-video';
 import { DeleteVideo } from 'shared/features/delete-video';
 import { BoundaryError } from 'shared/models/custom-errors';
@@ -207,6 +209,7 @@ export const VideoPage: React.FC = () => {
 					<DetailedInfoContainer>
 						<UserInfoHoverMenu
 							user={models.video.user}
+							disabled={!models.user}
 							isCurrentUser={models.isEditable}
 						>
 							<StyledAvatar
@@ -233,6 +236,10 @@ export const VideoPage: React.FC = () => {
 								commands.handleUpdateVideo({ tags: value })
 							}
 						/>
+						{models.user && models.video.isComments && (
+							<VideoComments video={models.video} />
+						)}
+						{!models.user && <UnauthorisedCommentView />}
 					</DetailedInfoContainer>
 				</>
 			)}
