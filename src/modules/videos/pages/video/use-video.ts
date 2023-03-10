@@ -12,7 +12,6 @@ import { selectUserData } from 'app/store/user/selects';
 import { USER_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import { VIDEO_MODALS_NAMES } from 'shared/constants/modal-names';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
-import { useChangeAccessSettings } from 'shared/hooks/use-change-access-settings';
 import { useCopyLink } from 'shared/hooks/use-copy-link';
 
 export function useVideo() {

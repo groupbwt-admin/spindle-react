@@ -2,7 +2,7 @@ import styled from '@emotion/styled/macro';
 
 import { FormControl, MenuItem, Select as ExternalSelect } from '@mui/material';
 
-import { VideoPermissionsEnum } from 'shared/hooks/use-change-access-settings';
+import { VideoPermissionsEnum } from 'shared/constants/modal-names';
 
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';

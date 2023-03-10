@@ -4,17 +4,14 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { VideoApi } from '../../app/api/video-api/video-api';
 import { Modal } from '../components/modal';
 import { AccessSettingsModal } from '../components/video/modals/access-settings-modal';
-import { VIDEO_MODALS_NAMES } from '../constants/modal-names';
+import {
+	VIDEO_MODALS_NAMES,
+	VideoPermissionsEnum,
+} from '../constants/modal-names';
 import { VIDEO_QUERY_KEYS } from '../constants/query-keys';
 import { useStateModalManager } from '../context/modal-manager';
 import { useCopyLink } from '../hooks/use-copy-link';
 import { IVideo } from '../types/video';
-
-export enum VideoPermissionsEnum {
-	ONLY_ME = 'ONLY ME',
-	AUTHENTICATE_USER = 'AUTHENTICATE USER',
-	ANYONE_WITH_LINK = 'ANYONE WITH LINK',
-}
 
 const VIDEO_PERMISSIONS_OPTIONS = [
 	{ title: 'Only you can view', value: VideoPermissionsEnum.ONLY_ME },

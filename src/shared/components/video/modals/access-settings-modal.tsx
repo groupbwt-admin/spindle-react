@@ -3,7 +3,7 @@ import styled from '@emotion/styled/macro';
 
 import { IVideo } from 'shared/types/video';
 
-import { VideoPermissionsEnum } from 'shared/hooks/use-change-access-settings';
+import { VideoPermissionsEnum } from 'shared/constants/modal-names';
 
 import { Button } from 'shared/components/button/button';
 import { Icon } from 'shared/components/icon/icon';

@@ -16,6 +16,8 @@ import { VideoList } from 'shared/components/table/video-list';
 import { Typography } from 'shared/components/typography/typography';
 import { VideoListSkeleton } from 'shared/components/video-list-skeleton/video-list-skeleton';
 
+import { AccessSettingVideo } from '../../../../shared/features/access-setting-video';
+
 const ProfileContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -140,7 +142,7 @@ export const MyProfilePage = () => {
 				/>
 			)}
 			<DeleteVideo onVideosDeleted={commands.handleDeleteVideoSuccess} />
-			{models.accessSettingsModal}
+			<AccessSettingVideo />
 		</ProfileContainer>
 	);
 };

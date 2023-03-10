@@ -20,7 +20,6 @@ import { VIDEO_ROUTES } from 'shared/config/routes';
 import { VIDEO_MODALS_NAMES } from 'shared/constants/modal-names';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { RequestSortType } from 'shared/constants/request-sort-type';
-import { useChangeAccessSettings } from 'shared/hooks/use-change-access-settings';
 import { useEffectAfterMount } from 'shared/hooks/use-effect-after-mount';
 import { useFilterRequest } from 'shared/hooks/use-filter-request';
 
@@ -47,9 +46,6 @@ export interface IFilterOptions {
 
 export function useProfile() {
 	const { modal, handleOpen } = useEditProfileUser();
-
-	const { modal: accessSettingsModal, startChangeSettings } =
-		useChangeAccessSettings();
 
 	const location = useLocation();
 
@@ -292,7 +288,7 @@ export function useProfile() {
 	};
 
 	const handleChangeVideoSettings = (video: IVideo) => {
-		startChangeSettings(video.id);
+		modalManager.open(VIDEO_MODALS_NAMES.access_setting_video, video.id);
 	};
 
 	const handleDeleteSelectedVideos = () => {
@@ -315,7 +311,6 @@ export function useProfile() {
 	return {
 		models: {
 			modal,
-			accessSettingsModal,
 			user,
 			videos: videosData?.data ?? [],
 			meta: videosData?.meta,
