@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { selectAuthUserData } from 'app/store/auth/selects';
 import { selectStatus } from 'app/store/record-socket/selects';
-import { socketState } from 'app/store/record-socket/state';
+import { useRecordSocketState } from 'app/store/record-socket/state';
 
 import { USER_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import {
@@ -25,6 +25,7 @@ const PAGE_TITLES = {
 		title: [USER_ROUTES.MY_PROFILE.title],
 	},
 };
+
 export const useRecording = () => {
 	const [isMicrophoneOn, setIsMicrophoneOn] = useState(true);
 	const [counterBeforeStart, setCounterBeforeStart] = useState<number>(3);
@@ -34,18 +35,31 @@ export const useRecording = () => {
 	const navigate = useNavigate();
 	const user = selectAuthUserData();
 	const location = useLocation();
+
+	const {
+		onConnectListener,
+		onDisconnectedListener,
+		setIsConnected,
+		connect,
+		setIsRecording,
+		unfollowListener,
+		setStatus,
+		emit,
+		save,
+	} = useRecordSocketState();
+
 	useEffect(() => {
 		if (!user) return;
-		socketState.onConnectListener();
-		socketState.onDisconnectedListener(() => {
+		onConnectListener();
+		onDisconnectedListener(() => {
 			if (mediaRecorder.current) {
 				onStopMediaRecording();
 			}
 		});
-		socketState.connect();
+		connect();
 		return () => {
-			socketState.unfollowListener(SOCKET_ACTIONS.disconnect);
-			socketState.unfollowListener(SOCKET_ACTIONS.connect);
+			unfollowListener(SOCKET_ACTIONS.disconnect);
+			unfollowListener(SOCKET_ACTIONS.connect);
 			if (SocketService.socket) {
 				SocketService.socket.close();
 			}
@@ -61,10 +75,10 @@ export const useRecording = () => {
 
 	useEffect(() => {
 		window.addEventListener('offline', () => {
-			socketState.setIsConnected(false);
+			setIsConnected(false);
 		});
 		window.addEventListener('online', () => {
-			socketState.setIsConnected(true);
+			setIsConnected(true);
 		});
 	}, []);
 
@@ -74,6 +88,7 @@ export const useRecording = () => {
 				() => setCounterBeforeStart((prevState) => prevState - 1),
 				INTERVAL_COUNT_START,
 			);
+
 			setTimeout(() => {
 				clearInterval(myInterval);
 				resolve();
@@ -91,9 +106,10 @@ export const useRecording = () => {
 					sampleRate: 44100,
 				},
 			});
+
 			const tracks = [...displayMedia.getTracks(), ...userMedia.getTracks()];
 			if (tracks.length) {
-				socketState.setStatus(RECORDING_STATUS.idle);
+				setStatus(RECORDING_STATUS.idle);
 			}
 
 			const stream: MediaStream = new MediaStream(tracks);
@@ -109,11 +125,11 @@ export const useRecording = () => {
 			const mediaRecorderLocal = new MediaRecorder(stream);
 
 			mediaRecorderLocal.onstart = () => {
-				socketState.emit({ type: SOCKET_ACTIONS.generate_video_path });
+				emit({ type: SOCKET_ACTIONS.generate_video_path });
 			};
 
 			mediaRecorderLocal.ondataavailable = (event) => {
-				socketState.emit({
+				emit({
 					type: SOCKET_ACTIONS.start,
 					payload: { chunk: event.data },
 				});
@@ -123,8 +139,8 @@ export const useRecording = () => {
 				if (!isCancel.current) {
 					mediaRecorderLocal.start(RECORDING_INTERVAL);
 					mediaRecorder.current = mediaRecorderLocal;
-					socketState.setStatus(RECORDING_STATUS.recording);
-					socketState.setIsRecording(true);
+					setStatus(RECORDING_STATUS.recording);
+					setIsRecording(true);
 					return mediaRecorderLocal;
 				} else {
 					mediaRecorderLocal.stream.getTracks().forEach((track) => {
@@ -134,7 +150,7 @@ export const useRecording = () => {
 			});
 		} catch (e) {
 			console.log(e);
-			socketState.setStatus(RECORDING_STATUS.error);
+			setStatus(RECORDING_STATUS.error);
 		}
 	};
 
@@ -145,7 +161,7 @@ export const useRecording = () => {
 			await requestMediaStream();
 		} catch (e) {
 			console.log('Socket Connect:' + e);
-			socketState.setStatus(RECORDING_STATUS.error);
+			setStatus(RECORDING_STATUS.error);
 		}
 	}, [status]);
 
@@ -161,7 +177,7 @@ export const useRecording = () => {
 
 	function onCancelPreview() {
 		isCancel.current = true;
-		socketState.setStatus(RECORDING_STATUS.permission_requested);
+		setStatus(RECORDING_STATUS.permission_requested);
 	}
 
 	const onNavigateToVideoPage = (video: { id: string }) => {
@@ -182,19 +198,20 @@ export const useRecording = () => {
 				track.stop();
 			});
 			mediaRecorder.current = null;
-			socketState.setStatus(RECORDING_STATUS.stopped);
-			socketState.setIsRecording(false);
+			setStatus(RECORDING_STATUS.stopped);
+			setIsRecording(false);
 		} catch (e) {
 			console.error('Stop Media Recording error' + e);
 		}
 	};
+
 	const onVideoSaved = useEvent(async () => {
 		try {
 			onStopMediaRecording();
-			socketState.save(SOCKET_ACTIONS.save, onNavigateToVideoPage);
+			save(SOCKET_ACTIONS.save, onNavigateToVideoPage);
 		} catch (e) {
 			console.log('Stop Recording: ' + e);
-			socketState.setStatus(RECORDING_STATUS.error);
+			setStatus(RECORDING_STATUS.error);
 		}
 	});
 
@@ -203,18 +220,19 @@ export const useRecording = () => {
 		mediaRecorder.current?.stream.getTracks().forEach((track) => {
 			track.stop();
 		});
-		socketState.emit({ type: SOCKET_ACTIONS.reset });
+		emit({ type: SOCKET_ACTIONS.reset });
 
-		socketState.setStatus(RECORDING_STATUS.reset);
-		socketState.setIsRecording(false);
+		setStatus(RECORDING_STATUS.reset);
+		setIsRecording(false);
 	};
+
 	const pauseRecording = useEvent(() => {
-		socketState.setStatus(RECORDING_STATUS.paused);
+		setStatus(RECORDING_STATUS.paused);
 		mediaRecorder.current?.pause();
 	});
 
 	const resumeRecording = useEvent(() => {
-		socketState.setStatus(RECORDING_STATUS.recording);
+		setStatus(RECORDING_STATUS.recording);
 		mediaRecorder.current?.resume();
 	});
 

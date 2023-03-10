@@ -1,15 +1,12 @@
-import { useQueryClient } from 'react-query';
-
-import { authState } from 'app/store/auth/state';
-import { userState } from 'app/store/user/state';
+import { useAuthState } from 'app/store/auth/state';
+import { useUserState } from 'app/store/user/state';
 
 export function useLogout() {
-	const queryClient = useQueryClient();
-
+	const { setProfile } = useUserState();
+	const { setUser } = useAuthState();
 	const logout = () => {
-		authState.setUser(null);
-		userState.setProfile(null);
-		queryClient.clear();
+		setUser(null);
+		setProfile(null);
 	};
 
 	return {

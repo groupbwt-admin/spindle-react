@@ -9,7 +9,7 @@ import { styled } from '@mui/material/styles';
 
 import { AuthApi, ResetPasswordDto } from 'app/api/auth-api/auth-api';
 
-import { authState } from 'app/store/auth/state';
+import { useAuthState } from 'app/store/auth/state';
 
 import { AUTH_ROUTES } from 'shared/config/routes';
 
@@ -42,14 +42,14 @@ const Footer = styled(Typography)`
 export const NewPasswordPage = () => {
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
-
+	const { setUser } = useAuthState();
 	const resetPasswordMutation = useMutation<
 		{ accessToken: string },
 		AxiosError<{ message: string }>,
 		ResetPasswordDto
 	>(AuthApi.resetPassword, {
 		onSuccess: (res) => {
-			authState.setUser(res.accessToken);
+			setUser(res.accessToken);
 		},
 	});
 

@@ -10,7 +10,7 @@ import { styled } from '@mui/material/styles';
 
 import { AuthApi, RegisterDataDto } from 'app/api/auth-api/auth-api';
 
-import { authState } from 'app/store/auth/state';
+import { useAuthState } from 'app/store/auth/state';
 
 import { AUTH_ROUTES } from 'shared/config/routes';
 
@@ -36,13 +36,14 @@ const LoginFootnote = styled(Typography)`
 `;
 
 export const RegisterPage = () => {
+	const { setUser } = useAuthState();
 	const registerMutation = useMutation<
 		{ accessToken: string },
 		AxiosError<{ message: string }>,
 		RegisterDataDto
 	>(AuthApi.register, {
 		onSuccess: (data) => {
-			authState.setUser(data.accessToken);
+			setUser(data.accessToken);
 		},
 	});
 
