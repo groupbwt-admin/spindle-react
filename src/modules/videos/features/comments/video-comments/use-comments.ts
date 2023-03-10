@@ -98,7 +98,7 @@ export function useComments(video) {
 			comments,
 			isChangesSaving: createCommentMutation.isLoading || isChangesSaving,
 			isInitialLoading,
-			currentUserAvatar: user?.avatar || '',
+			currentUser: user,
 		},
 		commands: {
 			loadNextPage,

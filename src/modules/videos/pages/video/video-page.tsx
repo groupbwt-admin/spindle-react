@@ -3,7 +3,8 @@ import { Helmet } from 'react-helmet-async';
 import styled from '@emotion/styled/macro';
 import { format } from 'date-fns';
 import { StartRecordButton } from 'modules/videos/components/start-record-button';
-import { UnauthorisedCommentView } from 'modules/videos/features/comments/components/unauthorised-comment-view';
+import { UnauthorisedCommentView } from 'modules/videos/features/comments/video-comments/components/unauthorised-comment-view';
+import { VideoComments } from 'modules/videos/features/comments/video-comments/video-comments';
 import { useVideo } from 'modules/videos/pages/video/use-video';
 import { DeleteVideo } from 'shared/features/delete-video';
 import { BoundaryError } from 'shared/models/custom-errors';
@@ -21,8 +22,6 @@ import { Typography } from 'shared/components/typography/typography';
 import { UserInfoHoverMenu } from 'shared/components/user-info-hover-menu/user-info-hover-menu';
 import { ActionMenu } from 'shared/components/video-card/action-menu';
 import { VideoPageSkeleton } from 'shared/components/video-page-skeleton/video-page-skeleton';
-
-import { Comments } from '../../features/comments/components/comments';
 
 const VideoPageContainer = styled.div`
 	display: flex;
@@ -236,7 +235,7 @@ export const VideoPage: React.FC = () => {
 							}
 						/>
 						{models.user && models.video.isComments && (
-							<Comments video={models.video} />
+							<VideoComments video={models.video} />
 						)}
 						{!models.user && <UnauthorisedCommentView />}
 					</DetailedInfoContainer>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
-import { DeleteCommentModalContent } from 'modules/videos/features/comments/components/delete-comment-modal-content';
+import { DeleteCommentModalContent } from 'modules/videos/features/comments/delete-my-comment/delete-comment-modal-content';
 import { useStateModalManager } from 'shared/context/modal-manager';
 
 import { IComment } from 'shared/types/video';

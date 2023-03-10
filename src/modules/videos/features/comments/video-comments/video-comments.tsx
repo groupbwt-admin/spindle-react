@@ -2,10 +2,10 @@ import React, { ReactNode } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styled from '@emotion/styled/macro';
 import { formatDistanceToNow } from 'date-fns';
-import { BaseCommentInput } from 'modules/videos/features/comments/components/base-comment-input';
-import { CommentItem } from 'modules/videos/features/comments/components/comment-item';
-import { DeleteCommentModal } from 'modules/videos/features/comments/delete-comment-modal';
-import { useComments } from 'modules/videos/features/comments/use-comments';
+import { DeleteCommentModal } from 'modules/videos/features/comments/delete-my-comment/delete-comment-modal';
+import { BaseCommentInput } from 'modules/videos/features/comments/video-comments/components/base-comment-input';
+import { CommentItem } from 'modules/videos/features/comments/video-comments/components/comment-item';
+import { useComments } from 'modules/videos/features/comments/video-comments/use-comments';
 
 import { IComment, IVideo } from 'shared/types/video';
 
@@ -44,11 +44,11 @@ const BtnContainer = styled.div`
 	display: flex;
 `;
 
-interface CommentsProps {
+interface VideoCommentsProps {
 	video: IVideo;
 }
 
-export const Comments: React.FC<CommentsProps> = ({ video }) => {
+export const VideoComments: React.FC<VideoCommentsProps> = ({ video }) => {
 	const { models, commands } = useComments(video);
 
 	return (
@@ -59,7 +59,7 @@ export const Comments: React.FC<CommentsProps> = ({ video }) => {
 
 			<BaseCommentInput
 				onCreateComment={commands.handleCreateComment}
-				avatar={models.currentUserAvatar}
+				avatar={models.currentUser?.avatar}
 				isLoading={models.isChangesSaving}
 			/>
 			<SpinnerOverlay open={models.isInitialLoading} />
@@ -79,7 +79,7 @@ export const Comments: React.FC<CommentsProps> = ({ video }) => {
 					{models?.comments?.data.map((comment: IComment) => (
 						<CommentItem
 							key={comment.id}
-							currentUserAvatar={models.currentUserAvatar}
+							currentUser={models.currentUser}
 							subComments={comment.subComments}
 							id={comment.id}
 							body={comment.body}

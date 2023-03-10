@@ -3,10 +3,11 @@ import { useForm } from 'react-hook-form';
 import styled from '@emotion/styled/macro';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { formatDistanceToNow } from 'date-fns';
-import CommentMenu from 'modules/videos/features/comments/components/comment-menu';
-import { CommentReply } from 'modules/videos/features/comments/components/comment-reply';
+import CommentMenu from 'modules/videos/features/comments/video-comments/components/comment-menu';
+import { CommentReply } from 'modules/videos/features/comments/video-comments/components/comment-reply';
 import * as yup from 'yup';
 
+import { IUser } from 'shared/types/user';
 import { IComment } from 'shared/types/video';
 
 import {
@@ -146,7 +147,7 @@ type CommentFormData = yup.InferType<typeof schema>;
 
 interface EditCommentProps {
 	id: string;
-	currentUserAvatar: string;
+	currentUser: IUser | null;
 	body: string;
 	user: IComment['user'];
 	creationDate: string;
@@ -158,7 +159,7 @@ interface EditCommentProps {
 
 export const CommentItem: React.FC<EditCommentProps> = ({
 	id,
-	currentUserAvatar,
+	currentUser,
 	body,
 	creationDate,
 	user,
@@ -219,7 +220,7 @@ export const CommentItem: React.FC<EditCommentProps> = ({
 					<StyledTypography variant="body1">
 						{`${user.firstName} ${user.lastName}`}
 					</StyledTypography>
-					{!isOpenComment && (
+					{!isOpenComment && user.id === currentUser?.id && (
 						<CommentMenu
 							handleEdit={handleEdit}
 							onDelete={handleDeleteComment}
@@ -265,7 +266,7 @@ export const CommentItem: React.FC<EditCommentProps> = ({
 
 				{isReplyOpen && (
 					<CommentReply
-						userAvatar={currentUserAvatar}
+						userAvatar={currentUser?.avatar}
 						onAddReply={handleSaveReply}
 						handleCloseReply={handleCloseReply}
 					/>
@@ -280,7 +281,7 @@ export const CommentItem: React.FC<EditCommentProps> = ({
 							user={comment.user}
 							body={comment.body}
 							id={id}
-							currentUserAvatar={currentUserAvatar}
+							currentUser={currentUser}
 							onAddReply={onAddReply}
 							onEditComment={onEditComment}
 							onDeleteComment={onDeleteComment}

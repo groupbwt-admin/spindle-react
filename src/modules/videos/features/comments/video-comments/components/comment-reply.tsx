@@ -87,7 +87,7 @@ const schema = yup
 type CommentFormData = yup.InferType<typeof schema>;
 
 interface CommentReplyProps {
-	userAvatar: string;
+	userAvatar?: string;
 	onAddReply: (payload: Partial<CreateCommentDto>) => void;
 	handleCloseReply: () => void;
 }
