@@ -123,7 +123,12 @@ export const BaseCommentInput: React.FC<IComment> = ({
 			</InputLineWrapper>
 			{isOpenComment && (
 				<StyledButtonWrap>
-					<StyledButton label="Cancel" color="info" onClick={handleCancel} />
+					<StyledButton
+						label="Cancel"
+						color="info"
+						onClick={handleCancel}
+						disabled={isLoading}
+					/>
 					<StyledButton
 						label="Comment"
 						onClick={handleSubmit(onSubmit)}

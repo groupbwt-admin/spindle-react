@@ -4,6 +4,7 @@ import styled from '@emotion/styled/macro';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { formatDistanceToNow } from 'date-fns';
 import CommentMenu from 'modules/videos/features/comments/components/comment-menu';
+import { CommentReply } from 'modules/videos/features/comments/components/comment-reply';
 import * as yup from 'yup';
 
 import { IComment } from 'shared/types/video';
@@ -145,6 +146,7 @@ type CommentFormData = yup.InferType<typeof schema>;
 
 interface EditCommentProps {
 	id: string;
+	currentUserAvatar: string;
 	body: string;
 	user: IComment['user'];
 	creationDate: string;
@@ -154,8 +156,9 @@ interface EditCommentProps {
 	onDeleteComment: (id: IComment['id']) => void;
 }
 
-export const EditComment: React.FC<EditCommentProps> = ({
+export const CommentItem: React.FC<EditCommentProps> = ({
 	id,
+	currentUserAvatar,
 	body,
 	creationDate,
 	user,
@@ -166,10 +169,7 @@ export const EditComment: React.FC<EditCommentProps> = ({
 }) => {
 	const [isOpenComment, setIsOpenComment] = useState(false);
 	const [isReplyOpen, setIsReplyOpen] = useState(false);
-	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [isReplySaving, setIsReplySaving] = useState(false);
 	const [isEditSaving, setIsEditSaving] = useState(false);
-	const open = Boolean(anchorEl);
 
 	const {
 		register: registerEdit,
@@ -183,34 +183,8 @@ export const EditComment: React.FC<EditCommentProps> = ({
 		},
 	});
 
-	const {
-		register: registerReply,
-		handleSubmit: handleReplySubmit,
-		formState: { errors: replyErrors },
-		getValues: getReplyValues,
-		reset: resetReply,
-	} = useForm<{ body: string }>({
-		resolver: yupResolver(schema),
-		defaultValues: {
-			body: '',
-		},
-	});
-
-	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		event.preventDefault();
-		setAnchorEl(event.currentTarget);
-	};
-
-	const handleCloseCommentMenu = (
-		event: React.MouseEvent<HTMLButtonElement>,
-	) => {
-		event.stopPropagation();
-		setAnchorEl(null);
-	};
-
 	const handleEdit = () => {
 		setIsOpenComment(true);
-		setAnchorEl(null);
 	};
 
 	const handleSaveEdits = async (data: CommentFormData) => {
@@ -220,17 +194,8 @@ export const EditComment: React.FC<EditCommentProps> = ({
 		setIsEditSaving(false);
 	};
 
-	const handleSaveReply = (data: CommentFormData) => {
-		setIsReplySaving(true);
-		onAddReply({ parentCommentId: id, ...data });
-		resetReply({ body: '' });
-		setIsReplyOpen(false);
-		setIsReplySaving(false);
-	};
-
 	const handleDeleteComment = () => {
 		onDeleteComment(id);
-		setAnchorEl(null);
 	};
 
 	const handleCancelEdit = () => {
@@ -238,10 +203,13 @@ export const EditComment: React.FC<EditCommentProps> = ({
 		resetEdit({ body: body });
 	};
 
-	const handleCancelReply = () => {
-		setIsReplyOpen(false);
-		resetReply({ body: '' });
+	const handleSaveReply = async (data) => {
+		await onAddReply({ parentCommentId: id, ...data });
 	};
+
+	const handleOpenReply = () => setIsReplyOpen(true);
+
+	const handleCloseReply = () => setIsReplyOpen(false);
 
 	return (
 		<StyledParentComment>
@@ -249,14 +217,10 @@ export const EditComment: React.FC<EditCommentProps> = ({
 			<StyleTextAreaWrapper>
 				<CommentHead>
 					<StyledTypography variant="body1">
-						{user.firstName + ' ' + user.lastName}
+						{`${user.firstName} ${user.lastName}`}
 					</StyledTypography>
 					{!isOpenComment && (
 						<CommentMenu
-							open={open}
-							anchorEl={anchorEl}
-							handleClick={handleClick}
-							handleClose={handleCloseCommentMenu}
 							handleEdit={handleEdit}
 							onDelete={handleDeleteComment}
 						/>
@@ -277,6 +241,7 @@ export const EditComment: React.FC<EditCommentProps> = ({
 					<StyledButtonWrap>
 						<StyledButton
 							label="Cancel"
+							disabled={isEditSaving}
 							color="info"
 							onClick={handleCancelEdit}
 						/>
@@ -293,59 +258,34 @@ export const EditComment: React.FC<EditCommentProps> = ({
 							{creationDate} ago
 						</StyledCaption>
 						{!isReplyOpen && (
-							<ReplyButton onClick={() => setIsReplyOpen(true)}>
-								Reply
-							</ReplyButton>
+							<ReplyButton onClick={handleOpenReply}>Reply</ReplyButton>
 						)}
 					</CommentBottom>
 				)}
 
-				{isReplyOpen || getReplyValues().body.length ? (
-					<StyledParentComment>
-						<StyledAvatar src={getUserAvatarURL(user.avatar)} />
+				{isReplyOpen && (
+					<CommentReply
+						userAvatar={currentUserAvatar}
+						onAddReply={handleSaveReply}
+						handleCloseReply={handleCloseReply}
+					/>
+				)}
 
-						<StyleTextAreaWrapper>
-							<StyledInput
-								multiline
-								placeholder={'Type your comment here'}
-								autoFocus
-								error={!!replyErrors.body}
-								errorText={replyErrors.body?.message}
-								{...registerReply('body')}
-							/>
-							{isReplyOpen && (
-								<StyledButtonWrap>
-									<StyledButton
-										label="Cancel"
-										color="info"
-										onClick={handleCancelReply}
-									/>
-									<StyledButton
-										label="Save"
-										isLoading={isReplySaving}
-										onClick={handleReplySubmit(handleSaveReply)}
-									/>
-								</StyledButtonWrap>
-							)}
-						</StyleTextAreaWrapper>
-					</StyledParentComment>
-				) : null}
-
-				{subComments?.length
-					? subComments.map((comment: IComment) => (
-							<EditComment
-								key={comment.id}
-								subComments={comment.subComments}
-								creationDate={formatDistanceToNow(new Date(comment.createdAt))}
-								user={comment.user}
-								body={comment.body}
-								id={id}
-								onAddReply={onAddReply}
-								onEditComment={onEditComment}
-								onDeleteComment={onDeleteComment}
-							/>
-					  ))
-					: null}
+				{!!subComments?.length &&
+					subComments.map((comment: IComment) => (
+						<CommentItem
+							key={comment.id}
+							subComments={comment.subComments}
+							creationDate={formatDistanceToNow(new Date(comment.createdAt))}
+							user={comment.user}
+							body={comment.body}
+							id={id}
+							currentUserAvatar={currentUserAvatar}
+							onAddReply={onAddReply}
+							onEditComment={onEditComment}
+							onDeleteComment={onDeleteComment}
+						/>
+					))}
 			</StyleTextAreaWrapper>
 		</StyledParentComment>
 	);

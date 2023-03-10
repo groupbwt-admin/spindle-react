@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled/macro';
 
 import { Menu, MenuItem } from '@mui/material';
@@ -8,7 +8,7 @@ import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 
 const StyledMenuButton = styled(IconButton)`
-	padding: 0px;
+	padding: 0;
 
 	&.open {
 		opacity: 1 !important;
@@ -49,22 +49,26 @@ const StyledMenuIcon = styled(Icon)`
 `;
 
 interface ICommentMenu {
-	open: boolean;
-	anchorEl: null | HTMLElement;
-	handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-	handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	handleEdit: () => void;
 	onDelete: () => void;
 }
 
-const CommentMenu: React.FC<ICommentMenu> = ({
-	anchorEl,
-	open,
-	handleClick,
-	handleClose,
-	handleEdit,
-	onDelete,
-}) => {
+const CommentMenu: React.FC<ICommentMenu> = ({ handleEdit, onDelete }) => {
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.preventDefault();
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleCloseCommentMenu = (
+		event: React.MouseEvent<HTMLButtonElement>,
+	) => {
+		event.stopPropagation();
+		setAnchorEl(null);
+	};
+
 	return (
 		<>
 			<StyledMenuButton
@@ -80,7 +84,7 @@ const CommentMenu: React.FC<ICommentMenu> = ({
 				id="video-menu"
 				anchorEl={anchorEl}
 				open={open}
-				onClose={handleClose}
+				onClose={handleCloseCommentMenu}
 				MenuListProps={{
 					'aria-labelledby': 'basic-button',
 				}}

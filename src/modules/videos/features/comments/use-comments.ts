@@ -14,7 +14,6 @@ import { selectUserData } from 'app/store/user/selects';
 
 import { VIDEO_MODALS_NAMES } from 'shared/constants/modal-names';
 import { useFilterRequest } from 'shared/hooks/use-filter-request';
-import { getUserAvatarURL } from 'shared/utils/get-file-url';
 
 export function useComments(video) {
 	const createCommentMutation = useMutation(CommentsApi.createComment);
@@ -97,8 +96,9 @@ export function useComments(video) {
 	return {
 		models: {
 			comments,
-			isChangesSaving,
-			currentUserAvatar: user?.avatar && getUserAvatarURL(user.avatar),
+			isChangesSaving: createCommentMutation.isLoading || isChangesSaving,
+			isInitialLoading,
+			currentUserAvatar: user?.avatar || '',
 		},
 		commands: {
 			loadNextPage,
