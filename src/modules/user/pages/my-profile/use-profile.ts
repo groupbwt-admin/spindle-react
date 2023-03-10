@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { Dayjs } from 'dayjs';
-import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
 import queryString from 'query-string';
 import { useModalManager } from 'shared/context/modal-manager';
 
@@ -45,8 +44,6 @@ export interface IFilterOptions {
 }
 
 export function useProfile() {
-	const { modal, handleOpen } = useEditProfileUser();
-
 	const location = useLocation();
 
 	const modalManager = useModalManager();
@@ -294,7 +291,9 @@ export function useProfile() {
 	const handleDeleteSelectedVideos = () => {
 		modalManager.open(VIDEO_MODALS_NAMES.delete_video, selectedVideosArray);
 	};
-
+	const handleEditProfileUser = () => {
+		modalManager.open(VIDEO_MODALS_NAMES.edit_profile_user);
+	};
 	const handleCopySelectedLinks = async () => {
 		if (!navigator.clipboard || isLinksCopied) return;
 
@@ -310,7 +309,6 @@ export function useProfile() {
 
 	return {
 		models: {
-			modal,
 			user,
 			videos: videosData?.data ?? [],
 			meta: videosData?.meta,
@@ -328,7 +326,7 @@ export function useProfile() {
 			SORT_OPTIONS,
 		},
 		commands: {
-			handleOpen,
+			handleEditProfileUser,
 			loadNextPage,
 			handleSearch,
 			handleClearSearch,

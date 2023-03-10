@@ -92,7 +92,7 @@ export const MyProfilePage = () => {
 					label="Edit profile"
 					startIcon={<StyledIcon icon={ICON_COLLECTION.edit_profile} />}
 					size="small"
-					onClick={commands.handleOpen}
+					onClick={commands.handleEditProfileUser}
 				/>
 			</ProfileInfo>
 			<FiltersPanel>
@@ -131,7 +131,7 @@ export const MyProfilePage = () => {
 				{models.isInitialLoading && <VideoListSkeleton />}
 				{models.isListEmpty && <EmptyVideoList />}
 			</VideoContainer>
-			{models.modal}
+
 			{models.isSelectMode && (
 				<StyledActionPanel
 					isLinksCopied={models.isLinksCopied}
