@@ -21,6 +21,8 @@ import { UserInfoHoverMenu } from 'shared/components/user-info-hover-menu/user-i
 import { ActionMenu } from 'shared/components/video-card/action-menu';
 import { VideoPageSkeleton } from 'shared/components/video-page-skeleton/video-page-skeleton';
 
+import { AccessSettingVideo } from '../../../../shared/features/access-setting-video';
+
 const VideoPageContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -140,7 +142,7 @@ export const VideoPage: React.FC = () => {
 					data-rh="true"
 				/>
 			</Helmet>
-			<DeleteVideo onVideosDeleted={commands.handleDeleteVideoSuccess} />
+
 			{models.user && (
 				<HeaderContainer>
 					<StyledIconButton onClick={commands.handleBack}>
@@ -234,7 +236,8 @@ export const VideoPage: React.FC = () => {
 					</DetailedInfoContainer>
 				</>
 			)}
-			{models.accessSettingsModal}
+			<AccessSettingVideo />
+			<DeleteVideo onVideosDeleted={commands.handleDeleteVideoSuccess} />
 		</VideoPageContainer>
 	);
 };

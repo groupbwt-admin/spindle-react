@@ -67,11 +67,8 @@ export function useVideo() {
 		modalManager.open(VIDEO_MODALS_NAMES.delete_video, [video]);
 	};
 
-	const { modal: accessSettingsModal, startChangeSettings } =
-		useChangeAccessSettings();
-
 	const handleChangeVideoSettings = () => {
-		startChangeSettings(video?.id);
+		modalManager.open(VIDEO_MODALS_NAMES.access_setting_video, video?.id);
 	};
 
 	const handleUpdateVideo = async (payload) => {
@@ -105,7 +102,6 @@ export function useVideo() {
 			user,
 			recordContext,
 			pageTitle,
-			accessSettingsModal,
 			videoUrl,
 			video,
 			videoError,
