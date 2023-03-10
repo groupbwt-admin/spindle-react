@@ -1,21 +1,17 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { IVideo } from 'shared/types/video';
-
-import { VideoApi } from 'app/api/video-api/video-api';
-
-import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
-import { useCopyLink } from 'shared/hooks/use-copy-link';
-
-import { Modal } from 'shared/components/modal';
-import { AccessSettingsModal } from 'shared/components/video/modals/access-settings-modal';
-
-export enum VideoPermissionsEnum {
-	ONLY_ME = 'ONLY ME',
-	AUTHENTICATE_USER = 'AUTHENTICATE USER',
-	ANYONE_WITH_LINK = 'ANYONE WITH LINK',
-}
+import { VideoApi } from '../../app/api/video-api/video-api';
+import { Modal } from '../components/modal';
+import { AccessSettingsModal } from '../components/video/modals/access-settings-modal';
+import {
+	VIDEO_MODALS_NAMES,
+	VideoPermissionsEnum,
+} from '../constants/modal-names';
+import { VIDEO_QUERY_KEYS } from '../constants/query-keys';
+import { useStateModalManager } from '../context/modal-manager';
+import { useCopyLink } from '../hooks/use-copy-link';
+import { IVideo } from '../types/video';
 
 const VIDEO_PERMISSIONS_OPTIONS = [
 	{ title: 'Only you can view', value: VideoPermissionsEnum.ONLY_ME },
@@ -28,12 +24,18 @@ const VIDEO_PERMISSIONS_OPTIONS = [
 		value: VideoPermissionsEnum.ANYONE_WITH_LINK,
 	},
 ];
-
-export function useChangeAccessSettings() {
-	const [isModalOpen, setIsModalOpen] = useState(false);
+export const AccessSettingVideo = () => {
 	const [videoId, setVideoId] = useState(null);
 	const client = useQueryClient();
 
+	const modalState = useStateModalManager(
+		VIDEO_MODALS_NAMES.access_setting_video,
+		{
+			onBeforeOpen: (videoId) => {
+				setVideoId(videoId);
+			},
+		},
+	);
 	const { data: video, isLoading } = useQuery({
 		queryKey: [VIDEO_QUERY_KEYS.video, videoId],
 		queryFn: () =>
@@ -57,12 +59,7 @@ export function useChangeAccessSettings() {
 		});
 	});
 
-	const startChangeSettings = async (id) => {
-		setVideoId(id);
-		setIsModalOpen(true);
-	};
-
-	const handleClose = () => setIsModalOpen(false);
+	const handleClose = () => modalState.close();
 
 	const handleChangePermissions = async (viewAccess) => {
 		const res = await changePermissionsMutation.mutateAsync(viewAccess);
@@ -75,10 +72,9 @@ export function useChangeAccessSettings() {
 		client.setQueryData([VIDEO_QUERY_KEYS.video, videoId], res);
 		return;
 	};
-
-	const modal = (
+	return (
 		<Modal.Root
-			open={isModalOpen}
+			open={modalState.open}
 			onClose={handleClose}
 			isClosable={!changePermissionsMutation.isLoading}
 		>
@@ -97,6 +93,4 @@ export function useChangeAccessSettings() {
 			/>
 		</Modal.Root>
 	);
-
-	return { modal, startChangeSettings };
-}
+};

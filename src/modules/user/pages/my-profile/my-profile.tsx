@@ -16,6 +16,8 @@ import { VideoList } from 'shared/components/table/video-list';
 import { Typography } from 'shared/components/typography/typography';
 import { VideoListSkeleton } from 'shared/components/video-list-skeleton/video-list-skeleton';
 
+import { AccessSettingVideo } from '../../../../shared/features/access-setting-video';
+
 const ProfileContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -90,7 +92,7 @@ export const MyProfilePage = () => {
 					label="Edit profile"
 					startIcon={<StyledIcon icon={ICON_COLLECTION.edit_profile} />}
 					size="small"
-					onClick={commands.handleOpen}
+					onClick={commands.handleEditProfileUser}
 				/>
 			</ProfileInfo>
 			<FiltersPanel>
@@ -129,7 +131,7 @@ export const MyProfilePage = () => {
 				{models.isInitialLoading && <VideoListSkeleton />}
 				{models.isListEmpty && <EmptyVideoList />}
 			</VideoContainer>
-			{models.modal}
+
 			{models.isSelectMode && (
 				<StyledActionPanel
 					isLinksCopied={models.isLinksCopied}
@@ -140,7 +142,7 @@ export const MyProfilePage = () => {
 				/>
 			)}
 			<DeleteVideo onVideosDeleted={commands.handleDeleteVideoSuccess} />
-			{models.accessSettingsModal}
+			<AccessSettingVideo />
 		</ProfileContainer>
 	);
 };

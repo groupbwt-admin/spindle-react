@@ -30,7 +30,7 @@ export const useCameraControl = () => {
 		}
 	};
 
-	const videoRef = useRef<any>(null);
+	const videoRef = useRef<HTMLVideoElement>(null);
 	if (mediaStream && videoRef.current && !videoRef.current?.srcObject) {
 		videoRef.current.srcObject = mediaStream;
 	}

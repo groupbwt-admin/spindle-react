@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled/macro';
-import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
 import { useRecordContext } from 'modules/videos/hooks/use-record-context';
 
 import { Menu, MenuItem } from '@mui/material';
@@ -15,6 +14,10 @@ import { Avatar } from 'shared/components/avatar/avatar';
 import { Icon } from 'shared/components/icon/icon';
 import { ICON_COLLECTION } from 'shared/components/icon/icon-list';
 import { Typography } from 'shared/components/typography/typography';
+
+import { VIDEO_MODALS_NAMES } from '../../constants/modal-names';
+import { useModalManager } from '../../context/modal-manager';
+import { EditProfileUser } from '../../features/edit-profile-user';
 
 const UserInfo = styled.div`
 	max-width: calc(100% - 92px);
@@ -116,8 +119,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 	const useLogoutHook = useLogout();
 	const user = selectUserData();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const { modal, handleOpen } = useEditProfileUser();
 	const { isRecording } = useRecordContext();
+
+	const modalManager = useModalManager();
 	const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -127,7 +131,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 	};
 
 	const handleEditProfile = () => {
-		handleOpen();
+		// handleOpen();
+		modalManager.open(VIDEO_MODALS_NAMES.edit_profile_user);
 		setAnchorEl(null);
 	};
 
@@ -200,7 +205,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ expanded }) => {
 					Logout
 				</StyledMenuItem>
 			</StyledMenu>
-			{modal}
+			<EditProfileUser />
 		</>
 	);
 };

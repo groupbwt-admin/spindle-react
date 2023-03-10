@@ -12,7 +12,6 @@ import { selectUserData } from 'app/store/user/selects';
 import { USER_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
 import { VIDEO_MODALS_NAMES } from 'shared/constants/modal-names';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
-import { useChangeAccessSettings } from 'shared/hooks/use-change-access-settings';
 import { useCopyLink } from 'shared/hooks/use-copy-link';
 
 export function useVideo() {
@@ -67,11 +66,8 @@ export function useVideo() {
 		modalManager.open(VIDEO_MODALS_NAMES.delete_video, [video]);
 	};
 
-	const { modal: accessSettingsModal, startChangeSettings } =
-		useChangeAccessSettings();
-
 	const handleChangeVideoSettings = () => {
-		startChangeSettings(video?.id);
+		modalManager.open(VIDEO_MODALS_NAMES.access_setting_video, video?.id);
 	};
 
 	const handleUpdateVideo = async (payload) => {
@@ -105,7 +101,6 @@ export function useVideo() {
 			user,
 			recordContext,
 			pageTitle,
-			accessSettingsModal,
 			videoUrl,
 			video,
 			videoError,

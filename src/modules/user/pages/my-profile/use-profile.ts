@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { Dayjs } from 'dayjs';
-import { useEditProfileUser } from 'modules/user/hooks/use-edit-profile-user';
 import queryString from 'query-string';
 import { useModalManager } from 'shared/context/modal-manager';
 
@@ -20,7 +19,6 @@ import { VIDEO_ROUTES } from 'shared/config/routes';
 import { VIDEO_MODALS_NAMES } from 'shared/constants/modal-names';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { RequestSortType } from 'shared/constants/request-sort-type';
-import { useChangeAccessSettings } from 'shared/hooks/use-change-access-settings';
 import { useEffectAfterMount } from 'shared/hooks/use-effect-after-mount';
 import { useFilterRequest } from 'shared/hooks/use-filter-request';
 
@@ -46,11 +44,6 @@ export interface IFilterOptions {
 }
 
 export function useProfile() {
-	const { modal, handleOpen } = useEditProfileUser();
-
-	const { modal: accessSettingsModal, startChangeSettings } =
-		useChangeAccessSettings();
-
 	const location = useLocation();
 
 	const modalManager = useModalManager();
@@ -292,13 +285,15 @@ export function useProfile() {
 	};
 
 	const handleChangeVideoSettings = (video: IVideo) => {
-		startChangeSettings(video.id);
+		modalManager.open(VIDEO_MODALS_NAMES.access_setting_video, video.id);
 	};
 
 	const handleDeleteSelectedVideos = () => {
 		modalManager.open(VIDEO_MODALS_NAMES.delete_video, selectedVideosArray);
 	};
-
+	const handleEditProfileUser = () => {
+		modalManager.open(VIDEO_MODALS_NAMES.edit_profile_user);
+	};
 	const handleCopySelectedLinks = async () => {
 		if (!navigator.clipboard || isLinksCopied) return;
 
@@ -314,8 +309,6 @@ export function useProfile() {
 
 	return {
 		models: {
-			modal,
-			accessSettingsModal,
 			user,
 			videos: videosData?.data ?? [],
 			meta: videosData?.meta,
@@ -333,7 +326,7 @@ export function useProfile() {
 			SORT_OPTIONS,
 		},
 		commands: {
-			handleOpen,
+			handleEditProfileUser,
 			loadNextPage,
 			handleSearch,
 			handleClearSearch,

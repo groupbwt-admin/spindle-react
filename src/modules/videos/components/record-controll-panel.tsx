@@ -92,4 +92,5 @@ const RecordControlPanelComponent: React.FC<IRecordControlPanel> = ({
 		</>
 	);
 };
+
 export const RecordControlPanel = React.memo(RecordControlPanelComponent);

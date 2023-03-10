@@ -1,20 +1,21 @@
-import { useState } from 'react';
+import React from 'react';
 import { useMutation } from 'react-query';
-import { EditUserForm } from 'modules/user/components/edit-user-form';
 
-import { UserApi } from 'app/api/user-api/user-api';
+import { UserApi } from '../../app/api/user-api/user-api';
+import { selectUserData } from '../../app/store/user/selects';
+import { useUserState } from '../../app/store/user/state';
+import { EditUserForm } from '../../modules/user/components/edit-user-form';
+import { Button } from '../components/button/button';
+import { Modal } from '../components/modal';
+import { Typography } from '../components/typography/typography';
+import { VIDEO_MODALS_NAMES } from '../constants/modal-names';
+import { useStateModalManager } from '../context/modal-manager';
 
-import { selectUserData } from 'app/store/user/selects';
-import { useUserState } from 'app/store/user/state';
-
-import { Button } from 'shared/components/button/button';
-import { Modal } from 'shared/components/modal';
-import { Typography } from 'shared/components/typography/typography';
-
-export function useEditProfileUser() {
-	const [isModalOpen, setIsModalOpen] = useState(false);
+export const EditProfileUser = () => {
 	const user = selectUserData();
 	const { setProfile } = useUserState();
+
+	const modalState = useStateModalManager(VIDEO_MODALS_NAMES.edit_profile_user);
 
 	const setUpProfileMutation = useMutation(UserApi.updateProfile, {
 		onSuccess: async (userData) => {
@@ -26,16 +27,14 @@ export function useEditProfileUser() {
 		},
 	});
 
-	const handleClose = () => setIsModalOpen(false);
-
-	const handleOpen = () => setIsModalOpen(true);
+	const handleClose = () => modalState.close();
 
 	const handleSubmit = (data) => {
 		setUpProfileMutation.mutate(data);
 	};
 
-	const modal = (
-		<Modal.Root open={isModalOpen} onClose={handleClose}>
+	return (
+		<Modal.Root open={modalState.open} onClose={handleClose}>
 			<Modal.Header onClose={handleClose}>
 				<Typography variant="h3">Profile Settings</Typography>
 			</Modal.Header>
@@ -66,6 +65,4 @@ export function useEditProfileUser() {
 			</EditUserForm>
 		</Modal.Root>
 	);
-
-	return { modal, handleOpen };
-}
+};

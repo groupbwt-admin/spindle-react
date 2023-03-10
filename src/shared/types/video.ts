@@ -1,6 +1,6 @@
 import { IUser } from 'shared/types/user';
 
-import { VideoPermissionsEnum } from 'shared/hooks/use-change-access-settings';
+import { VideoPermissionsEnum } from 'shared/constants/modal-names';
 
 export interface IVideo {
 	id: string;
