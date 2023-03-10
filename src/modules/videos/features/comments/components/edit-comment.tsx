@@ -68,7 +68,7 @@ const StyledInput = styled(Input)`
 		color: ${({ theme }) => theme.palette.text.primary};
 		border-color: transparent;
 		background-color: transparent;
-		margin-top: 0px;
+		margin-top: 0;
 		padding: 0 30px 0 0;
 
 		.Mui-disabled {
@@ -133,9 +133,15 @@ const ReplyButton = styled.button`
 
 const schema = yup
 	.object({
-		comment: yup.string().trim().max(7680).required(),
+		body: yup
+			.string()
+			.trim()
+			.max(7680, 'Must be at most 7680 characters')
+			.required('Type your comment'),
 	})
 	.defined();
+
+type CommentFormData = yup.InferType<typeof schema>;
 
 interface EditCommentProps {
 	id: string;
@@ -161,7 +167,6 @@ export const EditComment: React.FC<EditCommentProps> = ({
 	const [isOpenComment, setIsOpenComment] = useState(false);
 	const [isReplyOpen, setIsReplyOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [comment, setComment] = useState(body);
 	const [isReplySaving, setIsReplySaving] = useState(false);
 	const [isEditSaving, setIsEditSaving] = useState(false);
 	const open = Boolean(anchorEl);
@@ -171,10 +176,10 @@ export const EditComment: React.FC<EditCommentProps> = ({
 		handleSubmit: handleEditSubmit,
 		formState: { errors: editErrors },
 		reset: resetEdit,
-	} = useForm<{ comment: string }>({
+	} = useForm<CommentFormData>({
 		resolver: yupResolver(schema),
 		defaultValues: {
-			comment: body,
+			body: body,
 		},
 	});
 
@@ -184,10 +189,10 @@ export const EditComment: React.FC<EditCommentProps> = ({
 		formState: { errors: replyErrors },
 		getValues: getReplyValues,
 		reset: resetReply,
-	} = useForm<{ comment: string }>({
+	} = useForm<{ body: string }>({
 		resolver: yupResolver(schema),
 		defaultValues: {
-			comment: '',
+			body: '',
 		},
 	});
 
@@ -208,17 +213,17 @@ export const EditComment: React.FC<EditCommentProps> = ({
 		setAnchorEl(null);
 	};
 
-	const handleSaveEdits = async () => {
+	const handleSaveEdits = async (data: CommentFormData) => {
 		setIsEditSaving(true);
-		await onEditComment({ id: id, body: comment });
+		await onEditComment({ id: id, ...data });
 		setIsOpenComment(false);
 		setIsEditSaving(false);
 	};
 
-	const handleSaveReply = (data) => {
+	const handleSaveReply = (data: CommentFormData) => {
 		setIsReplySaving(true);
-		onAddReply({ parentCommentId: id, body: data.comment });
-		resetReply({ comment: '' });
+		onAddReply({ parentCommentId: id, ...data });
+		resetReply({ body: '' });
 		setIsReplyOpen(false);
 		setIsReplySaving(false);
 	};
@@ -230,12 +235,12 @@ export const EditComment: React.FC<EditCommentProps> = ({
 
 	const handleCancelEdit = () => {
 		setIsOpenComment(false);
-		resetEdit({ comment: body });
+		resetEdit({ body: body });
 	};
 
 	const handleCancelReply = () => {
 		setIsReplyOpen(false);
-		resetReply({ comment: '' });
+		resetReply({ body: '' });
 	};
 
 	return (
@@ -263,9 +268,9 @@ export const EditComment: React.FC<EditCommentProps> = ({
 						multiline
 						placeholder={'Type your comment here'}
 						disabled={!isOpenComment}
-						error={!!editErrors.comment}
-						errorText={editErrors.comment?.message}
-						{...registerEdit('comment')}
+						error={!!editErrors.body}
+						errorText={editErrors.body?.message}
+						{...registerEdit('body')}
 					/>
 				</InputLineWrapper>
 				{isOpenComment && (
@@ -295,7 +300,7 @@ export const EditComment: React.FC<EditCommentProps> = ({
 					</CommentBottom>
 				)}
 
-				{isReplyOpen || getReplyValues().comment.length ? (
+				{isReplyOpen || getReplyValues().body.length ? (
 					<StyledParentComment>
 						<StyledAvatar src={getUserAvatarURL(user.avatar)} />
 
@@ -304,9 +309,9 @@ export const EditComment: React.FC<EditCommentProps> = ({
 								multiline
 								placeholder={'Type your comment here'}
 								autoFocus
-								error={!!replyErrors.comment}
-								errorText={replyErrors.comment?.message}
-								{...registerReply('comment')}
+								error={!!replyErrors.body}
+								errorText={replyErrors.body?.message}
+								{...registerReply('body')}
 							/>
 							{isReplyOpen && (
 								<StyledButtonWrap>
@@ -327,7 +332,7 @@ export const EditComment: React.FC<EditCommentProps> = ({
 				) : null}
 
 				{subComments?.length
-					? subComments.map((comment: any) => (
+					? subComments.map((comment: IComment) => (
 							<EditComment
 								key={comment.id}
 								subComments={comment.subComments}

@@ -1,4 +1,6 @@
-import { IComment, IVideo } from 'shared/types/video';
+import { AxiosResponse } from 'axios';
+
+import { IComment } from 'shared/types/video';
 
 import { RequestSortType } from 'shared/constants/request-sort-type';
 import { BaseHttpServices } from 'shared/services/base-http-services';
@@ -39,7 +41,12 @@ export interface CommentsListResponseDto {
 }
 
 interface CommentsApiInterface {
-	createComment: (data: CreateCommentDto) => Promise<IVideo>;
+	createComment: (data: CreateCommentDto) => Promise<IComment>;
+	getComments: (
+		params: CommentsListParamsDto,
+	) => Promise<CommentsListResponseDto>;
+	editComment: (data: EditCommentDto) => Promise<IComment>;
+	deleteComment: (data: DeleteCommentDto) => Promise<AxiosResponse>;
 }
 
 export class CommentsApiService implements CommentsApiInterface {

@@ -66,9 +66,15 @@ const StyledButton = styled(Button)`
 
 const schema = yup
 	.object({
-		comment: yup.string().trim().max(7680).required(),
+		comment: yup
+			.string()
+			.trim()
+			.max(7680, 'Must be at most 7680 characters')
+			.required('Type your comment'),
 	})
 	.defined();
+
+type CommentFormData = yup.InferType<typeof schema>;
 
 interface IComment {
 	avatar?: string;
@@ -88,11 +94,11 @@ export const BaseCommentInput: React.FC<IComment> = ({
 		handleSubmit,
 		formState: { errors },
 		reset,
-	} = useForm<{ comment: string }>({
+	} = useForm<CommentFormData>({
 		resolver: yupResolver(schema),
 	});
 
-	const onSubmit = async (data) => {
+	const onSubmit = async (data: CommentFormData) => {
 		await onCreateComment({ body: data.comment });
 		setIsOpenComment(false);
 		reset({ comment: '' });
