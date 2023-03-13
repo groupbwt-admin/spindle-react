@@ -1,8 +1,8 @@
-import React, { PropsWithChildren, useState } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled/macro';
 
-import { Menu } from '@mui/material';
+import { Tooltip } from '@mui/material';
 
 import { IUser } from 'shared/types/user';
 
@@ -24,13 +24,12 @@ const UserAvatar = styled(Avatar)`
 	margin-right: 10px;
 `;
 
-const StyledMenu = styled(Menu)`
-	.MuiMenu-paper {
-		min-width: 280px;
-		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-		border-radius: 10px;
-		padding: 12px 16px;
-	}
+const StyledMenu = styled.div`
+	background-color: ${({ theme }) => theme.palette.common.white};
+	min-width: 280px;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+	border-radius: 10px;
+	padding: 12px 16px;
 `;
 
 const UserInfo = styled.div`
@@ -48,7 +47,6 @@ const MenuUserBio = styled.div`
 	display: flex;
 	align-items: center;
 	padding-bottom: 12px;
-	border-bottom: 1px solid ${({ theme }) => theme.palette.secondary.main};
 	margin-bottom: 8px;
 `;
 
@@ -65,80 +63,41 @@ type UserInfoHoverMenuProps = {
 export const UserInfoHoverMenu: React.FC<
 	PropsWithChildren<UserInfoHoverMenuProps>
 > = ({ user, disabled, isCurrentUser, children }) => {
-	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-	const handleMouseEnter = (
-		event:
-			| React.MouseEvent<HTMLDivElement>
-			| React.MouseEvent<HTMLUListElement>,
-	) => {
-		if (disabled) return;
-		setAnchorEl(event.currentTarget);
-	};
-
-	const handleClose = () => {
-		setAnchorEl(null);
-	};
-
-	const open = Boolean(anchorEl);
-
 	return (
 		<>
-			<UserInfoContainer
-				onClick={handleMouseEnter}
-				onMouseOver={handleMouseEnter}
-				aria-controls={open ? 'basic-menu' : undefined}
-				aria-haspopup="true"
-				aria-expanded={open ? 'true' : undefined}
+			<Tooltip
+				placement="right-end"
+				disableHoverListener={disabled}
+				slots={{ tooltip: StyledMenu }}
+				title={
+					<>
+						<MenuUserBio>
+							<UserAvatar
+								src={getUserAvatarURL(user.avatar)}
+								alt={user.firstName}
+							/>
+							<UserInfo>
+								<Typography variant="h3">{`${user.firstName} ${user.lastName}`}</Typography>
+								<MenuUserVideosInfo variant="body2">
+									{user.countVideo} videos
+								</MenuUserVideosInfo>
+							</UserInfo>
+						</MenuUserBio>
+						<Button
+							label="View Profile"
+							fullWidth
+							component={Link}
+							to={
+								isCurrentUser
+									? USER_ROUTES.MY_PROFILE.path
+									: USER_ROUTES.USER.generate(user.id as string)
+							}
+						/>
+					</>
+				}
 			>
-				{children}
-			</UserInfoContainer>
-			<StyledMenu
-				id="basic-menu"
-				anchorEl={anchorEl}
-				open={open}
-				onClose={handleClose}
-				MenuListProps={{
-					'aria-labelledby': 'basic-button',
-					onMouseLeave: handleClose,
-				}}
-				anchorOrigin={{
-					vertical: 'top',
-					horizontal: 'left',
-				}}
-				transformOrigin={{
-					vertical: 'bottom',
-					horizontal: 'left',
-				}}
-				PaperProps={{
-					style: {
-						transform: 'translateX(0) translateY(-8px)',
-					},
-				}}
-			>
-				<MenuUserBio>
-					<UserAvatar
-						src={getUserAvatarURL(user.avatar)}
-						alt={user.firstName}
-					/>
-					<UserInfo>
-						<Typography variant="h3">{`${user.firstName} ${user.lastName}`}</Typography>
-						<MenuUserVideosInfo variant="body2">
-							{user.countVideo} videos
-						</MenuUserVideosInfo>
-					</UserInfo>
-				</MenuUserBio>
-				<Button
-					label="View Profile"
-					fullWidth
-					component={Link}
-					to={
-						isCurrentUser
-							? USER_ROUTES.MY_PROFILE.path
-							: USER_ROUTES.USER.generate(user.id as string)
-					}
-				/>
-			</StyledMenu>
+				<UserInfoContainer>{children}</UserInfoContainer>
+			</Tooltip>
 		</>
 	);
 };
