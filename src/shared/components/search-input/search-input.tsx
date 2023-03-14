@@ -67,7 +67,7 @@ const AppInput = styled(InputBase)`
 	&.Mui-focused,
 	&.hasValue {
 		transition: width 0.3s ease;
-		width: 100%;
+		width: 100% !important;
 	}
 
 	&.hasValue {
