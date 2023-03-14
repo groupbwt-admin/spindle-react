@@ -72,11 +72,13 @@ interface UserVideoListParamsDto extends VideoListParamsDto {
 
 export interface GetVideoUrlDto {
 	id: IVideo['id'];
+	type?: string;
 }
 
 interface VideoApiInterface {
 	saveVideo: (data: SaveVideoDto) => Promise<IVideo>;
 	getVideoUrl: (data: GetVideoUrlDto) => Promise<IVideoSign>;
+	getVideoStreamManifest: (url: string) => Promise<Blob>;
 }
 
 export class VideoApiService implements VideoApiInterface {
@@ -92,8 +94,22 @@ export class VideoApiService implements VideoApiInterface {
 		return payload.data;
 	};
 
-	getVideoUrl = async ({ id }: GetVideoUrlDto): Promise<IVideoSign> => {
-		const payload = await this.http.get(`/videos/${id}/sign-url`);
+	getVideoUrl = async ({
+		id,
+		type = 'hls',
+	}: GetVideoUrlDto): Promise<IVideoSign> => {
+		const payload = await this.http.get(`/videos/${id}/sign-url`, {
+			params: { type },
+		});
+
+		return payload.data;
+	};
+
+	getVideoStreamManifest = async (url: string): Promise<Blob> => {
+		const payload = await this.http.get(url, {
+			responseType: 'blob',
+		});
+
 		return payload.data;
 	};
 
@@ -122,6 +138,7 @@ export class VideoApiService implements VideoApiInterface {
 			isComments: false,
 			...payload,
 		});
+
 		return res.data;
 	};
 
@@ -142,6 +159,7 @@ export class VideoApiService implements VideoApiInterface {
 			params: params,
 			signal,
 		});
+
 		return payload.data;
 	};
 
@@ -149,6 +167,7 @@ export class VideoApiService implements VideoApiInterface {
 		const payload = await this.http.get(`/tags`, {
 			params: { userId },
 		});
+
 		return payload.data;
 	};
 
@@ -156,6 +175,7 @@ export class VideoApiService implements VideoApiInterface {
 		const res = await this.http.get(`/videos/${id}/download`, {
 			responseType: 'blob',
 		});
+
 		download(res.data, title, res.headers.contentType);
 	};
 
@@ -167,6 +187,7 @@ export class VideoApiService implements VideoApiInterface {
 		const payload = await this.http.patch(`/videos/${id}/change-permission`, {
 			viewAccess,
 		});
+
 		return payload.data;
 	};
 
@@ -179,6 +200,7 @@ export class VideoApiService implements VideoApiInterface {
 			params: { search },
 			signal,
 		});
+
 		return payload.data;
 	};
 }
