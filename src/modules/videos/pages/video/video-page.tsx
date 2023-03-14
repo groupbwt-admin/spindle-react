@@ -6,6 +6,7 @@ import { StartRecordButton } from 'modules/videos/components/start-record-button
 import { UnauthorisedCommentView } from 'modules/videos/features/comments/video-comments/components/unauthorised-comment-view';
 import { VideoComments } from 'modules/videos/features/comments/video-comments/video-comments';
 import { useVideo } from 'modules/videos/pages/video/use-video';
+import { AccessSettingVideo } from 'shared/features/access-setting-video';
 import { DeleteVideo } from 'shared/features/delete-video';
 import { BoundaryError } from 'shared/models/custom-errors';
 
@@ -22,8 +23,7 @@ import { Typography } from 'shared/components/typography/typography';
 import { UserInfoHoverMenu } from 'shared/components/user-info-hover-menu/user-info-hover-menu';
 import { ActionMenu } from 'shared/components/video-card/action-menu';
 import { VideoPageSkeleton } from 'shared/components/video-page-skeleton/video-page-skeleton';
-
-import { AccessSettingVideo } from '../../../../shared/features/access-setting-video';
+import { VideoPlayer } from 'shared/components/video-player/video-player';
 
 const VideoPageContainer = styled.div`
 	display: flex;
@@ -80,7 +80,7 @@ const ViewsCount = styled(Typography)`
 	margin-right: auto;
 `;
 
-const StyledVideo = styled.video`
+const StyledVideo = styled(VideoPlayer)`
 	width: 100%;
 	height: 56.25vw;
 	max-height: calc(100vh - 300px);
@@ -163,9 +163,8 @@ export const VideoPage: React.FC = () => {
 			{models.videoUrl && models.video && (
 				<>
 					<StyledVideo
-						controls
-						src={models.videoUrl?.data?.url}
-						controlsList="nodownload"
+						src={models.videoUrl.data}
+						videoType={models.videoType}
 					/>
 					<EditInputField
 						value={models.video.title}

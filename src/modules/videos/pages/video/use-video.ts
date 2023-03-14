@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useRecordContext } from 'modules/videos/hooks/use-record-context';
@@ -10,6 +10,7 @@ import { VideoApi } from 'app/api/video-api/video-api';
 import { selectUserData } from 'app/store/user/selects';
 
 import { USER_ROUTES, VIDEO_ROUTES } from 'shared/config/routes';
+import { MIME_TYPES } from 'shared/constants/media';
 import { VIDEO_MODALS_NAMES } from 'shared/constants/modal-names';
 import { VIDEO_QUERY_KEYS } from 'shared/constants/query-keys';
 import { useCopyLink } from 'shared/hooks/use-copy-link';
@@ -21,7 +22,7 @@ export function useVideo() {
 	const location = useLocation();
 	const user = selectUserData();
 	const modalManager = useModalManager();
-
+	const [videoType, setVideoType] = useState<MIME_TYPES | null>(null);
 	const recordContext = useRecordContext();
 
 	const {
@@ -37,7 +38,21 @@ export function useVideo() {
 
 	const videoUrl = useQuery({
 		queryKey: [VIDEO_QUERY_KEYS.video_stream_url, urlParams.id],
-		queryFn: () => VideoApi.getVideoUrl({ id: urlParams.id! }),
+		queryFn: async () => {
+			const videoUrl = await VideoApi.getVideoUrl({ id: urlParams.id! });
+			const data = await VideoApi.getVideoStreamManifest(videoUrl?.url);
+			if (!data.size) {
+				const baseVideo = await VideoApi.getVideoUrl({
+					id: urlParams.id!,
+					type: 'base',
+				});
+
+				setVideoType(MIME_TYPES.WEBM);
+				return baseVideo.url;
+			}
+			setVideoType(MIME_TYPES.HLS);
+			return URL.createObjectURL(data);
+		},
 		enabled: !!video,
 	});
 
@@ -75,6 +90,7 @@ export function useVideo() {
 			id: video?.id,
 			payload,
 		});
+
 		client.setQueryData([VIDEO_QUERY_KEYS.video, video?.id], res);
 	};
 
@@ -103,6 +119,7 @@ export function useVideo() {
 			pageTitle,
 			videoUrl,
 			video,
+			videoType,
 			videoError,
 			tags: tagsArray,
 			isLinkCopied,

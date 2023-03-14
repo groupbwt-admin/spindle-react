@@ -1,4 +1,3 @@
-import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -186,23 +185,20 @@ const helmetContext = {};
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
-	<StrictMode>
-		<ModalManager.Provider>
-			<HelmetProvider context={helmetContext}>
-				<ThemeProvider theme={theme}>
-					<QueryClientProvider client={queryClient}>
-						<BrowserRouter>
-							<App />
-							<ReactQueryDevtools
-								initialIsOpen={false}
-								position="bottom-right"
-							/>
-						</BrowserRouter>
-					</QueryClientProvider>
-				</ThemeProvider>
-			</HelmetProvider>
-		</ModalManager.Provider>
-	</StrictMode>,
+	// <StrictMode>
+	<ModalManager.Provider>
+		<HelmetProvider context={helmetContext}>
+			<ThemeProvider theme={theme}>
+				<QueryClientProvider client={queryClient}>
+					<BrowserRouter>
+						<App />
+						<ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+					</BrowserRouter>
+				</QueryClientProvider>
+			</ThemeProvider>
+		</HelmetProvider>
+	</ModalManager.Provider>,
+	// </StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
