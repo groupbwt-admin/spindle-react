@@ -96,8 +96,9 @@ export function useVideo() {
 	};
 
 	const handleUpdateVideo = async (payload) => {
+		if (!video?.id) return;
 		const res = await updateVideoMutation.mutateAsync({
-			id: video?.id,
+			id: video.id,
 			payload,
 		});
 
