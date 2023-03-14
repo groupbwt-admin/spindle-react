@@ -66,13 +66,13 @@ const StyledVideoPlayer = styled.div`
 
 interface VideoPlayerProps {
 	src?: string | IVideoSign;
-	videoType?: MIME_TYPES | null;
+	mimeType?: MIME_TYPES | null;
 	className?: string;
 }
 
 export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 	src,
-	videoType,
+	mimeType,
 	className,
 }) => {
 	const [isPlayerLoading, setIsPlayerLoading] = useState(true);
@@ -99,7 +99,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 				width: '100%',
 				height: '100%',
 				source: src,
-				mimeType: videoType,
+				mimeType: mimeType,
 				plugins: [
 					MediaControl,
 					ClosedCaptions,

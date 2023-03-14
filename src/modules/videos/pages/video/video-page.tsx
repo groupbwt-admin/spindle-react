@@ -163,8 +163,8 @@ export const VideoPage: React.FC = () => {
 			{models.videoUrl && models.video && (
 				<>
 					<StyledVideo
-						src={models.videoUrl.data}
-						videoType={models.videoType}
+						src={models.videoUrl.data?.url}
+						mimeType={models.videoUrl.data?.mimeType}
 					/>
 					<EditInputField
 						value={models.video.title}

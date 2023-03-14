@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useRecordContext } from 'modules/videos/hooks/use-record-context';
@@ -22,7 +22,6 @@ export function useVideo() {
 	const location = useLocation();
 	const user = selectUserData();
 	const modalManager = useModalManager();
-	const [videoType, setVideoType] = useState<MIME_TYPES | null>(null);
 	const recordContext = useRecordContext();
 
 	const {
@@ -47,12 +46,23 @@ export function useVideo() {
 					type: 'base',
 				});
 
-				setVideoType(MIME_TYPES.WEBM);
-				return baseVideo.url;
+				return baseVideo;
 			}
-			setVideoType(MIME_TYPES.HLS);
-			return URL.createObjectURL(data);
+			return data;
 		},
+		select: useCallback((data) => {
+			if (data instanceof Blob) {
+				return {
+					url: URL.createObjectURL(data),
+					mimeType: MIME_TYPES.HLS,
+				};
+			}
+
+			return {
+				url: data.url,
+				mimeType: MIME_TYPES.WEBM,
+			};
+		}, []),
 		enabled: !!video,
 	});
 
@@ -119,7 +129,6 @@ export function useVideo() {
 			pageTitle,
 			videoUrl,
 			video,
-			videoType,
 			videoError,
 			tags: tagsArray,
 			isLinkCopied,

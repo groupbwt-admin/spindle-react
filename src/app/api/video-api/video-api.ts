@@ -78,6 +78,7 @@ export interface GetVideoUrlDto {
 interface VideoApiInterface {
 	saveVideo: (data: SaveVideoDto) => Promise<IVideo>;
 	getVideoUrl: (data: GetVideoUrlDto) => Promise<IVideoSign>;
+	getVideoStreamManifest: (url: string) => Promise<Blob>;
 }
 
 export class VideoApiService implements VideoApiInterface {
@@ -104,8 +105,7 @@ export class VideoApiService implements VideoApiInterface {
 		return payload.data;
 	};
 
-	getVideoStreamManifest = async (url): Promise<Blob> => {
-		console.log(url);
+	getVideoStreamManifest = async (url: string): Promise<Blob> => {
 		const payload = await this.http.get(url, {
 			responseType: 'blob',
 		});
