@@ -13,12 +13,16 @@ import {
 	Stats,
 } from '@clappr/plugins';
 import styled from '@emotion/styled/macro';
+import PlaybackRatePlugin from 'clappr-playback-rate-plugin';
 
 import { IVideoSign } from 'shared/types/video';
 
 import { MIME_TYPES } from 'shared/constants/media';
 
 import { SpinnerOverlay } from 'shared/components/spinner-overlay/spinner-overlay';
+
+import { PipPlugin } from './plugins/pip/pip';
+import { PipButton } from './plugins/pip/pip-button';
 
 const StyledVideoPlayerContainer = styled.div`
 	position: relative;
@@ -112,9 +116,18 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 					SeekTime,
 					Stats,
 					HlsjsPlayback,
+					PlaybackRatePlugin,
+					PipPlugin,
+					PipButton,
 				],
-				playback: {
-					mediaType: 'vod',
+				playbackRateConfig: {
+					defaultValue: 1,
+					options: [
+						{ value: 0.5, label: '0.5x' },
+						{ value: 1, label: '1x' },
+						{ value: 1.5, label: '1.5x' },
+						{ value: 2, label: '2x' },
+					],
 				},
 				events: {
 					onReady: (e: Player) => {
