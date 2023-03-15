@@ -64,7 +64,7 @@ export const HomePage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>My videos</title>
+				<title>Spindle | My videos</title>
 				<meta
 					name="description"
 					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."

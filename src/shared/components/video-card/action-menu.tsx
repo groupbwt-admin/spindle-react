@@ -91,6 +91,16 @@ export const ActionMenu: React.FC<VideoActionMenuProps> = ({
 		setAnchorEl(null);
 	};
 
+	const handleChangeSettings = (e: React.MouseEvent<HTMLLIElement>) => {
+		handleClose(e);
+		onChangeSettings(e);
+	};
+
+	const handleDelete = (e: React.MouseEvent<HTMLLIElement>) => {
+		handleClose(e);
+		onDelete(e);
+	};
+
 	return (
 		<>
 			<StyledMenuButton
@@ -134,7 +144,7 @@ export const ActionMenu: React.FC<VideoActionMenuProps> = ({
 					</StyledMenuItem>
 				)}
 				{activeActions.settings && (
-					<StyledMenuItem onClick={(e) => onChangeSettings(e)}>
+					<StyledMenuItem onClick={handleChangeSettings}>
 						<StyledMenuIcon icon={ICON_COLLECTION.settings} />
 						<span>Settings</span>
 					</StyledMenuItem>
@@ -146,7 +156,7 @@ export const ActionMenu: React.FC<VideoActionMenuProps> = ({
 					</StyledMenuItem>
 				)}
 				{activeActions.delete && (
-					<StyledMenuItem onClick={(e) => onDelete(e)}>
+					<StyledMenuItem onClick={handleDelete}>
 						<StyledMenuIcon icon={ICON_COLLECTION.delete} />
 						<span>Delete</span>
 					</StyledMenuItem>

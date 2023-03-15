@@ -1,5 +1,8 @@
+import * as React from 'react';
+import { Helmet } from 'react-helmet-async';
 import styled from '@emotion/styled/macro';
 import { useProfile } from 'modules/user/pages/my-profile/use-profile';
+import { AccessSettingVideo } from 'shared/features/access-setting-video';
 import { DeleteVideo } from 'shared/features/delete-video';
 
 import { Avatar } from 'shared/components/avatar/avatar';
@@ -15,8 +18,6 @@ import { ActionPanel } from 'shared/components/table/action-panel';
 import { VideoList } from 'shared/components/table/video-list';
 import { Typography } from 'shared/components/typography/typography';
 import { VideoListSkeleton } from 'shared/components/video-list-skeleton/video-list-skeleton';
-
-import { AccessSettingVideo } from '../../../../shared/features/access-setting-video';
 
 const ProfileContainer = styled.div`
 	display: flex;
@@ -80,6 +81,24 @@ export const MyProfilePage = () => {
 
 	return (
 		<ProfileContainer>
+			<Helmet>
+				<title>Spindle | My profile</title>
+				<meta
+					property="og:title"
+					content="Spindle | My profile"
+					data-rh="true"
+				/>
+				<meta
+					name="description"
+					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
+				/>
+				<meta
+					property="og:image"
+					content="https://miro.medium.com/max/812/1*1xhuVp8f2WFUGUByHS8VTg.png"
+					data-rh="true"
+				/>
+			</Helmet>
+
 			{(models.isVideoLoading ||
 				models.isInitialLoading ||
 				models.isSearching) && <FetchLinearLoader />}

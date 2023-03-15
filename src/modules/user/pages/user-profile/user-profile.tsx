@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { Helmet } from 'react-helmet-async';
 import styled from '@emotion/styled/macro';
 import { useUserProfile } from 'modules/user/pages/user-profile/use-user-profile';
 
@@ -62,6 +64,28 @@ export const UserProfilePage = () => {
 
 	return (
 		<ProfileContainer>
+			<Helmet>
+				<title>
+					{`Spindle | ${models.user?.firstName || ''} ${
+						models.user?.lastName || 'User'
+					} profile`}
+				</title>
+				<meta
+					property="og:title"
+					content="Spindle | My profile"
+					data-rh="true"
+				/>
+				<meta
+					name="description"
+					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
+				/>
+				<meta
+					property="og:image"
+					content="https://miro.medium.com/max/812/1*1xhuVp8f2WFUGUByHS8VTg.png"
+					data-rh="true"
+				/>
+			</Helmet>
+
 			{(models.isVideoLoading ||
 				models.isInitialLoading ||
 				models.isSearching) && <FetchLinearLoader />}

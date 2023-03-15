@@ -123,7 +123,7 @@ export const VideoPage: React.FC = () => {
 	return (
 		<VideoPageContainer>
 			<Helmet>
-				<title>{models.video?.title}</title>
+				<title>{`Spindle | ${models.video?.title || ' Video page'}`}</title>
 				<meta
 					name="description"
 					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
@@ -140,7 +140,7 @@ export const VideoPage: React.FC = () => {
 				/>
 				<meta
 					property="og:image"
-					content=" https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif"
+					content="https://ci5.googleusercontent.com/proxy/wlHOin-yKa7s4Imh1BnP4rUloVfyvisCECnCX_QsAWwMuc8lnHQQaiQy8QEhsWHNr842CLXRsFyP-pwXUeJBQb4ANBzarQ12b7CDey4A7M36p2i6d6l8=s0-d-e1-ft#https://spindle-api.groupbwt.com/storage/assets/img/spindle-logo.jpg"
 					data-rh="true"
 				/>
 			</Helmet>
@@ -184,13 +184,15 @@ export const VideoPage: React.FC = () => {
 							endIcon={<StyledButtonIcon icon={ICON_COLLECTION.copy_link} />}
 							onClick={commands.handleCopyLink}
 						/>
-						<Button
-							label="Download"
-							color="secondary"
-							variant="outlined"
-							endIcon={<StyledButtonIcon icon={ICON_COLLECTION.download} />}
-							onClick={commands.handleDownload}
-						/>
+						{models.user && (
+							<Button
+								label="Download"
+								color="secondary"
+								variant="outlined"
+								endIcon={<StyledButtonIcon icon={ICON_COLLECTION.download} />}
+								onClick={commands.handleDownload}
+							/>
+						)}
 						{models.isEditable && (
 							<ActionMenu
 								activeActions={{
