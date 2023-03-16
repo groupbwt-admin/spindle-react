@@ -4,6 +4,7 @@ import styled from '@emotion/styled/macro';
 import clsx from 'clsx';
 import { useRecordContext } from 'modules/videos/hooks/use-record-context';
 import { ReactComponent as Logo } from 'shared/assets/images/logo-reverse.svg';
+import { RecordButton } from 'shared/layout/components/record-button';
 import { UserMenu } from 'shared/layout/components/user-menu';
 
 import { css } from '@mui/material/styles';
@@ -52,9 +53,9 @@ const StyledToggleMenuBtn = styled(IconButton)`
 	}
 `;
 
-const LogoWrapper = styled('div')<{ isDisabled: boolean }>`
+const LogoWrapper = styled('div')`
 	width: 158px;
-	cursor: ${(props) => (props.isDisabled ? 'not-allowed' : 'pointer')};
+	cursor: pointer;
 	position: relative;
 
 
@@ -85,6 +86,14 @@ const StyledNavIcon = styled(Icon)`
 		height: 20px;
 		transition: transform 1s ease;
 	}
+`;
+
+const RecordButtonContainer = styled.div`
+	padding: 16px 14px 0;
+	margin-top: 16px;
+	margin-right: -15px;
+	margin-left: -15px;
+	border-top: 1px solid #576cd9;
 `;
 
 const MenuContainer = styled.aside<{
@@ -173,7 +182,6 @@ const StyledNavLink = styled(NavLink)(
 
 export const AppMenu = () => {
 	const [open, setOpen] = useState(false);
-	const { isRecording } = useRecordContext();
 	const nav = useNavigate();
 
 	const toggleDrawer = () => {
@@ -186,13 +194,11 @@ export const AppMenu = () => {
 
 	const user = selectUserData();
 
+	const { isRecording, isConnected, startRecording } = useRecordContext();
+
 	return (
 		<MenuContainer open={open}>
-			<LogoWrapper
-				onClick={isRecording ? undefined : toggleDrawer}
-				isDisabled={isRecording}
-				className={clsx(!user && 'isUnauth')}
-			>
+			<LogoWrapper onClick={toggleDrawer} className={clsx(!user && 'isUnauth')}>
 				<StyledLogo />
 				<StyledToggleMenuBtn>
 					<Icon
@@ -225,6 +231,14 @@ export const AppMenu = () => {
 				</NavContainer>
 			)}
 			{!!user && <UserMenu expanded={open} />}
+			<RecordButtonContainer>
+				<RecordButton
+					isRecording={isRecording}
+					isOpen={open}
+					onStartRecording={startRecording}
+					isConnected={isConnected}
+				/>
+			</RecordButtonContainer>
 		</MenuContainer>
 	);
 };

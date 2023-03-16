@@ -2,7 +2,6 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import styled from '@emotion/styled/macro';
 import { format } from 'date-fns';
-import { StartRecordButton } from 'modules/videos/components/start-record-button';
 import { UnauthorisedCommentView } from 'modules/videos/features/comments/video-comments/components/unauthorised-comment-view';
 import { VideoComments } from 'modules/videos/features/comments/video-comments/video-comments';
 import { useVideo } from 'modules/videos/pages/video/use-video';
@@ -107,10 +106,6 @@ const StyledCaption = styled(Typography)`
 	color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
-const StyledRecordButton = styled(StartRecordButton)`
-	margin-left: auto;
-`;
-
 const StyledButtonIcon = styled(Icon)`
 	width: 24px;
 	height: 24px;
@@ -151,11 +146,6 @@ export const VideoPage: React.FC = () => {
 						<Icon icon={ICON_COLLECTION.arrow_left} />
 					</StyledIconButton>
 					<Title variant="h1">{models.pageTitle}</Title>
-					<StyledRecordButton
-						isRecording={models.recordContext.isRecording}
-						onStartRecording={models.recordContext.startRecording}
-						isConnected={models.recordContext.isConnected}
-					/>
 				</HeaderContainer>
 			)}
 			{models.isVideoDataLoading && <VideoPageSkeleton />}

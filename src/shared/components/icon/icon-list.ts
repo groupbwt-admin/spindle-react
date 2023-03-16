@@ -34,6 +34,7 @@ import { ReactComponent as Settings } from 'shared/components/icon/collection/se
 import { ReactComponent as SignIn } from 'shared/components/icon/collection/sign-in.svg';
 import { ReactComponent as SortArrowDown } from 'shared/components/icon/collection/sort-down-arrow.svg';
 import { ReactComponent as SortArrowUp } from 'shared/components/icon/collection/sort-up-arrow.svg';
+import { ReactComponent as StartRecord } from 'shared/components/icon/collection/start-record.svg';
 import { ReactComponent as Stop } from 'shared/components/icon/collection/stop.svg';
 import { ReactComponent as Views } from 'shared/components/icon/collection/views.svg';
 import { ReactComponent as Calendar } from 'shared/components/icon/collection/сalendar.svg';
@@ -78,6 +79,7 @@ export const ICON_COLLECTION = {
 	open_menu: OpenMenu,
 	hide_menu: HideMenu,
 	sign_in: SignIn,
+	start_record: StartRecord,
 };
 
 type Keys = keyof typeof ICON_COLLECTION;
