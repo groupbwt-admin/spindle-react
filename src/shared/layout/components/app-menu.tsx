@@ -231,14 +231,16 @@ export const AppMenu = () => {
 				</NavContainer>
 			)}
 			{!!user && <UserMenu expanded={open} />}
-			<RecordButtonContainer>
-				<RecordButton
-					isRecording={isRecording}
-					isOpen={open}
-					onStartRecording={startRecording}
-					isConnected={isConnected}
-				/>
-			</RecordButtonContainer>
+			{!!user && (
+				<RecordButtonContainer>
+					<RecordButton
+						isRecording={isRecording}
+						isOpen={open}
+						onStartRecording={startRecording}
+						isConnected={isConnected}
+					/>
+				</RecordButtonContainer>
+			)}
 		</MenuContainer>
 	);
 };

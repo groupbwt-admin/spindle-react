@@ -4,6 +4,8 @@ import { HelmetProvider } from 'react-helmet-async';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter } from 'react-router-dom';
+import * as Sentry from '@sentry/react';
+import { BrowserTracing } from '@sentry/tracing';
 import { isPast } from 'date-fns';
 import jwtDecode from 'jwt-decode';
 import { ModalManager } from 'shared/context/modal-manager';
@@ -14,6 +16,7 @@ import { IToken } from 'shared/types/token';
 
 import { useAuthState } from 'app/store/auth/state';
 
+import { CLIENT_BASE_URL, SENTRY_DSN } from 'shared/config/variables';
 import { LocalStorageService } from 'shared/services/local-storage-service';
 
 import App from './app/app';
@@ -184,6 +187,14 @@ const queryClient = new QueryClient({
 
 const helmetContext = {};
 
+Sentry.init({
+	dsn: SENTRY_DSN,
+	integrations: [new BrowserTracing()],
+	debug: true,
+	tracesSampleRate: 1.0,
+	allowUrls: CLIENT_BASE_URL ? [CLIENT_BASE_URL] : [],
+});
+
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
 	<StrictMode>
@@ -205,7 +216,4 @@ root.render(
 	</StrictMode>,
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
