@@ -96,8 +96,6 @@ const RecordButtonContainer = styled.div`
 	border-top: 1px solid #576cd9;
 `;
 
-const StyledRecordButton = styled(RecordButton)``;
-
 const MenuContainer = styled.aside<{
 	open?: boolean;
 }>`
@@ -234,7 +232,7 @@ export const AppMenu = () => {
 			)}
 			{!!user && <UserMenu expanded={open} />}
 			<RecordButtonContainer>
-				<StyledRecordButton
+				<RecordButton
 					isRecording={isRecording}
 					isOpen={open}
 					onStartRecording={startRecording}
