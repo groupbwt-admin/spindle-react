@@ -25,6 +25,10 @@ const StyledRecordButton = styled(Button)<IRecordButton>`
 	height: 51px;
 	transition: all 0.3s ${({ theme }) => theme.transitions.easing.easeIn};
 
+	&.Mui-disabled {
+		background-color: ${({ theme }) => theme.palette.common.white};
+	}
+
 	.ButtonLabel {
 		white-space: nowrap;
 		opacity: 0;
