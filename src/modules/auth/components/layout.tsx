@@ -20,7 +20,7 @@ const AuthContentLeft = styled('div')`
 
 const AuthContentRight = styled('div')`
 	display: flex;
-	align-items: flex-end;
+	align-items: center;
 	justify-content: center;
 	width: 50%;
 	padding: 24px;

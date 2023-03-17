@@ -29,6 +29,13 @@ const steps = [
 	},
 ];
 
+const SliderContainer = styled(Box)`
+	max-width: 560px;
+	height: 593px;
+	display: flex;
+	flex-direction: column;
+`;
+
 const QuoteContainer = styled(Box)(
 	({ theme }) => css`
 		max-width: 560px;
@@ -91,7 +98,7 @@ export const AuthSlider = () => {
 	);
 
 	return (
-		<Box sx={{ maxWidth: '560px', flexGrow: 1, mb: '38px' }}>
+		<SliderContainer>
 			<QuoteContainer>
 				<QuoteIconStyled icon={ICON_COLLECTION.quote} />
 				{steps[activeStep].description}
@@ -106,10 +113,10 @@ export const AuthSlider = () => {
 			<MobileStepper
 				sx={{
 					background: 'transparent',
-					mt: '80px',
 					p: '8px 0',
 					ml: '-8px',
 					mr: '-8px',
+					mt: 'auto',
 				}}
 				variant="dots"
 				steps={maxSteps}
@@ -118,6 +125,6 @@ export const AuthSlider = () => {
 				nextButton={ButtonRight}
 				backButton={ButtonLeft}
 			/>
-		</Box>
+		</SliderContainer>
 	);
 };
