@@ -21,6 +21,7 @@ const ActionPanelContainer = styled.div`
 	border-radius: 10px;
 	padding: 11px 32px;
 	width: 483px;
+	z-index: 100;
 `;
 
 const ActionsContainer = styled.div`
