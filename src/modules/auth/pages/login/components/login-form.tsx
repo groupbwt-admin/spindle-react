@@ -101,6 +101,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 			<GoogleAuthButtonWidget label="Sign In with Google" />
 			<StyledDivider>or</StyledDivider>
 			<StyledInput
+				data-test-id="email-login"
 				type="email"
 				label="Email address"
 				placeholder="Your email address"
@@ -112,6 +113,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 			/>
 			<StyledPasswordInput
 				label="Password"
+				data-test-id="password-login"
 				placeholder="Your password"
 				{...register('password')}
 				helperText={

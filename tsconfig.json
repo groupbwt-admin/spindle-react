@@ -16,6 +16,7 @@
 		"noImplicitAny": false,
 		"jsx": "react-jsx",
 		"baseUrl": "./src",
+		"types": ["jest", "@types/node", "@types/jest", "@playwright/test"],
 		"noFallthroughCasesInSwitch": true,
 		"plugins": [
 			{

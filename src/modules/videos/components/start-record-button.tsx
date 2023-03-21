@@ -34,6 +34,7 @@ const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({
 }) => {
 	return (
 		<RecordButton
+			data-test-id="record-button"
 			className={className}
 			isRecording={isRecording}
 			label={isRecording ? 'Recording' : 'Start Recording'}
@@ -43,4 +44,5 @@ const StartRecordButtonComponent: React.FC<IStartRecordButton> = ({
 		/>
 	);
 };
+
 export const StartRecordButton = memo(StartRecordButtonComponent);
