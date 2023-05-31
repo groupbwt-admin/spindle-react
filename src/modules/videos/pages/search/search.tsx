@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled/macro';
 import { useSearch } from 'modules/videos/pages/search/use-search';
@@ -106,6 +107,25 @@ export const SearchPage = (props) => {
 
 	return (
 		<SearchPageContainer>
+			<Helmet>
+				<title>Spindle | Search</title>
+				<meta
+					name="description"
+					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
+				/>
+				<meta property="og:title" content="Spindle | Search" data-rh="true" />
+				<meta
+					property="og:description"
+					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
+					data-rh="true"
+				/>
+				<meta
+					property="og:image"
+					content=" https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif"
+					data-rh="true"
+				/>
+			</Helmet>
+
 			<SearchInputExtended
 				isLoading={models.isSearching}
 				inputValue={models.query}

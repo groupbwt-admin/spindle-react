@@ -1,5 +1,5 @@
 import { useMutation } from 'react-query';
-import { AxiosError } from 'axios/index';
+import { AxiosError } from 'axios';
 import { AuthLink } from 'modules/auth/components/link';
 import { LoginForm } from 'modules/auth/pages/login/components/login-form';
 
@@ -22,7 +22,7 @@ const Container = styled('div')`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	overflow-y: auto;
 	width: 100%;
 	margin-top: 22px;
 `;

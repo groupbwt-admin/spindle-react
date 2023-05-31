@@ -11,9 +11,6 @@ import { VideoList } from 'shared/components/table/video-list';
 import { Typography } from 'shared/components/typography/typography';
 import { VideoListSkeleton } from 'shared/components/video-list-skeleton/video-list-skeleton';
 
-import { StartRecordButton } from '../components/start-record-button';
-import { useRecordContext } from '../hooks/use-record-context';
-
 import { useHome } from './use-home';
 
 const VideoContainer = styled.div`
@@ -59,12 +56,10 @@ const Title = styled(Typography)`
 export const HomePage = () => {
 	const { models, commands } = useHome();
 
-	const { isRecording, isConnected, startRecording } = useRecordContext();
-
 	return (
 		<>
 			<Helmet>
-				<title>My videos</title>
+				<title>Spindle | My videos</title>
 				<meta
 					name="description"
 					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
@@ -77,12 +72,6 @@ export const HomePage = () => {
 			</Helmet>
 			<HeaderContainer>
 				<Title variant="h1">My videos</Title>
-
-				<StartRecordButton
-					isRecording={isRecording}
-					onStartRecording={startRecording}
-					isConnected={isConnected}
-				/>
 			</HeaderContainer>
 			<ContentContainer>
 				<FiltersPanel>

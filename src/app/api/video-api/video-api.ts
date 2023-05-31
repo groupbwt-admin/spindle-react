@@ -1,4 +1,4 @@
-import { isAxiosError } from 'axios';
+import { AxiosResponse, isAxiosError } from 'axios';
 import download from 'downloadjs';
 import {
 	BoundaryError,
@@ -10,6 +10,7 @@ import {
 import { IUser } from 'shared/types/user';
 import { ITag, IVideo, IVideoSign } from 'shared/types/video';
 
+import { VideoPermissionsEnum } from 'shared/constants/modal-names';
 import { RequestSortType } from 'shared/constants/request-sort-type';
 import { BaseHttpServices } from 'shared/services/base-http-services';
 
@@ -42,6 +43,15 @@ export interface VideoListParamsDto {
 	criteriaTags?: string[];
 }
 
+export interface UpdateVideoDto {
+	id: IVideo['id'];
+	payload: {
+		isComments?: boolean;
+		title?: string;
+		tags?: string[];
+	};
+}
+
 export interface SearchParamsDto {
 	search?: string;
 	signal?: AbortSignal;
@@ -72,11 +82,27 @@ interface UserVideoListParamsDto extends VideoListParamsDto {
 
 export interface GetVideoUrlDto {
 	id: IVideo['id'];
+	type?: string;
 }
 
 interface VideoApiInterface {
 	saveVideo: (data: SaveVideoDto) => Promise<IVideo>;
 	getVideoUrl: (data: GetVideoUrlDto) => Promise<IVideoSign>;
+	getVideoStreamManifest: (url: string) => Promise<Blob>;
+	getVideoInfoById: (data: GetVideoUrlDto) => Promise<IVideo>;
+	updateVideoById: (data: UpdateVideoDto) => Promise<IVideo>;
+	getVideos: (params: VideoListParamsDto) => Promise<SearchResponseDto>;
+	getVideosByUserId: (
+		params: UserVideoListParamsDto,
+	) => Promise<VideoListResponseDto>;
+	getVideoTags: (payload: { userId: string }) => Promise<ITag[]>;
+	downloadVideoById: (payload: { id: IVideo['id']; title: string }) => void;
+	deleteVideoById: (videoId: IVideo['id']) => Promise<AxiosResponse>;
+	changeVideoPermissions: (payload: {
+		id: IVideo['id'];
+		viewAccess: VideoPermissionsEnum;
+	}) => Promise<IVideo>;
+	search: (data: SearchParamsDto) => Promise<SearchResponseDto>;
 }
 
 export class VideoApiService implements VideoApiInterface {
@@ -92,8 +118,22 @@ export class VideoApiService implements VideoApiInterface {
 		return payload.data;
 	};
 
-	getVideoUrl = async ({ id }: GetVideoUrlDto): Promise<IVideoSign> => {
-		const payload = await this.http.get(`/videos/${id}/sign-url`);
+	getVideoUrl = async ({
+		id,
+		type = 'hls',
+	}: GetVideoUrlDto): Promise<IVideoSign> => {
+		const payload = await this.http.get(`/videos/${id}/sign-url`, {
+			params: { type },
+		});
+
+		return payload.data;
+	};
+
+	getVideoStreamManifest = async (url: string): Promise<Blob> => {
+		const payload = await this.http.get(url, {
+			responseType: 'blob',
+		});
+
 		return payload.data;
 	};
 
@@ -116,12 +156,16 @@ export class VideoApiService implements VideoApiInterface {
 		}
 	};
 
-	updateVideoById = async ({ id, payload }): Promise<IVideo> => {
+	updateVideoById = async ({
+		id,
+		payload,
+	}: UpdateVideoDto): Promise<IVideo> => {
 		const res = await this.http.patch(`/videos/${id}`, {
 			title: 'My video',
 			isComments: false,
 			...payload,
 		});
+
 		return res.data;
 	};
 
@@ -142,6 +186,7 @@ export class VideoApiService implements VideoApiInterface {
 			params: params,
 			signal,
 		});
+
 		return payload.data;
 	};
 
@@ -149,6 +194,7 @@ export class VideoApiService implements VideoApiInterface {
 		const payload = await this.http.get(`/tags`, {
 			params: { userId },
 		});
+
 		return payload.data;
 	};
 
@@ -156,6 +202,7 @@ export class VideoApiService implements VideoApiInterface {
 		const res = await this.http.get(`/videos/${id}/download`, {
 			responseType: 'blob',
 		});
+
 		download(res.data, title, res.headers.contentType);
 	};
 
@@ -167,6 +214,7 @@ export class VideoApiService implements VideoApiInterface {
 		const payload = await this.http.patch(`/videos/${id}/change-permission`, {
 			viewAccess,
 		});
+
 		return payload.data;
 	};
 
@@ -179,6 +227,7 @@ export class VideoApiService implements VideoApiInterface {
 			params: { search },
 			signal,
 		});
+
 		return payload.data;
 	};
 }

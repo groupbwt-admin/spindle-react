@@ -2,10 +2,10 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import styled from '@emotion/styled/macro';
 import { format } from 'date-fns';
-import { StartRecordButton } from 'modules/videos/components/start-record-button';
 import { UnauthorisedCommentView } from 'modules/videos/features/comments/video-comments/components/unauthorised-comment-view';
 import { VideoComments } from 'modules/videos/features/comments/video-comments/video-comments';
 import { useVideo } from 'modules/videos/pages/video/use-video';
+import { AccessSettingVideo } from 'shared/features/access-setting-video';
 import { DeleteVideo } from 'shared/features/delete-video';
 import { BoundaryError } from 'shared/models/custom-errors';
 
@@ -22,8 +22,7 @@ import { Typography } from 'shared/components/typography/typography';
 import { UserInfoHoverMenu } from 'shared/components/user-info-hover-menu/user-info-hover-menu';
 import { ActionMenu } from 'shared/components/video-card/action-menu';
 import { VideoPageSkeleton } from 'shared/components/video-page-skeleton/video-page-skeleton';
-
-import { AccessSettingVideo } from '../../../../shared/features/access-setting-video';
+import { VideoPlayer } from 'shared/components/video-player/video-player';
 
 const VideoPageContainer = styled.div`
 	display: flex;
@@ -80,7 +79,7 @@ const ViewsCount = styled(Typography)`
 	margin-right: auto;
 `;
 
-const StyledVideo = styled.video`
+const StyledVideo = styled(VideoPlayer)`
 	width: 100%;
 	height: 56.25vw;
 	max-height: calc(100vh - 300px);
@@ -107,10 +106,6 @@ const StyledCaption = styled(Typography)`
 	color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
-const StyledRecordButton = styled(StartRecordButton)`
-	margin-left: auto;
-`;
-
 const StyledButtonIcon = styled(Icon)`
 	width: 24px;
 	height: 24px;
@@ -123,7 +118,7 @@ export const VideoPage: React.FC = () => {
 	return (
 		<VideoPageContainer>
 			<Helmet>
-				<title>{models.video?.title}</title>
+				<title>{`Spindle | ${models.video?.title || ' Video page'}`}</title>
 				<meta
 					name="description"
 					content="Use Spindle to record quick videos of your screen and cam. Explain anything clearly and easily – and skip the meeting. An essential tool for hybrid workplaces."
@@ -140,7 +135,7 @@ export const VideoPage: React.FC = () => {
 				/>
 				<meta
 					property="og:image"
-					content=" https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif"
+					content="https://ci5.googleusercontent.com/proxy/wlHOin-yKa7s4Imh1BnP4rUloVfyvisCECnCX_QsAWwMuc8lnHQQaiQy8QEhsWHNr842CLXRsFyP-pwXUeJBQb4ANBzarQ12b7CDey4A7M36p2i6d6l8=s0-d-e1-ft#https://spindle-api.groupbwt.com/storage/assets/img/spindle-logo.jpg"
 					data-rh="true"
 				/>
 			</Helmet>
@@ -151,11 +146,6 @@ export const VideoPage: React.FC = () => {
 						<Icon icon={ICON_COLLECTION.arrow_left} />
 					</StyledIconButton>
 					<Title variant="h1">{models.pageTitle}</Title>
-					<StyledRecordButton
-						isRecording={models.recordContext.isRecording}
-						onStartRecording={models.recordContext.startRecording}
-						isConnected={models.recordContext.isConnected}
-					/>
 				</HeaderContainer>
 			)}
 			{models.isVideoDataLoading && <VideoPageSkeleton />}
@@ -163,9 +153,8 @@ export const VideoPage: React.FC = () => {
 			{models.videoUrl && models.video && (
 				<>
 					<StyledVideo
-						controls
-						src={models.videoUrl?.data?.url}
-						controlsList="nodownload"
+						src={models.videoUrl.data?.url}
+						mimeType={models.videoUrl.data?.mimeType}
 					/>
 					<EditInputField
 						value={models.video.title}
@@ -185,13 +174,15 @@ export const VideoPage: React.FC = () => {
 							endIcon={<StyledButtonIcon icon={ICON_COLLECTION.copy_link} />}
 							onClick={commands.handleCopyLink}
 						/>
-						<Button
-							label="Download"
-							color="secondary"
-							variant="outlined"
-							endIcon={<StyledButtonIcon icon={ICON_COLLECTION.download} />}
-							onClick={commands.handleDownload}
-						/>
+						{models.user && (
+							<Button
+								label="Download"
+								color="secondary"
+								variant="outlined"
+								endIcon={<StyledButtonIcon icon={ICON_COLLECTION.download} />}
+								onClick={commands.handleDownload}
+							/>
+						)}
 						{models.isEditable && (
 							<ActionMenu
 								activeActions={{

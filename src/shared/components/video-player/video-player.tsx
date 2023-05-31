@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Player } from '@clappr/core';
 import HlsjsPlayback from '@clappr/hlsjs-playback';
 import {
 	ClickToPause,
 	ClosedCaptions,
-	DVRControls,
 	EndVideo,
 	ErrorScreen,
 	MediaControl,
@@ -13,29 +12,98 @@ import {
 	SpinnerThreeBounce,
 	Stats,
 } from '@clappr/plugins';
+import styled from '@emotion/styled/macro';
+import PlaybackRatePlugin from 'clappr-playback-rate-plugin';
 
-export const VideoPlayer = () => {
+import { IVideoSign } from 'shared/types/video';
+
+import { MIME_TYPES } from 'shared/constants/media';
+
+import { SpinnerOverlay } from 'shared/components/spinner-overlay/spinner-overlay';
+
+import { PipPlugin } from './plugins/pip/pip';
+import { PipButton } from './plugins/pip/pip-button';
+
+const StyledVideoPlayerContainer = styled.div`
+	position: relative;
+
+	.MuiBackdrop-root {
+		z-index: 5;
+		position: absolute;
+	}
+
+	.play-wrapper {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&::before {
+			content: '';
+			display: block;
+			background: ${({ theme }) => theme.palette.common.white};
+			width: 100px;
+			height: 100px;
+			left: calc(50% - 50px);
+			top: calc(50% - 50px);
+			position: absolute;
+			border-radius: 50%;
+		}
+	}
+
+	.poster-icon {
+		position: relative;
+		width: 36px;
+		height: 36px;
+
+		path {
+			fill: #231d2c !important;
+		}
+	}
+`;
+
+const StyledVideoPlayer = styled.div`
+	height: 56.25vw;
+	max-height: calc(100vh - 300px);
+	min-height: 480px;
+`;
+
+interface VideoPlayerProps {
+	src?: string | IVideoSign;
+	mimeType?: MIME_TYPES | null;
+	className?: string;
+}
+
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({
+	src,
+	mimeType,
+	className,
+}) => {
+	const [isPlayerLoading, setIsPlayerLoading] = useState(true);
+
 	const containerRef = React.useRef(null);
 	const playerRef = React.useRef<Player | null>(null);
 	const player = playerRef.current;
 
 	useEffect(() => {
-		if (!containerRef.current || player) return;
+		if ((!containerRef.current || player) && !src) return;
+
 		initPlayer();
 
 		return () => {
 			playerRef.current?.destroy();
 			playerRef.current = null;
 		};
-	}, [containerRef.current, player]);
+	}, [containerRef.current, player, src]);
 
-	const initPlayer = () => {
-		return new Promise((resolve, reject) => {
+	const initPlayer = async () => {
+		return new Promise((resolve) => {
 			playerRef.current = new Player({
 				parent: containerRef.current,
-				autoPlay: true,
-				source:
-					'http://spindle-api.groupbwt.com/api/videos/streaming?videoId=1ac41b94-098b-48fd-9c81-3aa53356d975&expirationDate=2023-01-13T19%3A18%3A03.697Z&signed=cf62305d6145c586a5ad18729af8ea0517ed42c29a1e12e2562fe2582989d645',
+				width: '100%',
+				height: '100%',
+				source: src,
+				mimeType: mimeType,
 				plugins: [
 					MediaControl,
 					ClosedCaptions,
@@ -43,46 +111,28 @@ export const VideoPlayer = () => {
 					SpinnerThreeBounce,
 					Stats,
 					ClickToPause,
-					DVRControls,
 					ErrorScreen,
 					Poster,
 					SeekTime,
 					Stats,
-					// HlsjsPlayback,
+					HlsjsPlayback,
+					PlaybackRatePlugin,
+					PipPlugin,
+					PipButton,
 				],
+				playbackRateConfig: {
+					defaultValue: 1,
+					options: [
+						{ value: 0.5, label: '0.5x' },
+						{ value: 1, label: '1x' },
+						{ value: 1.5, label: '1.5x' },
+						{ value: 2, label: '2x' },
+					],
+				},
 				events: {
 					onReady: (e: Player) => {
 						console.log('ready', e);
-					},
-					onResize: (e: { width: number; height: number }) => {
-						console.log('resize', e);
-					},
-					onPlay: () => {
-						console.log('play', true);
-					},
-					onPause: () => {
-						console.log('pause', true);
-					},
-					onStop: (e: boolean) => {
-						console.log('stop', e);
-					},
-					onEnded: () => {
-						console.log('ended', true);
-					},
-					onSeek: (e: number) => {
-						console.log('seek', e);
-					},
-					onError: (e: Error) => {
-						console.log('error', e);
-					},
-					onTimeUpdate: (e: { current: number; total: number }) => {
-						console.log('time-updated', e);
-					},
-					onVolumeUpdate: (e: number) => {
-						console.log('volume-updated', e);
-					},
-					onSubtitleAvailable: (e: boolean) => {
-						console.log('subtitle-available', e);
+						setIsPlayerLoading(false);
 					},
 				},
 			});
@@ -91,8 +141,9 @@ export const VideoPlayer = () => {
 	};
 
 	return (
-		<div>
-			<div ref={containerRef}></div>
-		</div>
+		<StyledVideoPlayerContainer className={className}>
+			<SpinnerOverlay open={isPlayerLoading} />
+			<StyledVideoPlayer ref={containerRef}></StyledVideoPlayer>
+		</StyledVideoPlayerContainer>
 	);
 };

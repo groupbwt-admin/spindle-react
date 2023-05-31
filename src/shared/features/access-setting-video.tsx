@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { VideoApi } from '../../app/api/video-api/video-api';
+import { VideoApi } from 'app/api/video-api/video-api';
+
 import { Modal } from '../components/modal';
 import { AccessSettingsModal } from '../components/video/modals/access-settings-modal';
 import {
@@ -24,6 +25,7 @@ const VIDEO_PERMISSIONS_OPTIONS = [
 		value: VideoPermissionsEnum.ANYONE_WITH_LINK,
 	},
 ];
+
 export const AccessSettingVideo = () => {
 	const [videoId, setVideoId] = useState(null);
 	const client = useQueryClient();
@@ -36,6 +38,7 @@ export const AccessSettingVideo = () => {
 			},
 		},
 	);
+
 	const { data: video, isLoading } = useQuery({
 		queryKey: [VIDEO_QUERY_KEYS.video, videoId],
 		queryFn: () =>
@@ -52,12 +55,15 @@ export const AccessSettingVideo = () => {
 		});
 	});
 
-	const changeCommentsPermissionMutation = useMutation(async (isComments) => {
-		return await VideoApi.updateVideoById({
-			id: video?.id,
-			payload: { isComments: isComments },
-		});
-	});
+	const changeCommentsPermissionMutation = useMutation(
+		async (isComments: boolean) => {
+			if (!video?.id) return;
+			return await VideoApi.updateVideoById({
+				id: video.id,
+				payload: { isComments: isComments },
+			});
+		},
+	);
 
 	const handleClose = () => modalState.close();
 
@@ -67,11 +73,12 @@ export const AccessSettingVideo = () => {
 		return;
 	};
 
-	const handleChangeCommentsPermission = async (isComments) => {
+	const handleChangeCommentsPermission = async (isComments: boolean) => {
 		const res = await changeCommentsPermissionMutation.mutateAsync(isComments);
 		client.setQueryData([VIDEO_QUERY_KEYS.video, videoId], res);
 		return;
 	};
+
 	return (
 		<Modal.Root
 			open={modalState.open}

@@ -106,7 +106,9 @@ const ButtonRoot: React.ForwardRefRenderFunction<
 					<CircularProgress color={SPINNER_COLOR[color] ?? 'info'} size={24} />
 				</StyledSpinnerContainer>
 			)}
-			<StyledLabel isLoading={isLoading}>{label}</StyledLabel>
+			<StyledLabel isLoading={isLoading} className="ButtonLabel">
+				{label}
+			</StyledLabel>
 		</StyledButton>
 	);
 };

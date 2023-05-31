@@ -99,7 +99,7 @@ export const useRecording = () => {
 		try {
 			const mediaDevices = navigator.mediaDevices;
 			const displayMedia = await mediaDevices.getDisplayMedia();
-			const userMedia = await mediaDevices.getUserMedia({
+			const userMedia: MediaStream | null = await mediaDevices.getUserMedia({
 				audio: {
 					echoCancellation: true,
 					noiseSuppression: true,
@@ -107,7 +107,12 @@ export const useRecording = () => {
 				},
 			});
 
-			const tracks = [...displayMedia.getTracks(), ...userMedia.getTracks()];
+			let tracks = displayMedia.getTracks();
+			console.log(displayMedia);
+			if (userMedia) {
+				tracks = [...userMedia.getTracks(), ...tracks];
+			}
+
 			if (tracks.length) {
 				setStatus(RECORDING_STATUS.idle);
 			}
@@ -120,8 +125,12 @@ export const useRecording = () => {
 				});
 				isCancel.current ? onCancelPreview() : onVideoSaved();
 			};
-			stream.getAudioTracks()[0].enabled = true;
-			setIsMicrophoneOn(true);
+			if (stream.getAudioTracks().length) {
+				stream.getAudioTracks()[0].enabled = true;
+				setIsMicrophoneOn(true);
+			} else {
+				setIsMicrophoneOn(false);
+			}
 			const mediaRecorderLocal = new MediaRecorder(stream);
 
 			mediaRecorderLocal.onstart = () => {
@@ -149,7 +158,7 @@ export const useRecording = () => {
 				}
 			});
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 			setStatus(RECORDING_STATUS.error);
 		}
 	};
@@ -168,7 +177,10 @@ export const useRecording = () => {
 	const toggleMicrophone = useEvent(() => {
 		setIsMicrophoneOn((prevValue) => {
 			const newValue = !prevValue;
-			if (mediaRecorder.current) {
+			if (
+				mediaRecorder.current &&
+				mediaRecorder.current.stream.getAudioTracks().length
+			) {
 				mediaRecorder.current.stream.getAudioTracks()[0].enabled = newValue;
 			}
 			return newValue;

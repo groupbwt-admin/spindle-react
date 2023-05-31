@@ -143,7 +143,6 @@ export const TagsAutocomplete: React.FC<TagsAutocompleteProps> = ({
 	};
 
 	const submitHandler = async (e) => {
-		if (!tagsList.length) return;
 		setIsLoading(true);
 		await onUpdateTags(tagsList);
 		toggleEditMode(e, false);

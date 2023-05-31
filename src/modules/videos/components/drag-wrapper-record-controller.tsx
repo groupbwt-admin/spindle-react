@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 
-import { useEvent } from '../../../shared/hooks/use-event';
+import { useEvent } from 'shared/hooks/use-event';
+
 import { useDragContext } from '../context/drag-select-provider';
 import { DragWrapperContext } from '../context/drag-wrapper-context';
 
@@ -22,13 +23,14 @@ const ControllerWrapper = styled.div<IControllerWrapper>`
 	flex-direction: row;
 	width: auto;
 	align-items: center;
-	z-index: 100;
+	z-index: 1500;
 `;
 
 const CONDITION_RESIZE = {
 	withCamera: { x: 700, y: 230 },
 	withOutCamera: { x: 400, y: 70 },
 };
+
 const INDENT = 20;
 const CONTROLLER_WIDTH = 700;
 const CONTROLLER_HEIGHT = 500;
@@ -41,6 +43,7 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 	const [conditionCamera, setConditionCamera] = useState(
 		CONDITION_RESIZE.withOutCamera,
 	);
+
 	const controllerRef = useRef<HTMLDivElement>(null);
 	const { containerRef } = useDragContext();
 
@@ -111,9 +114,11 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 					x: event.pageX + offsetX,
 					y: event.pageY + offsetY,
 				};
+
 				onUpdatePosition(newPosition);
 			}
 		};
+
 		const handleMouseUp = () => {
 			examinationPosition();
 			if (body) {
@@ -122,6 +127,7 @@ const WrapperRecordControllerComponent: React.FC<IWrapperRecordController> = ({
 			document.removeEventListener('mousemove', handleMouseMove);
 			document.removeEventListener('mouseup', handleMouseUp);
 		};
+
 		document.addEventListener('mousemove', handleMouseMove);
 		document.addEventListener('mouseup', handleMouseUp);
 	};
